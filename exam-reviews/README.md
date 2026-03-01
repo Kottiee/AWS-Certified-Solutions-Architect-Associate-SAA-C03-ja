@@ -2,6 +2,12 @@
 
 This directory contains practice test reviews and study materials for the AWS Certified Solutions Architect Associate (SAA-C03) exam.
 
+> **⚠️ IMPORTANT DISCLAIMER:** 
+> - These reviews are **personal study notes** from taking **unofficial practice tests** (not actual AWS exams)
+> - They do **NOT contain actual exam questions** from the AWS certification exam
+> - All content is for **educational purposes** and complies with AWS certification policies
+> - These are learning materials created from **legitimate, paid practice test providers**
+
 ---
 
 ## 🎯 **START HERE**
