@@ -539,13 +539,609 @@ Glacier Deep Archive      | 12-48 hours    | Lowest storage cost
 - [Module 04: Storage - Glacier](../04-Storage/README.md#glacier)
 - [Module 13: Cost Optimization - Storage](../13-Cost-Optimization/README.md#storage-costs)
 
-##### 2. EC2 Pricing Models ⚠️
-**Topics to review:**
-- Savings Plans vs Reserved Instances
-- Spot Instances strategies
-- On-Demand Capacity Reservations
+---
+
+### Priority 3: Design Cost-Optimized Architectures (86% - 2 incorrect)
+
+#### Key Topics That Need Review:
+
+##### 1. S3 Glacier Retrieval Costs ⚠️
+**Common Mistake:** Choosing Instant Retrieval for cost optimization
+
+**S3 Glacier Cost Comparison:**
+```
+Storage Class              | Retrieval Time | Cost Pattern
+────────────────────────────────────────────────────────────
+Glacier Instant Retrieval  | Milliseconds   | High retrieval cost
+                          |                | No free quota
+                          |                | ❌ Not cost-optimized
+────────────────────────────────────────────────────────────
+Glacier Flexible Retrieval | Minutes-Hours  | 10 GB/month FREE
+                          |                | Low cost after quota
+                          |                | ✅ Best for occasional access
+────────────────────────────────────────────────────────────
+Glacier Deep Archive      | 12-48 hours    | Lowest storage cost
+                          |                | Bulk: $0.0025/GB retrieval
+                          |                | Best for long-term archive
+```
+
+**Cost Optimization Strategy:**
+- **Unpredictable access:** Flexible Retrieval (use free 10 GB quota)
+- **Rare access (< 1x/year):** Deep Archive
+- **Millisecond access needed:** Instant Retrieval (but expensive)
+
+---
+
+### 📖 DETAILED EXPLANATIONS FOR PRIORITY 3 WEAKNESSES
+
+---
+
+#### ❌ 1. S3 Glacier Retrieval Cost Optimization (Detailed Analysis)
+
+**📋 SCENARIO:**
+Your company stores 100 TB of compliance logs in S3 that are accessed 5-10 times per year (unpredictable). Each retrieval is typically 50 GB. You need to minimize costs while meeting regulatory requirements for 24-hour retrieval time.
+
+**Common Wrong Answer:** ❌ S3 Glacier Instant Retrieval
+**Correct Answer:** ✅ **S3 Glacier Flexible Retrieval**
+
+**🔍 DEEP DIVE EXPLANATION:**
+
+**Complete S3 Glacier Storage Classes:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│         S3 GLACIER STORAGE CLASSES COMPARISON               │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  S3 Glacier Instant Retrieval                               │
+│  ┌────────────────────────────────────────┐                │
+│  │ Retrieval: Milliseconds                │                │
+│  │ Storage: $0.004/GB-month               │                │
+│  │ Retrieval: $0.03/GB (NO FREE QUOTA)    │                │
+│  │ Minimum: 128 KB object size            │                │
+│  │ Use Case: Rarely accessed, need instant│                │
+│  │ Example: Medical imaging archives      │                │
+│  │ ❌ NOT cost-optimized for unknown access│               │
+│  └────────────────────────────────────────┘                │
+│              ↓ More cost-effective                          │
+│  S3 Glacier Flexible Retrieval (formerly Glacier)          │
+│  ┌────────────────────────────────────────┐                │
+│  │ Retrieval:                             │                │
+│  │   - Expedited: 1-5 minutes             │                │
+│  │   - Standard: 3-5 hours                │                │
+│  │   - Bulk: 5-12 hours (FREE 10GB/month)│ ← BEST CHOICE  │
+│  │ Storage: $0.0036/GB-month              │                │
+│  │ Retrieval:                             │                │
+│  │   - Expedited: $0.03/GB + $0.01/request│               │
+│  │   - Standard: $0.01/GB + $0.03/1000 req│               │
+│  │   - Bulk: FREE first 10GB/month        │                │
+│  │ Minimum: 90 days storage               │                │
+│  │ Use Case: ✅ YOUR SCENARIO (unpredictable)│            │
+│  └────────────────────────────────────────┘                │
+│              ↓ Lowest cost                                  │
+│  S3 Glacier Deep Archive                                    │
+│  ┌────────────────────────────────────────┐                │
+│  │ Retrieval:                             │                │
+│  │   - Standard: 12 hours                 │                │
+│  │   - Bulk: 48 hours                     │                │
+│  │ Storage: $0.00099/GB-month (cheapest!) │                │
+│  │ Retrieval:                             │                │
+│  │   - Standard: $0.02/GB                 │                │
+│  │   - Bulk: $0.0025/GB                   │                │
+│  │ Minimum: 180 days storage              │                │
+│  │ Use Case: Long-term archival (7-10 yrs)│               │
+│  │ Example: Regulatory archives           │                │
+│  └────────────────────────────────────────┘                │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Cost Calculation Example (Your Scenario):**
+
+```
+Scenario: 100 TB data, 5-10 retrievals/year, 50 GB each
+
+Option 1: S3 Glacier Instant Retrieval ❌
+┌────────────────────────────────────────────────────────────┐
+│  Storage Cost:                                             │
+│    100 TB × 1024 GB/TB × $0.004/GB = $409.60/month        │
+│    Annual: $409.60 × 12 = $4,915.20                        │
+│                                                             │
+│  Retrieval Cost (10 times × 50 GB):                       │
+│    10 × 50 GB × $0.03/GB = $15.00/year                     │
+│                                                             │
+│  Total Annual Cost: $4,915.20 + $15.00 = $4,930.20        │
+│                                                             │
+│  ❌ HIGH storage cost for infrequent access                │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+
+Option 2: S3 Glacier Flexible Retrieval ✅
+┌────────────────────────────────────────────────────────────┐
+│  Storage Cost:                                             │
+│    100 TB × 1024 GB/TB × $0.0036/GB = $368.64/month       │
+│    Annual: $368.64 × 12 = $4,423.68                        │
+│                                                             │
+│  Retrieval Cost (10 times × 50 GB, Standard):             │
+│    10 × 50 GB × $0.01/GB = $5.00/year                      │
+│    OR use Bulk (first 10 GB/month FREE):                  │
+│    10 × (50 GB - 10 GB free) × $0 = $0/year               │
+│                                                             │
+│  Total Annual Cost: $4,423.68 + $5.00 = $4,428.68         │
+│  OR with Bulk FREE: $4,423.68                              │
+│                                                             │
+│  ✅ Savings: $501.52/year vs Instant Retrieval            │
+│  ✅ Meets 24-hour requirement (Standard: 3-5 hours)       │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+
+Option 3: S3 Glacier Deep Archive
+┌────────────────────────────────────────────────────────────┐
+│  Storage Cost:                                             │
+│    100 TB × 1024 GB/TB × $0.00099/GB = $101.38/month      │
+│    Annual: $101.38 × 12 = $1,216.51                        │
+│                                                             │
+│  Retrieval Cost (10 times × 50 GB, Standard 12h):        │
+│    10 × 50 GB × $0.02/GB = $10.00/year                     │
+│    OR Bulk (48 hours):                                     │
+│    10 × 50 GB × $0.0025/GB = $1.25/year                    │
+│                                                             │
+│  Total Annual Cost: $1,216.51 + $10.00 = $1,226.51        │
+│                                                             │
+│  ✅ CHEAPEST option                                        │
+│  ⚠️  But: 12-48 hour retrieval (slower than requirement)  │
+│  Use if 24-hour SLA can extend to 48 hours                │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+
+💡 RECOMMENDATION: Glacier Flexible Retrieval
+   - Best balance of cost ($4,428/year) and retrieval time (3-5 hours)
+   - Use Bulk retrieval tier for FREE 10 GB/month quota
+   - Meets 24-hour regulatory requirement
+```
+
+**Glacier Flexible Retrieval Tiers Explained:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│     GLACIER FLEXIBLE RETRIEVAL TIERS                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1️⃣  Expedited (1-5 minutes):                               │
+│     ┌──────────────────────────────────┐                   │
+│     │ Cost: $0.03/GB + $0.01/request   │                   │
+│     │ Use: Emergency access needed     │                   │
+│     │ Example: Legal request           │                   │
+│     │ Limit: 250 MB max object size    │                   │
+│     └──────────────────────────────────┘                   │
+│                                                              │
+│  2️⃣  Standard (3-5 hours):                                  │
+│     ┌──────────────────────────────────┐                   │
+│     │ Cost: $0.01/GB + $0.03/1000 req  │                   │
+│     │ Use: Regular planned access      │ ← MOST COMMON     │
+│     │ Example: Quarterly audit         │                   │
+│     │ Reliable: Consistent timing      │                   │
+│     └──────────────────────────────────┘                   │
+│                                                              │
+│  3️⃣  Bulk (5-12 hours):                                     │
+│     ┌──────────────────────────────────┐                   │
+│     │ Cost: FREE first 10 GB/month     │ ← FREE TIER!      │
+│     │ Then: $0.0025/GB                 │                   │
+│     │ Use: Large datasets, no rush    │                   │
+│     │ Example: Year-end compliance     │                   │
+│     │ Best for: Cost optimization      │                   │
+│     └──────────────────────────────────┘                   │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Lifecycle Policy for Automatic Transition:**
+
+```yaml
+# Automatically transition to Glacier after 90 days
+{
+  "Rules": [
+    {
+      "Id": "Compliance-Log-Lifecycle",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": "logs/compliance/"
+      },
+      "Transitions": [
+        {
+          "Days": 90,
+          "StorageClass": "GLACIER_IR"  # Instant Retrieval
+        },
+        {
+          "Days": 365,
+          "StorageClass": "GLACIER"  # Flexible Retrieval (best choice)
+        },
+        {
+          "Days": 2555,  # 7 years
+          "StorageClass": "DEEP_ARCHIVE"
+        }
+      ],
+      "Expiration": {
+        "Days": 3650  # 10 years retention
+      }
+    }
+  ]
+}
+```
+
+**Common Exam Traps:**
+
+```
+Trap 1: "Instant = Better"
+  ❌ WRONG: Instant Retrieval is MORE expensive
+  ✅ RIGHT: Flexible Retrieval is MORE cost-optimized
+
+Trap 2: "Need millisecond access"
+  ❌ WRONG: Choose Instant if requirement says "occasionally accessed"
+  ✅ RIGHT: Occasionally = Flexible Retrieval with Standard tier
+
+Trap 3: "Confusing Glacier options"
+  Instant Retrieval ≠ Flexible Retrieval Expedited
+  Instant: Storage class (always milliseconds)
+  Expedited: Retrieval tier for Flexible (1-5 minutes)
+
+Trap 4: "Ignoring FREE tier"
+  ❌ WRONG: Overlooking Bulk's free 10 GB/month
+  ✅ RIGHT: Use Bulk tier for predictable cost savings
+```
+
+**Decision Tree:**
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  How often do you access data?                             │
+│         ↓                                                   │
+│  ┌──────────────────────────────────────────────┐         │
+│  │ Once per quarter or less (rare)              │         │
+│  │         ↓                                     │         │
+│  │   Need instant access?                       │         │
+│  │   ├─ Yes → Glacier Instant Retrieval         │         │
+│  │   └─ No, can wait hours?                     │         │
+│  │       ├─ 3-5 hours OK → Flexible (Standard)  │ ← YOU   │
+│  │       └─ 12-48 hours OK → Deep Archive       │         │
+│  └──────────────────────────────────────────────┘         │
+│                                                             │
+│  ┌──────────────────────────────────────────────┐         │
+│  │ Once per month (frequent)                    │         │
+│  │         ↓                                     │         │
+│  │   S3 Standard-IA or Intelligent-Tiering      │         │
+│  └──────────────────────────────────────────────┘         │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+```
+
+**💡 KEY TAKEAWAY:**
+- **Glacier Instant Retrieval** = High cost, millisecond access (rarely cost-optimized)
+- **Glacier Flexible Retrieval** = BEST for unpredictable access patterns + FREE Bulk tier
+- **Glacier Deep Archive** = Cheapest storage, longest retrieval (12-48 hours)
+
+**📝 EXAM TIP:**
+When question says "cost-optimized" + "occasional/unpredictable access" + "can tolerate hours," always choose **Glacier Flexible Retrieval with Standard or Bulk tier**, NOT Instant Retrieval.
+
+---
+
+#### ❌ 2. EC2 Pricing Models for Cost Optimization
+
+**📋 SCENARIO:**
+Your application runs 24/7 on m5.2xlarge instances. The workload is steady and predictable for the next 3 years. You want to minimize costs. Which pricing model should you use?
+
+**Common Wrong Answers:**
+- ❌ Compute Savings Plans (less flexible)
+- ❌ Spot Instances (not for 24/7 predictable workloads)
+- ❌ On-Demand (no commitment discount)
+
+**Correct Answer:** ✅ **EC2 Instance Savings Plans or Standard Reserved Instances**
+
+**🔍 DEEP DIVE EXPLANATION:**
+
+**Complete EC2 Pricing Model Comparison:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│         EC2 PRICING MODELS COMPARISON                       │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1️⃣  On-Demand (Pay-as-you-go)                              │
+│     ┌──────────────────────────────────────┐               │
+│     │ Cost: $0.384/hour (m5.2xlarge)       │               │
+│     │ Discount: 0% (baseline)              │               │
+│     │ Commitment: None                     │               │
+│     │ Flexibility: Full                    │               │
+│     │ Use: Variable workloads, testing     │               │
+│     │ Annual: $3,364 (24/7/365)            │               │
+│     └──────────────────────────────────────┘               │
+│                                                              │
+│  2️⃣  Reserved Instances (1 or 3 year)                       │
+│     ┌──────────────────────────────────────┐               │
+│     │ Standard RI (3-year, All Upfront):   │               │
+│     │   Discount: Up to 72%                │ ← BEST SAVINGS│
+│     │   Cost: $0.107/hour (m5.2xlarge)     │               │
+│     │   Annual: $938                        │               │
+│     │   Savings: $2,426/year vs On-Demand │               │
+│     │   Flexibility: Region + instance type│               │
+│     │   Can sell on RI Marketplace         │               │
+│     │                                       │               │
+│     │ Convertible RI (3-year):             │               │
+│     │   Discount: Up to 66%                │               │
+│     │   Can change instance family         │               │
+│     │   More flexible, less discount       │               │
+│     └──────────────────────────────────────┘               │
+│                                                              │
+│  3️⃣  Savings Plans (1 or 3 year)                            │
+│     ┌──────────────────────────────────────┐               │
+│     │ Compute Savings Plans:               │               │
+│     │   Discount: Up to 66%                │               │
+│     │   Flexibility: Any instance type,    │               │
+│     │                region, OS, tenancy    │               │
+│     │   Commitment: $/hour compute         │               │
+│     │   Use: Flexible workloads            │               │
+│     │                                       │               │
+│     │ EC2 Instance Savings Plans:          │               │
+│     │   Discount: Up to 72%                │ ← BEST FOR YOU│
+│     │   Flexibility: Instance family +     │               │
+│     │                region (any size)      │               │
+│     │   Commitment: $/hour for EC2         │               │
+│     │   Use: ✅ YOUR SCENARIO (m5 family)  │               │
+│     └──────────────────────────────────────┘               │
+│                                                              │
+│  4️⃣  Spot Instances                                          │
+│     ┌──────────────────────────────────────┐               │
+│     │ Discount: Up to 90%                  │               │
+│     │ Risk: Can be interrupted (2-min warn)│               │
+│     │ Use: Fault-tolerant, stateless       │               │
+│     │ ❌ NOT for 24/7 critical workloads   │               │
+│     └──────────────────────────────────────┘               │
+│                                                              │
+│  5️⃣  Dedicated Hosts                                         │
+│     ┌──────────────────────────────────────┐               │
+│     │ Cost: Highest (full host)            │               │
+│     │ Use: Licensing, compliance           │               │
+│     │ Can use RI for additional savings    │               │
+│     └──────────────────────────────────────┘               │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Cost Comparison (m5.2xlarge, 24/7 for 3 years):**
+
+```
+Pricing Model Comparison:
+┌────────────────────────────────────────────────────────────┐
+│                                                             │
+│  On-Demand:                                                │
+│    $0.384/hour × 8,760 hours/year × 3 years = $10,095     │
+│    Discount: 0%                                            │
+│                                                             │
+│  Standard RI (3-year, All Upfront):                        │
+│    Upfront: $2,814                                         │
+│    Hourly: $0 (paid upfront)                               │
+│    Total 3-year: $2,814                                    │
+│    Discount: 72% ✅                                        │
+│    Savings: $7,281 vs On-Demand                            │
+│                                                             │
+│  EC2 Instance Savings Plan (3-year, All Upfront):         │
+│    Similar to Standard RI                                  │
+│    Total 3-year: ~$2,900                                   │
+│    Discount: ~71%                                          │
+│    Flexibility: Can change instance size within family     │
+│                                                             │
+│  Compute Savings Plan (3-year):                            │
+│    Total 3-year: ~$3,200                                   │
+│    Discount: ~66%                                          │
+│    Flexibility: Can change to ANY instance type            │
+│                                                             │
+│  Spot Instances:                                           │
+│    ~$0.115/hour (70% off, varies by AZ)                    │
+│    Total if no interruptions: ~$3,029                      │
+│    ❌ Risk: Frequent interruptions for 24/7 workload      │
+│    ❌ Not recommended for critical production              │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+
+💡 BEST CHOICE: Standard RI or EC2 Instance Savings Plan
+   - Maximum discount (71-72%)
+   - No interruption risk
+   - Predictable costs
+```
+
+**Savings Plans vs Reserved Instances:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│     SAVINGS PLANS vs RESERVED INSTANCES                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Reserved Instances (Traditional):                          │
+│  ┌────────────────────────────────────────┐                │
+│  │ Purchase: Specific instance type        │                │
+│  │   Example: m5.2xlarge in us-east-1     │                │
+│  │                                          │                │
+│  │ Flexibility:                            │                │
+│  │   ✅ Can change AZ within region        │                │
+│  │   ✅ Can change instance size (m5.2xl→m5.4xl)            │
+│  │   ❌ Cannot change family (m5 → c5)     │                │
+│  │   ❌ Cannot change region               │                │
+│  │                                          │                │
+│  │ Marketplace: ✅ Can sell unused RIs     │                │
+│  │ Best for: Specific known workload       │                │
+│  └────────────────────────────────────────┘                │
+│                                                              │
+│  Savings Plans (Newer):                                    │
+│  ┌────────────────────────────────────────┐                │
+│  │ Commitment: $/hour compute spend        │                │
+│  │   Example: $10/hour for 3 years        │                │
+│  │                                          │                │
+│  │ EC2 Instance Savings Plans:             │                │
+│  │   ✅ Any size in instance family        │                │
+│  │   ✅ Any region                          │                │
+│  │   ✅ Any OS, tenancy                     │                │
+│  │   ❌ Must stay in same family (m5)      │                │
+│  │                                          │                │
+│  │ Compute Savings Plans:                  │                │
+│  │   ✅ ANY instance type (m5, c5, r5...)  │                │
+│  │   ✅ ANY region                          │                │
+│  │   ✅ Covers Lambda, Fargate too          │                │
+│  │   ❌ Lower discount than EC2 SP         │                │
+│  │                                          │                │
+│  │ Marketplace: ❌ Cannot sell             │                │
+│  │ Best for: Flexible workloads            │                │
+│  └────────────────────────────────────────┘                │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Payment Options:**
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  1️⃣  All Upfront (Maximum discount)                        │
+│     Pay everything at purchase                             │
+│     No hourly charges                                      │
+│     Example: $2,814 upfront, $0/hour                       │
+│     Discount: 72%                                          │
+│                                                             │
+│  2️⃣  Partial Upfront (Medium discount)                     │
+│     Pay part upfront, rest monthly                         │
+│     Example: $1,500 upfront, $0.05/hour                    │
+│     Discount: ~65%                                         │
+│                                                             │
+│  3️⃣  No Upfront (Lowest discount)                          │
+│     Pay monthly only                                       │
+│     Example: $0 upfront, $0.107/hour                       │
+│     Discount: ~60%                                         │
+│     Best for: Limited capital                              │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Spot Instance Strategy (Advanced):**
+
+```
+Spot Instances for Cost Optimization:
+┌────────────────────────────────────────────────────────────┐
+│  When to Use Spot:                                         │
+│    ✅ Batch processing                                      │
+│    ✅ Data analysis                                         │
+│    ✅ CI/CD workers                                         │
+│    ✅ Stateless web servers (with Auto Scaling)            │
+│    ✅ ML training                                           │
+│                                                             │
+│  When NOT to use Spot:                                     │
+│    ❌ Databases                                             │
+│    ❌ Critical production without redundancy                │
+│    ❌ Long-running stateful applications                    │
+│    ❌ Your 24/7 predictable workload scenario              │
+│                                                             │
+│  Spot Best Practices:                                      │
+│    1. Diversify instance types (EC2 Fleet)                │
+│    2. Use Spot placement scores                            │
+│    3. Handle interruptions gracefully                      │
+│    4. Use Spot capacity rebalancing                        │
+│    5. Mix with On-Demand for stability                     │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Decision Matrix:**
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  Choose pricing model based on workload:                   │
+│                                                             │
+│  Steady, predictable, 1-3 years:                           │
+│    → Reserved Instances or Savings Plans ✅                │
+│      (Your scenario)                                       │
+│                                                             │
+│  Flexible, may change instance types:                      │
+│    → Compute Savings Plans                                 │
+│                                                             │
+│  Specific family, may change sizes/regions:                │
+│    → EC2 Instance Savings Plans                            │
+│                                                             │
+│  Variable, unpredictable:                                  │
+│    → On-Demand                                             │
+│                                                             │
+│  Fault-tolerant, interruptible:                            │
+│    → Spot Instances (70-90% savings!)                      │
+│                                                             │
+│  Short-term test/dev:                                      │
+│    → On-Demand                                             │
+│                                                             │
+│  License requirements (BYOL):                              │
+│    → Dedicated Hosts with RI                               │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Common Exam Scenarios:**
+
+```
+Scenario 1: 24/7 production, 3 years
+  Answer: Standard RI or EC2 Instance Savings Plan
+
+Scenario 2: Batch processing, interruptible
+  Answer: Spot Instances
+
+Scenario 3: May migrate to different instance family
+  Answer: Compute Savings Plans
+
+Scenario 4: Database server, 1-year commitment
+  Answer: 1-year Reserved Instance (Standard)
+
+Scenario 5: Development environment, 8AM-6PM weekdays
+  Answer: On-Demand + Instance Scheduler
+
+Scenario 6: ML training workload, can handle interruptions
+  Answer: Spot Instances
+
+Scenario 7: Unpredictable traffic, may scale
+  Answer: On-Demand + Auto Scaling (+ Savings Plan for baseline)
+```
+
+**Capacity Reservations (Bonus):**
+
+```
+On-Demand Capacity Reservations:
+┌────────────────────────────────────────────────────────────┐
+│  Purpose: Reserve capacity without commitment              │
+│                                                             │
+│  Use Cases:                                                │
+│    • Disaster recovery (reserve capacity, don't launch)   │
+│    • Regulatory requirements (guaranteed capacity)         │
+│    • Event-driven (Black Friday, tax season)              │
+│                                                             │
+│  Cost:                                                     │
+│    • Pay On-Demand rates whether you use it or not        │
+│    • Can combine with RIs/Savings Plans for discount      │
+│                                                             │
+│  Example:                                                  │
+│    Reserve 100 m5.large instances in us-east-1a           │
+│    Cost: $0.096/hour × 100 = $9.60/hour                   │
+│    Charged even if not running instances                   │
+│    But: Guaranteed capacity when needed                    │
+│                                                             │
+└────────────────────────────────────────────────────────────┘
+```
+
+**💡 KEY TAKEAWAY:**
+- **Steady 24/7 workloads** = Reserved Instances or Savings Plans (up to 72% savings)
+- **Flexible workloads** = Compute Savings Plans (66% savings, full flexibility)
+- **Interruptible workloads** = Spot Instances (90% savings, but can be terminated)
+- **Unpredictable** = On-Demand (0% savings, full flexibility)
+
+**📝 EXAM TIP:**
+When question mentions "steady," "predictable," and "3 years," always choose **Reserved Instances or EC2 Instance Savings Plans**, NOT On-Demand or Spot.
+
+---
 
 **Study Resources:**
+- [Module 04: Storage - Glacier](../04-Storage/README.md#glacier)
+- [Module 13: Cost Optimization - Storage](../13-Cost-Optimization/README.md#storage-costs)
 - [Module 03: Compute - Pricing](../03-Compute/README.md#ec2-pricing)
 - [Module 13: Cost Optimization - Compute](../13-Cost-Optimization/README.md)
 

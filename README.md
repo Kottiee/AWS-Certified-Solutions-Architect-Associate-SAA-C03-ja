@@ -173,7 +173,7 @@ All 14 modules are complete with multiple learning formats:
 | [📇 Flashcards](FLASHCARDS.md) | 30-60 min | Quick review cards | Final review |
 | [🔍 Quick Reference](QUICK-REFERENCE.md) | 15 min | Service lookup table | Quick facts |
 | [📅 Study Roadmap](STUDY-ROADMAP.md) | - | 8-week study plan | Planning |
-| [📝 Exam Reviews](exam-reviews/README.md) | - | Practice test analysis | Track progress |
+| [📝 Exam Reviews](exam-reviews/COMPLETE-EXAM-REVIEW.md) | - | Practice test analysis | Track progress |
 
 ---
 
