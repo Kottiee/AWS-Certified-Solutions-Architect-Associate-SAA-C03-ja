@@ -19,13 +19,13 @@ ARCHIVAL? → S3 Glacier (long-term backup)
 ### S3 Storage Classes (試験最重要!)
 | Class | Retrieval | Availability | Min Duration | 用途 | Cost |
 |-------|-----------|--------------|--------------|----------|------|
-| **Standard** | Instant | 99.99% | なしne | Frequently accessed | $$$$ |
-| **Intelligent-Tiering** | Instant | 99.9% | 30 days | Unknown access | $$$ |
-| **Standard-IA** | Instant | 99.9% | 30 days | Infrequent access | $$ |
-| **One Zone-IA** | Instant | 99.5% | 30 days | なしn-critical, infrequent | $ |
-| **Glacier Instant** | Instant | 99.9% | 90 days | Archive, instant access | $ |
-| **Glacier 柔軟** | Min-Hours | 99.99% | 90 days | Archive, rare access | $ |
-| **Glacier Deep** | 12 hours | 99.99% | 180 days | Long-term archive | $ |
+| **Standard** | Instant | 99.99% | なし | 頻繁にアクセスされるデータ | $$$$ |
+| **Intelligent-Tiering** | Instant | 99.9% | 30日 | アクセスパターン不明 | $$$ |
+| **Standard-IA** | Instant | 99.9% | 30日 | アクセス頻度が低いデータ | $$ |
+| **One Zone-IA** | Instant | 99.5% | 30日 | 非重要・低頻度アクセス | $ |
+| **Glacier Instant** | Instant | 99.9% | 90日 | アーカイブ・即時取得 | $ |
+| **Glacier Flexible** | 分〜時間 | 99.99% | 90日 | アーカイブ・まれにアクセス | $ |
+| **Glacier Deep** | 12時間 | 99.99% | 180日 | 長期アーカイブ | $ |
 
 **記憶法**: "SISO-GGG" = Standard, Intelligent, Standard-IA, One Zone-IA, Glacier x3
 
@@ -139,7 +139,7 @@ ALL OPERATIONS: Consistent since Dec 2020
 - Lowercase のみ
 - なし uppercase, no underscores
 - Must start with letter or number
-- グローバルly unique
+- グローバルに一意である必要がある
 
 ### S3 Object Key = Full Path
 ```
@@ -245,16 +245,16 @@ Delete incomplete multipart uploads after 7 days
 ### 避けるべきよくあるミス
 ❌ Using EBS for shared storage (use EFS)
 ❌ Forgetting EBS is single AZ
-❌ なしt using lifecycle policies for cost savings
+❌ コスト削減のためのライフサイクルポリシーを設定しない
 ❌ Choosing wrong S3 storage class
 ❌ Forgetting to enable versioning before replication
 ❌ Using Standard for infrequently accessed data
 ❌ Instance Store for persistent data (it's ephemeral!)
-❌ なしt encrypting sensitive data
+❌ 機密データを暗号化しない
 
 ## 🎯 試験練習スピードラン
 
-**Quick 質問s**（答えは下）
+**クイック問題**（答えは下）
 
 1. 最大 S3 object size? __
 2. Which EBS type for 50,000 IOPS? __
@@ -305,7 +305,7 @@ Delete incomplete multipart uploads after 7 days
 
 ---
 
-**Quick 答えs**: 
+**クイック解答**:
 1) 5 TB
 2) io2 or io1 (Provisioned IOPS SSD)
 3) なし (Linux のみ)

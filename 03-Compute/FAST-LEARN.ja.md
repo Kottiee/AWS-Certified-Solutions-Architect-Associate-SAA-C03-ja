@@ -33,11 +33,11 @@ NEED LOAD BALANCE? → ALB/NLB/GWLB
 ### EC2料金モデル (OSRSD)
 | Model | Discount | Commitment | 用途 | Interruption |
 |-------|----------|------------|----------|--------------|
-| **O**n-Demand | 0% | なしne | 短期・予測困難 | なし |
-| **S**pot | Up to 90% | なしne | 耐障害性あり | あり (2分 notice) |
-| **R**eserved | Up to 72% | 1-3 years | 常時稼働 | なし |
-| **S**avings Plans | Up to 66% | 1-3 years | 柔軟 | なし |
-| **D**edicated | 0% | なしne/1-3 yr | Compliance, licensing | なし |
+| **O**n-Demand | 0% | なし | 短期・予測困難 | なし |
+| **S**pot | 最大90% | なし | 耐障害性ワークロード | あり（2分前通知） |
+| **R**eserved | 最大72% | 1〜3年 | 常時稼働 | なし |
+| **S**avings Plans | 最大66% | 1〜3年 | 柔軟なワークロード | なし |
+| **D**edicated | 0% | なし/1〜3年 | コンプライアンス、ライセンス | なし |
 
 ## 🔥 試験頻出トピック
 
@@ -135,7 +135,7 @@ METADATA (Instance info)
 ### Auto Scalingの重要概念
 - **Min**: Minimum instances (always running)
 - **Desired**: Current target
-- **最大**: 最大imum instances (cost limit)
+- **最大**: 最大インスタンス数（コスト上限）
 - **Cooldown**: Wait period (デフォルト 300s)
 - **Health Check**: EC2 status or ELB health
 
@@ -164,7 +164,7 @@ METADATA (Instance info)
 ### Container Services 使い分け
 | Service | Management | 用途 |
 |---------|------------|----------|
-| **ECS** | AWS-native | AWS-のみ containers |
+| **ECS** | AWS-native | AWSネイティブコンテナ |
 | **EKS** | Kubernetes | K8s compatibility |
 | **Fargate** | Serverless | サーバー管理不要 |
 
@@ -183,17 +183,17 @@ METADATA (Instance info)
 
 ### Compute意思決定ツリー
 ```
-1. サーバーが必要か？ 
-   NO → Lambda (if < 15分) or Fargate
-   あり → Continue
-   
+1. サーバーが必要か？
+   不要 → Lambda（15分以内）または Fargate
+   必要 → 次へ
+
 2. 24/7で常時稼働か？
-   あり → Reserved Instances
-   NO → Continue
-   
+   はい → Reserved Instances
+   いいえ → 次へ
+
 3. 中断を許容できるか？
-   あり → Spot Instances
-   NO → On-Demand
+   はい → Spot Instances
+   いいえ → On-Demand
    
 4. ロードバランサーが必要か？
    HTTP/HTTPS → ALB
@@ -210,7 +210,7 @@ METADATA (Instance info)
 
 ### 避けるべきよくあるミス
 ❌ Using On-Demand for steady workloads (use Reserved)
-❌ なしt using Auto Scaling for variable loads
+❌ 変動負荷にAuto Scalingを使用しない
 ❌ Single AZ deployment (no HA)
 ❌ ALB for TCP/UDP (use NLB)
 ❌ Forgetting Spot can be interrupted
@@ -218,7 +218,7 @@ METADATA (Instance info)
 
 ## 🎯 試験練習スピードラン
 
-**Quick 質問s**（答えは下）
+**クイック問題**（答えは下）
 
 1. Lambdaの最大タイムアウトは？ __
 2. マイクロサービスに最適なLBは？ __
@@ -262,7 +262,7 @@ EBS (Persistent)
 
 ---
 
-**Quick 答えs**: 
+**クイック解答**:
 1) 15 分
 2) ALB (Application Load Balancer)
 3) Spot Instances (up to 90% off)

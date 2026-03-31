@@ -39,7 +39,7 @@ DOCUMENT? → DocumentDB (MongoDB compatible)
 | **Read Replicas** | Up to 5 | Up to 15 | N/A |
 | **Scaling** | Vertical | Vertical + Horizontal | Horizontal (auto) |
 | **Performance** | Standard | 5x MySQL, 3x PostgreSQL | Milliseconds |
-| **Maintenance** | Some required | Minimal | なしne |
+| **Maintenance** | 要対応 | 最小限 | なし |
 | **Cost** | $$ | $$$ | $ (pay per use) |
 
 ## 🔥 試験頻出トピック
@@ -180,7 +180,7 @@ STRONGLY CONSISTENT READS
 ```
 VERTICAL SCALING
 └── Change instance type
-└── Requires downtime (Multi-AZ分imizes)
+└── ダウンタイムが必要（Multi-AZで最小化）
 └── Use: More CPU/RAM needed
 
 HORIZONTAL SCALING (Reads)
@@ -267,17 +267,17 @@ STORAGE SCALING
 
 ### 避けるべきよくあるミス
 ❌ Using Multi-AZ for read scaling (use Read Replicas)
-❌ なしt enabling automated backups
+❌ 自動バックアップを有効化しない
 ❌ Choosing wrong DynamoDB partition key (hot partitions)
 ❌ Using Redshift for OLTP (it's for OLAP)
 ❌ Forgetting Aurora is MySQL/PostgreSQL compatible のみ
-❌ なしt using ElastiCache for repeated queries
+❌ 繰り返しクエリにElastiCacheを使用しない
 ❌ Thinking Multi-AZ standby is readable (it's not!)
 ❌ Using provisioned capacity for unpredictable DynamoDB traffic
 
 ## 🎯 試験練習スピードラン
 
-**Quick 質問s**（答えは下）
+**クイック問題**（答えは下）
 
 1. 最大 Read Replicas for Aurora? __
 2. Is Multi-AZ standby readable? __
@@ -326,7 +326,7 @@ ENCRYPTION IN TRANSIT
 
 ---
 
-**Quick 答えs**: 
+**クイック解答**:
 1) 15
 2) なし (のみ in failover)
 3) Eventually consistent & Strongly consistent

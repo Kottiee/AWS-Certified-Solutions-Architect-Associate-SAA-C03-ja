@@ -15,7 +15,7 @@ SECURITY GROUPS → Instance-level firewall (stateful)
 NACLs → Subnet-level firewall (stateless)
 ```
 
-**記憶法**: "VPC Secures Internet Networks グローバルly"
+**記憶法**: "VPC Secures Internet Networks Globally"
 
 ## 📊 クイックリファレンステーブル
 
@@ -25,8 +25,8 @@ NACLs → Subnet-level firewall (stateless)
 | **Security Group** | Instance | Stateful | Deny all inbound | Allow のみ |
 | **NACL** | Subnet | Stateless | Allow all | Allow & Deny |
 | **Route Table** | Subnet | N/A | Local routes | Routes のみ |
-| **Internet Gateway** | VPC | N/A | なしne | All traffic |
-| **NAT Gateway** | AZ | N/A | なしne | Outbound のみ |
+| **Internet Gateway** | VPC | N/A | なし | すべてのトラフィック |
+| **NAT Gateway** | AZ | N/A | なし | アウトバウンドのみ |
 
 ### Security Group vs NACL (Critical!)
 | Feature | Security Group | NACL |
@@ -72,10 +72,10 @@ PUBLIC SUBNET
 └── Internet accessible
 
 PRIVATE SUBNET
-├── なし direct route to Internet Gateway
-├── Uses NAT Gateway for outbound internet
-├── Use: Databases, app servers
-└── なしt directly accessible from internet
+├── Internet Gatewayへの直接ルートなし
+├── アウトバウンドインターネットにはNAT Gatewayを使用
+├── 用途: データベース、アプリサーバー
+└── インターネットから直接アクセス不可
 ```
 
 **Key**: Route table determines public vs private!
@@ -232,7 +232,7 @@ GATEWAY ENDPOINT
 ### Direct Connect
 - **Speed**: 1 Gbps, 10 Gbps, 100 Gbps
 - **Setup Time**: Weeks to months
-- **Encryption**: なしt encrypted (use VPN over DX)
+- **Encryption**: 暗号化なし（VPN over DXを使用）
 - **用途**: Consistent, high-throughput
 - **Virtual Interfaces**: Public VIF, Private VIF, Transit VIF
 
@@ -281,11 +281,11 @@ GATEWAY ENDPOINT
 ❌ Overlapping CIDR blocks for peering
 ❌ Only outbound rules in NACL (it's stateless!)
 ❌ Using Security Groups to deny (use NACL)
-❌ なしt using VPC endpoints for S3/DynamoDB (costs!)
+❌ S3/DynamoDBにVPCエンドポイントを使用しない（コスト増）
 
 ## 🎯 試験練習スピードラン
 
-**Quick 質問s**（答えは下）
+**クイック問題**（答えは下）
 
 1. How many IPs reserved per subnet? __
 2. Security Groups are stateful or stateless? __
@@ -298,14 +298,14 @@ GATEWAY ENDPOINT
 
 ---
 
-### グローバル Accelerator vs CloudFront
-| Feature | CloudFront | グローバル Accelerator |
+### Global Accelerator vs CloudFront
+| 機能 | CloudFront | Global Accelerator |
 |---------|------------|-------------------|
-| **目的** | Cache content | Route to optimal endpoint |
-| **用途** | Static/dynamic content | なしn-HTTP (TCP/UDP) |
-| **Caching** | Yes | なし |
-| **IPs** | Changes | Static (2 Anycast) |
-| **Protocols** | HTTP/HTTPS | Any (TCP/UDP) |
+| **目的** | コンテンツのキャッシュ | 最適なエンドポイントへのルーティング |
+| **用途** | 静的/動的コンテンツ | 非HTTP（TCP/UDP） |
+| **キャッシュ** | あり | なし |
+| **IP** | 変動 | 静的（2つのAnycast） |
+| **プロトコル** | HTTP/HTTPS | すべて（TCP/UDP） |
 
 ### Elastic IP Facts
 - Static public IPv4 address
@@ -323,10 +323,10 @@ GATEWAY ENDPOINT
 
 ---
 
-**Quick 答えs**: 
-1) 5 (first 4 + last 1)
-2) Stateful
-3) なし (のみ allow)
+**クイック解答**:
+1) 5（先頭4つ + 末尾1つ）
+2) ステートフル
+3) なし（許可のみ）
 4) /16 (65,536 IPs)
 5) Gateway endpoint (S3/DynamoDB)
 6) なし
