@@ -1,8 +1,8 @@
 # ⚡ Fast Learning - Storage Services
 
-> **Time to Complete**: 60-75 minutes | **Exam Weight**: ~15-20%
+> **完了時間**: 60-75 分 | **試験配点**: ~15-20%
 
-## 🎯 Must-Know Concepts (5 Minutes)
+## 🎯 必須理解コンセプト（5分）
 
 ### Storage Service Selector (The SEFI Rule)
 ```
@@ -12,39 +12,39 @@ FILE STORAGE? → EFS/FSx (shared file systems)
 ARCHIVAL? → S3 Glacier (long-term backup)
 ```
 
-**Memory Aid**: "SEF-I store data" = S3, EBS, EFS/FSx, Ice (Glacier)
+**記憶法**: "SEF-I store data" = S3, EBS, EFS/FSx, Ice (Glacier)
 
-## 📊 Quick Reference Tables
+## 📊 クイックリファレンステーブル
 
-### S3 Storage Classes (Critical for Exam!)
-| Class | Retrieval | Availability | Min Duration | Use Case | Cost |
+### S3 Storage Classes (試験最重要!)
+| Class | Retrieval | Availability | Min Duration | 用途 | Cost |
 |-------|-----------|--------------|--------------|----------|------|
-| **Standard** | Instant | 99.99% | None | Frequently accessed | $$$$ |
-| **Intelligent-Tiering** | Instant | 99.9% | 30 days | Unknown access | $$$ |
-| **Standard-IA** | Instant | 99.9% | 30 days | Infrequent access | $$ |
-| **One Zone-IA** | Instant | 99.5% | 30 days | Non-critical, infrequent | $ |
-| **Glacier Instant** | Instant | 99.9% | 90 days | Archive, instant access | $ |
-| **Glacier Flexible** | Min-Hours | 99.99% | 90 days | Archive, rare access | $ |
-| **Glacier Deep** | 12 hours | 99.99% | 180 days | Long-term archive | $ |
+| **Standard** | Instant | 99.99% | なし | 頻繁にアクセスされるデータ | $$$$ |
+| **Intelligent-Tiering** | Instant | 99.9% | 30日 | アクセスパターン不明 | $$$ |
+| **Standard-IA** | Instant | 99.9% | 30日 | アクセス頻度が低いデータ | $$ |
+| **One Zone-IA** | Instant | 99.5% | 30日 | 非重要・低頻度アクセス | $ |
+| **Glacier Instant** | Instant | 99.9% | 90日 | アーカイブ・即時取得 | $ |
+| **Glacier Flexible** | 分〜時間 | 99.99% | 90日 | アーカイブ・まれにアクセス | $ |
+| **Glacier Deep** | 12時間 | 99.99% | 180日 | 長期アーカイブ | $ |
 
-**Memory Aid**: "SISO-GGG" = Standard, Intelligent, Standard-IA, One Zone-IA, Glacier x3
+**記憶法**: "SISO-GGG" = Standard, Intelligent, Standard-IA, One Zone-IA, Glacier x3
 
 ### EBS Volume Types (GISP)
-| Type | Name | IOPS | Throughput | Use Case | Boot? |
+| Type | Name | IOPS | Throughput | 用途 | Boot? |
 |------|------|------|------------|----------|-------|
 | **gp3** | General SSD | 16,000 | 1,000 MB/s | Most workloads | ✅ |
-| **gp2** | General SSD | 16,000 | 250 MB/s | Legacy general | ✅ |
+| **gp2** | General SSD | 16,000 | 250 MB/s | 旧世代 general | ✅ |
 | **io2** | Provisioned SSD | 64,000+ | 1,000 MB/s | Mission-critical DB | ✅ |
-| **io1** | Provisioned SSD | 64,000 | 1,000 MB/s | Legacy high perf | ✅ |
+| **io1** | Provisioned SSD | 64,000 | 1,000 MB/s | 旧世代 high perf | ✅ |
 | **st1** | Throughput HDD | 500 | 500 MB/s | Big data, logs | ❌ |
 | **sc1** | Cold HDD | 250 | 250 MB/s | Infrequent access | ❌ |
 
-**Memory Aid**: "GP = General Purpose, IO = Input/Output intensive, ST = Streaming Throughput, SC = Slow/Cold"
+**記憶法**: "GP = General 目的, IO = Input/Output intensive, ST = Streaming Throughput, SC = Slow/Cold"
 
-## 🔥 Exam Hot Topics
+## 🔥 試験頻出トピック
 
-### 1. S3 Features Quick Matrix
-| Feature | Purpose | Exam Scenario |
+### 1. S3 Features 早見表
+| Feature | 目的 | Exam Scenario |
 |---------|---------|---------------|
 | **Versioning** | Keep all versions | Protect from deletion |
 | **Encryption** | Secure data | Compliance requirements |
@@ -52,14 +52,14 @@ ARCHIVAL? → S3 Glacier (long-term backup)
 | **Lifecycle Rules** | Auto-transition/delete | Cost optimization |
 | **Replication** | Copy to another bucket | DR, compliance |
 | **Transfer Acceleration** | Fast global uploads | Worldwide users |
-| **Static Hosting** | Host websites | Simple static sites |
+| **Static Hosting** | Host Websites | Simple static sites |
 
 ### 2. S3 Encryption Options (SSEC)
 ```
 SSE-S3 (AWS-managed keys)
 └── AWS manages everything
 └── AES-256 encryption
-└── Default option
+└── デフォルト option
 
 SSE-KMS (KMS-managed keys)
 └── More control, audit trail
@@ -76,7 +76,7 @@ Client-Side Encryption
 └── You manage everything
 ```
 
-**Memory Aid**: SSE-S3 = Simple, SSE-KMS = Key control, SSE-C = Customer keys, Client = Complete control
+**記憶法**: SSE-S3 = Simple, SSE-KMS = Key control, SSE-C = Customer keys, Client = Complete control
 
 ### 3. EBS vs EFS vs Instance Store
 | Feature | EBS | EFS | Instance Store |
@@ -86,11 +86,11 @@ Client-Side Encryption
 | **AZ** | Single AZ | Multi-AZ | Single AZ |
 | **Persist** | Yes | Yes | NO (ephemeral) |
 | **Performance** | High | Shared | Very High |
-| **Use Case** | DB, boot | Shared files | Cache, temp |
+| **用途** | DB, boot | Shared files | Cache, temp |
 
 *Multi-attach available for io1/io2 in same AZ
 
-**Memory Aid**: "BEI" = Block (EBS), Everyone shares (EFS), Instance-ephemeral (Instance Store)
+**記憶法**: "BEI" = Block (EBS), Everyone shares (EFS), Instance-ephemeral (Instance Store)
 
 ### 4. S3 Consistency Model
 ```
@@ -102,44 +102,44 @@ Client-Side Encryption
 ALL OPERATIONS: Consistent since Dec 2020
 ```
 
-## 💡 Common Exam Scenarios
+## 💡 よくある試験シナリオ
 
-### Scenario 1: Cost Optimization for Old Data
-**Q**: Data accessed frequently first 30 days, rarely after 90 days
-**✅ ANSWER**: Lifecycle policy: Standard → Standard-IA (30 days) → Glacier (90 days)
+### Scenario 1: コスト最適化 for Old Data
+**質問**: Data accessed frequently first 30 days, rarely after 90 days
+**✅ 正解**: Lifecycle policy: Standard → Standard-IA (30 days) → Glacier (90 days)
 
 ### Scenario 2: Protect Critical S3 Data
-**Q**: Prevent accidental deletion of critical files
-**✅ ANSWER**: Enable versioning + MFA Delete + Bucket policy with explicit deny
+**質問**: Prevent accidental deletion of critical files
+**✅ 正解**: Enable versioning + MFA Delete + Bucket policy with explicit deny
 
 ### Scenario 3: Share Files Across EC2 Instances
-**Q**: Multiple EC2 instances need read/write to same files
-**✅ ANSWER**: EFS (not EBS - only mounts to one instance)
+**質問**: Multiple EC2 instances need read/write to same files
+**✅ 正解**: EFS (not EBS - のみ mounts to one instance)
 
 ### Scenario 4: Database Volume Performance
-**Q**: Database needs 50,000 IOPS
-**✅ ANSWER**: io2 EBS volume (up to 64,000+ IOPS)
+**質問**: Database needs 50,000 IOPS
+**✅ 正解**: io2 EBS volume (up to 64,000+ IOPS)
 
-### Scenario 5: Fast Global Uploads to S3
-**Q**: Users worldwide uploading to S3, need speed
-**✅ ANSWER**: S3 Transfer Acceleration
+### Scenario 5: Fast グローバル Uploads to S3
+**質問**: Users worldwide uploading to S3, need speed
+**✅ 正解**: S3 Transfer Acceleration
 
 ### Scenario 6: Compliance - Keep 7 Years
-**Q**: Regulatory requirement to store 7 years, rarely accessed
-**✅ ANSWER**: S3 Glacier Deep Archive (cheapest for long-term)
+**質問**: Regulatory requirement to store 7 years, rarely accessed
+**✅ 正解**: S3 Glacier Deep Archive (cheapest for long-term)
 
 ### Scenario 7: Temporary High-Speed Storage
-**Q**: EC2 needs very fast temporary storage for processing
-**✅ ANSWER**: Instance Store (ephemeral, fastest)
+**質問**: EC2 needs very fast temporary storage for processing
+**✅ 正解**: Instance Store (ephemeral, fastest)
 
-## 🎓 Speed Learning Tips
+## 🎓 速習のコツ
 
 ### S3 Bucket Naming Rules
 - 3-63 characters
-- Lowercase only
-- No uppercase, no underscores
+- Lowercase のみ
+- なし uppercase, no underscores
 - Must start with letter or number
-- Globally unique
+- グローバルに一意である必要がある
 
 ### S3 Object Key = Full Path
 ```
@@ -171,39 +171,39 @@ SRR (Same-Region Replication)
 
 **Requirements**: Versioning enabled on both buckets
 
-## 📝 Rapid-Fire Facts
+## 📝 ラピッドファイア事実集
 
 ### S3 Limits
-- Max object size: **5 TB**
+- 最大 object size: **5 TB**
 - Single PUT: **5 GB**
 - Multi-part upload: Required for > **5 GB**, recommended for > **100 MB**
-- Max parts: **10,000**
+- 最大 parts: **10,000**
 - Part size: **5 MB to 5 GB**
 
 ### EBS Facts
-- Single AZ only (can snapshot → restore to different AZ)
+- Single AZ のみ (can snapshot → restore to different AZ)
 - Can detach/reattach (except boot volumes)
 - Can resize on the fly
 - Snapshots stored in S3 (multi-AZ)
 - Can encrypt existing unencrypted volume via snapshot
 
 ### EFS Features
-- Multi-AZ by default
+- Multi-AZ by デフォルト
 - Auto-scales (no provisioning)
 - Pay for what you use
 - NFSv4.1 protocol
-- Linux only
+- Linux のみ
 - Thousands of concurrent connections
 
 ### FSx Quick Comparison
-| Type | OS | Protocol | Use Case |
+| Type | OS | Protocol | 用途 |
 |------|-----|----------|----------|
 | **FSx for Windows** | Windows | SMB | Windows apps, AD |
 | **FSx for Lustre** | Linux | Lustre | HPC, ML, big data |
 | **FSx for NetApp ONTAP** | Any | NFS/SMB | Multi-protocol |
 | **FSx for OpenZFS** | Linux | NFS | Linux workloads |
 
-## 🚀 5-Minute Master Review
+## 🚀 5分マスターレビュー
 
 ### Storage Decision Tree
 ```
@@ -242,21 +242,21 @@ Delete objects after 365 days
 Delete incomplete multipart uploads after 7 days
 ```
 
-### Common Mistakes to Avoid
+### 避けるべきよくあるミス
 ❌ Using EBS for shared storage (use EFS)
 ❌ Forgetting EBS is single AZ
-❌ Not using lifecycle policies for cost savings
+❌ コスト削減のためのライフサイクルポリシーを設定しない
 ❌ Choosing wrong S3 storage class
 ❌ Forgetting to enable versioning before replication
 ❌ Using Standard for infrequently accessed data
 ❌ Instance Store for persistent data (it's ephemeral!)
-❌ Not encrypting sensitive data
+❌ 機密データを暗号化しない
 
-## 🎯 Exam Practice Speedrun
+## 🎯 試験練習スピードラン
 
-**Quick Questions** (Answers at bottom)
+**クイック問題**（答えは下）
 
-1. Max S3 object size? __
+1. 最大 S3 object size? __
 2. Which EBS type for 50,000 IOPS? __
 3. Does EFS work with Windows? __
 4. S3 storage class for unknown access patterns? __
@@ -268,12 +268,12 @@ Delete incomplete multipart uploads after 7 days
 ---
 
 ### S3 Pre-signed URLs
-- **Purpose**: Temporary access to private objects
+- **目的**: Temporary access to private objects
 - **Validity**: Configurable (seconds to days)
-- **Use Case**: Download private files, upload to bucket
+- **用途**: Download private files, upload to bucket
 - **Example**: Share file for 1 hour without making public
 
-### S3 Event Notifications
+### S3 Event なしtifications
 **Triggers**:
 - Object created (PUT, POST, COPY)
 - Object removed (DELETE)
@@ -286,7 +286,7 @@ Delete incomplete multipart uploads after 7 days
 - SNS topics
 - EventBridge
 
-## 🔒 S3 Security Layers
+## 🔒 S3 Security レイヤーs
 ```
 1. IAM Policies (user/role permissions)
 2. Bucket Policies (resource-based)
@@ -297,20 +297,20 @@ Delete incomplete multipart uploads after 7 days
 7. Block Public Access (account level)
 ```
 
-## ⏱️ Next Steps
-- Time spent: ~60-75 min
-- Practice: Create S3 bucket, lifecycle rules, EBS volume
-- Ready for: Storage practice questions
-- Move to: Module 05 - Database
+## ⏱️ 次のステップ
+- 学習時間: ~60-75分
+- 演習: Create S3 bucket, lifecycle rules, EBS volume
+- 準備完了: Storage practice questions
+- 次へ: Module 05 - Database
 
 ---
 
-**Quick Answers**: 
+**クイック解答**:
 1) 5 TB
 2) io2 or io1 (Provisioned IOPS SSD)
-3) No (Linux only)
+3) なし (Linux のみ)
 4) S3 Intelligent-Tiering
-5) No (except io1/io2 multi-attach in same AZ)
+5) なし (except io1/io2 multi-attach in same AZ)
 6) NFSv4.1
 7) S3 (managed by AWS)
 8) 180 days
