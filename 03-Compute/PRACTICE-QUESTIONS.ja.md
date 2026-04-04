@@ -1,44 +1,44 @@
-# Compute Services - Practice Questions
+# コンピューティングサービス - 練習問題
 
-> **⚠️ DISCLAIMER:** These are **original practice questions** created for educational purposes based on AWS documentation. They are **NOT actual exam questions** from the AWS certification exam.
+> **⚠️ 免責事項:** これらは AWS ドキュメントに基づいて教育目的で作成した**オリジナル問題**です。AWS 認定試験の**実際の試験問題ではありません**。
 
-## Exam-Standard Questions (SAA-C03)
+## 試験レベル問題（SAA-C03）
 
 ---
 
-### Question 1
-A company needs to run a batch processing job that can tolerate interruptions and must minimize costs. Which EC2 pricing model should be used?
+### 問題 1
+中断を許容できるバッチ処理ジョブを実行し、コストを最小化したい企業があります。利用すべき EC2 の料金モデルはどれですか？
 
-A. On-Demand Instances  
-B. Reserved Instances  
-C. Spot Instances  
+A. オンデマンドインスタンス  
+B. リザーブドインスタンス  
+C. スポットインスタンス  
 D. Dedicated Hosts  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- Spot Instances offer up to 90% discount compared to On-Demand
-- Can be interrupted with 2-minute warning when AWS needs capacity
-- Perfect for fault-tolerant, flexible workloads
-- **Ideal Use Cases**: Batch jobs, data analysis, image processing, CI/CD
-- Option A: On-Demand is most expensive
-- Option B: Reserved requires 1-3 year commitment
-- Option D: Dedicated Hosts are most expensive, for compliance
+**解説:**
+- スポットインスタンスはオンデマンド比で最大 90% 割引
+- AWS が容量を必要とするとき、2 分前通知で中断される可能性がある
+- フォールトトレラントで柔軟なワークロードに最適
+- **主な用途**: バッチ処理、データ分析、画像処理、CI/CD
+- A: オンデマンドは最も高価
+- B: リザーブドは 1〜3 年のコミットが必要
+- D: Dedicated Hosts はコンプライアンス向けで高コスト
 
-**Key Points**:
-- Spot = Cheapest, can be interrupted
-- Best for: Stateless, fault-tolerant, flexible workloads
+**重要ポイント**:
+- Spot = 最安だが中断あり
+- 向いている用途: ステートレス・耐障害・柔軟なワークロード
 
-**References:** EC2 Pricing Models, Spot Instances
+**参照:** EC2 料金モデル、Spot Instances
 </details>
 
 ---
 
-### Question 2
-An application experiences predictable traffic spikes every Monday at 9 AM. What is the MOST cost-effective Auto Scaling approach?
+### 問題 2
+あるアプリケーションは毎週月曜の午前9時に予測可能なトラフィックスパイクが発生します。最もコスト効率の高い Auto Scaling の方式はどれですか？
 
 A. Target Tracking Scaling  
 B. Simple Scaling  
@@ -46,17 +46,17 @@ C. Step Scaling
 D. Scheduled Scaling  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: D**
+**答え: D**
 
-**Explanation:**
-- Scheduled Scaling scales based on predefined schedule
-- Perfect for predictable traffic patterns
-- Scales before traffic spike occurs (proactive)
-- Most cost-effective for known patterns
+**解説:**
+- Scheduled Scaling は事前定義スケジュールでスケールする
+- 予測可能なトラフィックパターンに最適
+- スパイク前にスケールできる（プロアクティブ）
+- 既知パターンでは最もコスト効率が高い
 
-**Schedule Example**:
+**スケジュール例**:
 ```bash
 aws autoscaling put-scheduled-update-group-action \
   --auto-scaling-group-name my-asg \
@@ -65,17 +65,17 @@ aws autoscaling put-scheduled-update-group-action \
   --desired-capacity 10
 ```
 
-- Option A: Target Tracking is reactive, scales after metric changes
-- Option B/C: Step/Simple scaling are reactive
-- **Scheduled = Proactive, Target/Step/Simple = Reactive**
+- A: Target Tracking はメトリクス変化後のリアクティブ対応
+- B/C: Step/Simple もリアクティブ
+- **Scheduled = プロアクティブ、Target/Step/Simple = リアクティブ**
 
-**References:** Auto Scaling Policies, Scheduled Scaling
+**参照:** Auto Scaling Policies、Scheduled Scaling
 </details>
 
 ---
 
-### Question 3
-A web application requires high availability across multiple Availability Zones with automatic distribution of traffic. Which load balancer should be used for HTTP/HTTPS traffic with advanced routing?
+### 問題 3
+複数 AZ にまたがる高可用性と、自動トラフィック分散が必要な Web アプリがあります。HTTP/HTTPS で高度なルーティングが必要な場合、どのロードバランサーを使うべきですか？
 
 A. Classic Load Balancer  
 B. Application Load Balancer  
@@ -83,37 +83,37 @@ C. Network Load Balancer
 D. Gateway Load Balancer  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- **Application Load Balancer (ALB)** operates at Layer 7 (HTTP/HTTPS)
-- Advanced routing: path-based, host-based, header-based
-- WebSocket and HTTP/2 support
-- Perfect for modern web applications
+**解説:**
+- **Application Load Balancer (ALB)** はレイヤー7（HTTP/HTTPS）で動作
+- パス/ホスト/ヘッダーなど高度なルーティングに対応
+- WebSocket と HTTP/2 をサポート
+- モダンな Web アプリに最適
 
-**ALB Features**:
-- Path-based routing: `/api/*` → API servers, `/images/*` → image servers
-- Host-based routing: `api.example.com` vs `www.example.com`
-- Query string/header routing
-- Fixed response, redirects
-- AWS WAF integration
-- Authentication (OIDC, Cognito)
+**ALB の機能**:
+- パスベース: `/api/*` → API サーバー、`/images/*` → 画像サーバー
+- ホストベース: `api.example.com` と `www.example.com`
+- クエリ文字列/ヘッダーでのルーティング
+- 固定レスポンス、リダイレクト
+- AWS WAF 連携
+- 認証（OIDC、Cognito）
 
-**Load Balancer Comparison**:
-- **CLB**: Legacy, Layer 4/7, basic
-- **ALB**: Layer 7, HTTP/HTTPS, advanced routing
-- **NLB**: Layer 4, TCP/UDP, ultra-high performance, static IP
-- **GLB**: Layer 3, third-party virtual appliances
+**ロードバランサー比較**:
+- **CLB**: レガシー、Layer 4/7、基本機能
+- **ALB**: Layer 7、HTTP/HTTPS、高度ルーティング
+- **NLB**: Layer 4、TCP/UDP、超高性能、静的 IP
+- **GLB**: Layer 3、サードパーティ仮想アプライアンス
 
-**References:** Application Load Balancer, ELB Types
+**参照:** Application Load Balancer、ELB Types
 </details>
 
 ---
 
-### Question 4
-A microservices application needs a load balancer that can handle millions of requests per second with ultra-low latency and static IP addresses. Which load balancer should be used?
+### 問題 4
+マイクロサービスアプリケーションで、超低レイテンシ・秒間数百万リクエスト・静的 IP アドレスが必要です。どのロードバランサーを使うべきですか？
 
 A. Application Load Balancer  
 B. Network Load Balancer  
@@ -121,35 +121,35 @@ C. Classic Load Balancer
 D. CloudFront  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- **Network Load Balancer (NLB)** operates at Layer 4 (TCP/UDP/TLS)
-- Handles millions of requests per second
-- Ultra-low latency (microseconds)
-- Static IP addresses (one per AZ)
-- Preserves source IP address
+**解説:**
+- **Network Load Balancer (NLB)** は Layer 4（TCP/UDP/TLS）で動作
+- 秒間数百万リクエストを処理可能
+- 超低レイテンシ（マイクロ秒）
+- 静的 IP（AZ ごとに 1 つ）
+- 送信元 IP を保持
 
-**NLB Use Cases**:
-- Extreme performance requirements
-- Static/Elastic IP needed (whitelist in firewalls)
-- TCP/UDP traffic
-- PrivateLink endpoints
-- Game servers, IoT, real-time applications
+**NLB のユースケース**:
+- 極限の性能要件
+- 静的/Elastic IP が必要（ファイアウォール許可リスト）
+- TCP/UDP トラフィック
+- PrivateLink エンドポイント
+- ゲーム、IoT、リアルタイムアプリ
 
 **NLB vs ALB**:
-- **NLB**: Layer 4, faster, static IP, TCP/UDP
-- **ALB**: Layer 7, advanced routing, HTTP/HTTPS
+- **NLB**: Layer 4、高速、静的 IP、TCP/UDP
+- **ALB**: Layer 7、高度ルーティング、HTTP/HTTPS
 
-**References:** Network Load Balancer, Layer 4 vs Layer 7
+**参照:** Network Load Balancer、Layer 4 vs Layer 7
 </details>
 
 ---
 
-### Question 5
-A company wants to run code in response to events without managing servers. The code should execute only when triggered and scale automatically. Which service should be used?
+### 問題 5
+サーバー管理なしで、イベントに応じてコード実行したい企業があります。トリガー時のみ実行され、自動スケールも必要です。どのサービスを使うべきですか？
 
 A. Amazon EC2 with Auto Scaling  
 B. AWS Lambda  
@@ -157,39 +157,39 @@ C. Amazon ECS
 D. AWS Elastic Beanstalk  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- **AWS Lambda** is serverless compute service
-- Event-driven execution
-- Automatic scaling (1 to 1000s of concurrent executions)
-- Pay only for compute time (per millisecond)
-- No server management
+**解説:**
+- **AWS Lambda** はサーバーレスコンピュート
+- イベント駆動で実行
+- 自動スケーリング（同時実行 1 〜 数千）
+- 実行時間分のみ課金（ミリ秒単位）
+- サーバー管理不要
 
-**Lambda Characteristics**:
-- **Max execution time**: 15 minutes
-- **Memory**: 128 MB to 10,240 MB
-- **Deployment package**: 50 MB (zipped), 250 MB (unzipped)
-- **Concurrent executions**: 1000 (default, can increase)
-- **Billing**: Per request + compute time (GB-seconds)
+**Lambda の特性**:
+- **最大実行時間**: 15 分
+- **メモリ**: 128 MB 〜 10,240 MB
+- **デプロイパッケージ**: 50 MB（zip）、250 MB（展開後）
+- **同時実行数**: 1000（デフォルト、引き上げ可）
+- **課金**: リクエスト数 + 実行時間（GB 秒）
 
-**Lambda Triggers**:
-- API Gateway (REST APIs)
-- S3 events
+**Lambda のトリガー**:
+- API Gateway（REST API）
+- S3 イベント
 - DynamoDB Streams
-- EventBridge (scheduled/event-based)
-- SNS, SQS
+- EventBridge（スケジュール/イベント）
+- SNS、SQS
 - Kinesis
 
-**References:** AWS Lambda, Serverless Computing
+**参照:** AWS Lambda、Serverless Computing
 </details>
 
 ---
 
-### Question 6
-An application running on EC2 instances experiences variable traffic and needs to maintain 50% average CPU utilization. What Auto Scaling policy should be configured?
+### 問題 6
+EC2 上のアプリでトラフィックが変動し、CPU 平均使用率を 50% に維持したいです。設定すべき Auto Scaling ポリシーはどれですか？
 
 A. Simple Scaling  
 B. Step Scaling  
@@ -197,17 +197,17 @@ C. Target Tracking Scaling
 D. Predictive Scaling  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **Target Tracking Scaling** automatically adjusts capacity to maintain target metric
-- Specify target value (e.g., 50% CPU), Auto Scaling does the rest
-- Easiest to configure and manage
-- Creates and manages CloudWatch alarms automatically
+**解説:**
+- **Target Tracking Scaling** は目標メトリクスを維持するよう自動調整
+- 例: CPU 50% を指定すれば Auto Scaling が自動制御
+- 設定/運用が最も簡単
+- CloudWatch アラームを自動作成・管理
 
-**Configuration Example**:
+**設定例**:
 ```json
 {
   "TargetValue": 50.0,
@@ -217,110 +217,110 @@ D. Predictive Scaling
 }
 ```
 
-**Predefined Metrics**:
+**定義済みメトリクス**:
 - `ASGAverageCPUUtilization`
 - `ASGAverageNetworkIn`
 - `ASGAverageNetworkOut`
 - `ALBRequestCountPerTarget`
 
-**Scaling Policy Types**:
-- **Target Tracking**: Maintain specific metric value (EASIEST)
-- **Step**: Add/remove capacity based on CloudWatch alarm thresholds
-- **Simple**: Single scaling adjustment (legacy)
-- **Predictive**: ML-based forecasting
+**スケーリングポリシーの種類**:
+- **Target Tracking**: 指定値維持（最も簡単）
+- **Step**: しきい値に応じ段階的増減
+- **Simple**: 単一調整（レガシー）
+- **Predictive**: ML 予測ベース
 
-**References:** Target Tracking Scaling, Auto Scaling Policies
+**参照:** Target Tracking Scaling、Auto Scaling Policies
 </details>
 
 ---
 
-### Question 7
-A company needs to run Docker containers without managing EC2 instances. Which service should be used?
+### 問題 7
+EC2 インスタンスを管理せずに Docker コンテナを実行したい場合、どのサービスを使うべきですか？
 
-A. Amazon ECS with EC2 launch type  
-B. Amazon ECS with Fargate launch type  
+A. Amazon ECS（EC2 起動タイプ）  
+B. Amazon ECS（Fargate 起動タイプ）  
 C. Amazon EKS  
 D. AWS Elastic Beanstalk  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- **AWS Fargate** is serverless container platform
-- No EC2 instance management required
-- Pay for vCPU and memory resources used
-- Works with both ECS and EKS
+**解説:**
+- **AWS Fargate** はサーバーレスコンテナ基盤
+- EC2 インスタンス管理が不要
+- 使用した vCPU/メモリ分だけ課金
+- ECS/EKS の両方で利用可能
 
-**Container Service Options**:
+**コンテナサービスの選択肢**:
 
-| Service | Description | Management |
+| サービス | 説明 | 管理範囲 |
 |---------|-------------|------------|
-| **ECS + EC2** | Container orchestration on EC2 | Manage instances |
-| **ECS + Fargate** | Serverless containers | No instance management |
-| **EKS + EC2** | Kubernetes on EC2 | Manage instances + K8s |
-| **EKS + Fargate** | Serverless Kubernetes | No instance management |
+| **ECS + EC2** | EC2 上のコンテナオーケストレーション | インスタンス管理が必要 |
+| **ECS + Fargate** | サーバーレスコンテナ | インスタンス管理不要 |
+| **EKS + EC2** | EC2 上の Kubernetes | インスタンス + K8s 管理 |
+| **EKS + Fargate** | サーバーレス Kubernetes | インスタンス管理不要 |
 
-**Fargate Benefits**:
-- No instance provisioning/scaling
-- No patching/securing instances
-- Pay per task
-- Simpler operations
+**Fargate の利点**:
+- インスタンスの調達/スケーリング不要
+- パッチ適用やセキュリティ管理不要
+- タスク単位課金
+- 運用がシンプル
 
-**When to use Fargate vs EC2**:
-- **Fargate**: Simplicity, less operational overhead
-- **EC2**: Need specific instance types, GPU, cost optimization for sustained workloads
+**Fargate と EC2 の使い分け**:
+- **Fargate**: シンプル運用、運用負荷を減らしたい
+- **EC2**: 特定インスタンスタイプ/GPU 必要、長期稼働でコスト最適化
 
-**References:** AWS Fargate, Amazon ECS
+**参照:** AWS Fargate、Amazon ECS
 </details>
 
 ---
 
-### Question 8
-An EC2 instance needs low-latency, high-throughput connectivity to other instances in the same cluster. Which placement group should be used?
+### 問題 8
+同一クラスター内の他インスタンスと低遅延・高スループット接続が必要な EC2 インスタンスがあります。どのプレースメントグループを使うべきですか？
 
 A. Cluster Placement Group  
 B. Spread Placement Group  
 C. Partition Placement Group  
-D. No placement group needed  
+D. プレースメントグループは不要  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- **Cluster Placement Group** places instances close together in single AZ
-- Low-latency network (10 Gbps between instances)
-- High throughput, enhanced networking
-- All instances in same rack/physical proximity
+**解説:**
+- **Cluster Placement Group** は単一 AZ 内でインスタンスを近接配置
+- 低遅延ネットワーク（インスタンス間 10 Gbps）
+- 高スループット/拡張ネットワーキング
+- 同一ラック付近へ配置
 
-**Placement Group Types**:
+**プレースメントグループの種類**:
 
-| Type | Purpose | AZ | Max Instances |
+| 種類 | 目的 | AZ | 最大インスタンス |
 |------|---------|----|----|
-| **Cluster** | Low latency, high throughput | Single AZ | Limited by instance type |
-| **Spread** | Reduce correlated failures | Multi-AZ | 7 per AZ |
-| **Partition** | Large distributed workloads | Multi-AZ | 7 partitions per AZ |
+| **Cluster** | 低遅延・高スループット | 単一 AZ | インスタンスタイプ依存 |
+| **Spread** | 障害の相関を低減 | 複数 AZ | AZ ごとに 7 台 |
+| **Partition** | 大規模分散ワークロード | 複数 AZ | AZ ごとに 7 パーティション |
 
-**Use Cases**:
-- **Cluster**: HPC, big data, low-latency apps
-- **Spread**: Critical applications (each instance separate rack)
-- **Partition**: Hadoop, Cassandra, Kafka (partition = rack)
+**ユースケース**:
+- **Cluster**: HPC、ビッグデータ、低遅延アプリ
+- **Spread**: 重要アプリ（インスタンスを別ラックに分離）
+- **Partition**: Hadoop、Cassandra、Kafka
 
-**Limitations**:
-- Cluster: Single AZ only
-- Spread: Max 7 instances per AZ
-- Not all instance types supported
+**制限事項**:
+- Cluster: 単一 AZ のみ
+- Spread: AZ あたり最大 7 台
+- 対応インスタンスタイプに制限あり
 
-**References:** EC2 Placement Groups
+**参照:** EC2 Placement Groups
 </details>
 
 ---
 
-### Question 9
-A company wants to deploy a web application with automatic scaling, load balancing, and health monitoring without managing infrastructure. Which service should be used?
+### 問題 9
+インフラ管理なしで、Web アプリを自動スケーリング・ロードバランシング・ヘルス監視付きでデプロイしたい場合、どのサービスを使うべきですか？
 
 A. AWS Lambda  
 B. Amazon EC2 with Auto Scaling  
@@ -328,43 +328,43 @@ C. AWS Elastic Beanstalk
 D. Amazon Lightsail  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **AWS Elastic Beanstalk** is PaaS (Platform as a Service)
-- Upload code, Beanstalk handles deployment
-- Automatic provisioning: EC2, ALB, Auto Scaling, RDS, monitoring
-- Multiple platforms: Java, .NET, PHP, Node.js, Python, Ruby, Go, Docker
+**解説:**
+- **AWS Elastic Beanstalk** は PaaS
+- コードをアップロードするとデプロイを自動化
+- EC2/ALB/Auto Scaling/RDS/監視を自動構成
+- Java、.NET、PHP、Node.js、Python、Ruby、Go、Docker など対応
 
-**Elastic Beanstalk Features**:
-- Automatic capacity provisioning
-- Load balancing
+**Elastic Beanstalk の機能**:
+- 自動キャパシティプロビジョニング
+- ロードバランシング
 - Auto Scaling
-- Health monitoring
-- Platform updates
-- Still have full control over resources (not completely abstracted)
+- ヘルス監視
+- プラットフォーム更新
+- リソースへの制御権は保持
 
-**Deployment Options**:
-- **All at once**: Fastest, downtime
-- **Rolling**: Partial batches, reduced capacity
-- **Rolling with additional batch**: Maintains full capacity
-- **Immutable**: New instances, safest
-- **Blue/Green**: Manual via swap URLs
+**デプロイ方式**:
+- **All at once**: 最速、ダウンタイムあり
+- **Rolling**: 分割展開、一時的に容量減
+- **Rolling with additional batch**: フル容量維持
+- **Immutable**: 新規インスタンスで安全性高
+- **Blue/Green**: URL 交換で切替
 
-**Beanstalk vs Others**:
-- **Lambda**: Functions, not full applications
-- **EC2 + Auto Scaling**: More manual configuration
-- **Lightsail**: Simpler, less scalable
+**Beanstalk と他サービス比較**:
+- **Lambda**: 関数実行向けでアプリ全体向けではない
+- **EC2 + Auto Scaling**: 手動設定が多い
+- **Lightsail**: シンプルだが拡張性は限定的
 
-**References:** AWS Elastic Beanstalk, PaaS
+**参照:** AWS Elastic Beanstalk、PaaS
 </details>
 
 ---
 
-### Question 10
-An application requires guaranteed capacity reservation for EC2 instances in a specific Availability Zone without long-term commitment. Which option should be used?
+### 問題 10
+特定 AZ で EC2 のキャパシティを保証予約したいが、長期コミットは避けたいです。どの選択肢が適切ですか？
 
 A. Reserved Instances  
 B. Savings Plans  
@@ -372,81 +372,81 @@ C. On-Demand Capacity Reservations
 D. Spot Instances  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **On-Demand Capacity Reservations** reserve capacity in specific AZ
-- No long-term commitment (can cancel anytime)
-- Charged at On-Demand rates whether used or not
-- Ensures capacity availability when needed
+**解説:**
+- **On-Demand Capacity Reservations** は特定 AZ の容量を予約
+- 長期コミット不要（いつでもキャンセル可）
+- 使用有無に関わらずオンデマンド料金で課金
+- 必要時の容量確保に有効
 
-**Capacity Options Comparison**:
+**キャパシティ選択肢の比較**:
 
-| Option | Commitment | Discount | Capacity Guarantee |
+| 選択肢 | コミット | 割引 | キャパシティ保証 |
 |--------|------------|----------|-------------------|
-| **On-Demand** | None | None | No guarantee |
-| **Reserved** | 1-3 years | Up to 72% | Yes (regional or zonal) |
-| **Savings Plans** | 1-3 years | Up to 66% | No |
-| **Capacity Reservations** | None | None | Yes (zonal) |
-| **Spot** | None | Up to 90% | No (can be interrupted) |
+| **On-Demand** | なし | なし | なし |
+| **Reserved** | 1〜3年 | 最大 72% | あり（リージョン or AZ） |
+| **Savings Plans** | 1〜3年 | 最大 66% | なし |
+| **Capacity Reservations** | なし | なし | あり（AZ） |
+| **Spot** | なし | 最大 90% | なし（中断あり） |
 
-**Use Case**:
-- Disaster recovery (reserve capacity but don't always run)
-- Business-critical events (Black Friday)
-- Regulatory/compliance requirements
+**ユースケース**:
+- 災害対策（常時稼働しないが容量予約）
+- 重要イベント（例: Black Friday）
+- 規制/コンプライアンス要件
 
-**Cost Optimization**: Combine Capacity Reservation with Savings Plan
+**コスト最適化**: Capacity Reservation と Savings Plan を組み合わせる
 
-**References:** On-Demand Capacity Reservations
+**参照:** On-Demand Capacity Reservations
 </details>
 
 ---
 
-### Question 11
-A Lambda function is timing out after 3 seconds when processing large files. What should be changed?
+### 問題 11
+大きなファイルを処理する Lambda 関数が 3 秒でタイムアウトします。何を変更すべきですか？
 
-A. Increase Lambda memory allocation  
-B. Increase Lambda timeout setting  
-C. Use Lambda layers  
-D. Switch to EC2  
+A. Lambda メモリ割り当てを増やす  
+B. Lambda タイムアウト設定を増やす  
+C. Lambda レイヤーを使う  
+D. EC2 に切り替える  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- Lambda default timeout is 3 seconds
-- Can be increased up to 15 minutes (900 seconds)
-- Timeout configuration is separate from memory
+**解説:**
+- Lambda のデフォルトタイムアウトは 3 秒
+- 最大 15 分（900 秒）まで拡張可能
+- タイムアウト設定はメモリ設定とは別
 
-**Lambda Configuration**:
-- **Memory**: 128 MB to 10,240 MB (10 GB)
-- **Timeout**: 1 second to 900 seconds (15 minutes)
-- **CPU scales with memory** (1,792 MB = 1 vCPU)
-- **Ephemeral storage (/tmp)**: 512 MB to 10,240 MB
+**Lambda 設定**:
+- **メモリ**: 128 MB 〜 10,240 MB（10 GB）
+- **タイムアウト**: 1 秒 〜 900 秒（15 分）
+- **CPU はメモリに比例**（1,792 MB = 1 vCPU）
+- **一時ストレージ (/tmp)**: 512 MB 〜 10,240 MB
 
-**Performance Tuning**:
-1. Increase timeout for long-running tasks
-2. Increase memory if CPU-bound (CPU scales with memory)
-3. Optimize code
-4. Use async patterns for very long tasks
+**性能調整の手順**:
+1. 長時間処理ではタイムアウトを延長
+2. CPU ボトルネックならメモリ増加
+3. コード最適化
+4. さらに長い処理は非同期パターンを検討
 
-**When Lambda is NOT suitable**:
-- Tasks > 15 minutes
-- Need GPU
-- Stateful applications
-- Real-time latency requirements (cold starts)
+**Lambda が不向きなケース**:
+- 15 分超の処理
+- GPU 必要
+- ステートフルアプリ
+- 厳しいリアルタイム要件（コールドスタート影響）
 
-**References:** Lambda Configuration, Lambda Limits
+**参照:** Lambda Configuration、Lambda Limits
 </details>
 
 ---
 
-### Question 12
-A company wants to run EC2 instances with dedicated physical servers for compliance requirements. Which option should be used?
+### 問題 12
+コンプライアンス要件のため、専有物理サーバー上で EC2 を実行したい企業があります。どの選択肢を使うべきですか？
 
 A. Dedicated Instances  
 B. Dedicated Hosts  
@@ -454,79 +454,79 @@ C. Reserved Instances
 D. Spot Instances  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- **Dedicated Hosts**: Physical server dedicated to your use
-- Visibility into sockets, cores, host ID
-- Support for BYOL (Bring Your Own License) - Windows Server, SQL Server
-- Meet compliance requirements
-- Most expensive option
+**解説:**
+- **Dedicated Hosts**: 物理サーバーを専有利用
+- ソケット数、コア数、ホスト ID の可視性あり
+- BYOL（Windows Server、SQL Server）をサポート
+- 厳格なコンプライアンス要件に対応
+- コストは最も高い
 
-**Dedicated Instances vs Dedicated Hosts**:
+**Dedicated Instances と Dedicated Hosts**:
 
-| Feature | Dedicated Instances | Dedicated Hosts |
+| 項目 | Dedicated Instances | Dedicated Hosts |
 |---------|-------------------|----------------|
-| **Isolation** | Instance-level | Physical server |
-| **Visibility** | No hardware visibility | Socket/core visibility |
-| **BYOL** | Not supported | Supported |
-| **Placement** | Automatic | Control placement |
-| **Billing** | Per instance | Per host |
-| **Use Case** | Compliance (soft requirement) | BYOL, compliance (strict) |
+| **分離レベル** | インスタンス単位 | 物理サーバー単位 |
+| **可視性** | ハードウェア可視性なし | ソケット/コア可視性あり |
+| **BYOL** | 非対応 | 対応 |
+| **配置制御** | 自動 | 制御可能 |
+| **課金** | インスタンス単位 | ホスト単位 |
+| **用途** | ソフト要件の分離 | BYOL/厳格コンプライアンス |
 
-**Use Cases for Dedicated Hosts**:
-- Server-bound software licenses
-- Regulatory compliance
-- Track physical host usage
+**Dedicated Hosts の用途**:
+- サーバー固定ライセンス
+- 規制対応
+- 物理ホスト利用の追跡
 
-**References:** Dedicated Hosts, Dedicated Instances, BYOL
+**参照:** Dedicated Hosts、Dedicated Instances、BYOL
 </details>
 
 ---
 
-### Question 13
-An Auto Scaling group has 10 instances. An administrator manually terminates 3 instances. What happens next?
+### 問題 13
+Auto Scaling グループに 10 台あります。管理者が手動で 3 台終了しました。次に何が起きますか？
 
-A. Auto Scaling terminates 3 more instances  
-B. Auto Scaling launches 3 new instances  
-C. Auto Scaling does nothing  
-D. Auto Scaling sends an alert  
+A. Auto Scaling がさらに 3 台終了する  
+B. Auto Scaling が 3 台新規起動する  
+C. Auto Scaling は何もしない  
+D. Auto Scaling がアラートを送信する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- Auto Scaling maintains desired capacity
-- If instances are terminated (manually or automatically), ASG replaces them
-- Ensures desired count is maintained
+**解説:**
+- Auto Scaling は desired capacity を維持
+- 手動/自動で終了しても ASG が補充
+- 目標台数を継続的に保つ
 
-**Auto Scaling Group Configuration**:
-- **Minimum**: Minimum number of instances
-- **Desired**: Target number of instances
-- **Maximum**: Maximum number of instances
+**Auto Scaling Group の設定**:
+- **Minimum**: 最小台数
+- **Desired**: 目標台数
+- **Maximum**: 最大台数
 
-**Scaling Activities**:
-- Scale out: Launch instances (desired < current)
-- Scale in: Terminate instances (desired > current)
-- Replace unhealthy: Terminate and replace
-- Rebalance across AZs
+**スケーリング動作**:
+- スケールアウト: 起動（必要台数が現状より多い）
+- スケールイン: 終了（必要台数が現状より少ない）
+- 異常インスタンス置換: 終了して再作成
+- AZ 間リバランス
 
-**Instance Protection**:
-- Can enable scale-in protection on specific instances
-- Prevents Auto Scaling from terminating protected instances
-- Manual termination still works
+**インスタンス保護**:
+- 特定インスタンスにスケールイン保護を設定可能
+- 保護インスタンスは Auto Scaling による終了を回避
+- ただし手動終了は可能
 
-**References:** Auto Scaling Groups, Desired Capacity
+**参照:** Auto Scaling Groups、Desired Capacity
 </details>
 
 ---
 
-### Question 14
-A batch processing application uses Lambda functions but needs to coordinate multiple steps with error handling and retries. Which service should be used?
+### 問題 14
+Lambda を使うバッチ処理で、複数ステップの調整・エラーハンドリング・リトライが必要です。どのサービスを使うべきですか？
 
 A. Amazon SQS  
 B. Amazon SNS  
@@ -534,95 +534,95 @@ C. AWS Step Functions
 D. Amazon EventBridge  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **AWS Step Functions** orchestrates serverless workflows
-- Coordinate multiple Lambda functions
-- Built-in error handling, retries, parallel execution
-- Visual workflow designer
+**解説:**
+- **AWS Step Functions** はサーバーレスワークフローのオーケストレーション
+- 複数 Lambda を連携
+- エラー処理、リトライ、並列実行を標準搭載
+- 視覚的ワークフローデザイナーあり
 
-**Step Functions Features**:
-- **State machine**: Define workflow as states
-- **Error handling**: Catch errors, retry logic
-- **Parallel execution**: Run steps concurrently
-- **Wait states**: Delays between steps
-- **Choice states**: Conditional logic
-- **Map states**: Iterate over arrays
+**Step Functions の機能**:
+- **State machine**: 状態遷移でワークフロー定義
+- **Error handling**: 例外捕捉とリトライ
+- **Parallel execution**: 並列実行
+- **Wait states**: 待機
+- **Choice states**: 条件分岐
+- **Map states**: 配列反復
 
-**Workflow Types**:
-- **Standard**: Long-running (up to 1 year), exactly-once execution
-- **Express**: Short-lived (5 min), at-least-once, high-rate
+**ワークフロー種別**:
+- **Standard**: 長時間実行（最大1年）、exactly-once
+- **Express**: 短時間（5分）、at-least-once、高スループット
 
-**Use Cases**:
-- ETL pipelines
-- Order processing
-- Video processing
-- Machine learning workflows
+**ユースケース**:
+- ETL パイプライン
+- 注文処理
+- 動画処理
+- 機械学習ワークフロー
 
-**Step Functions vs Alternatives**:
-- **SQS**: Message queue, no orchestration
-- **SNS**: Pub/sub messaging, no orchestration
-- **EventBridge**: Event routing, simpler workflows
+**代替との比較**:
+- **SQS**: キュー機能のみ
+- **SNS**: Pub/Sub のみ
+- **EventBridge**: イベントルーティング中心
 
-**References:** AWS Step Functions, Serverless Orchestration
+**参照:** AWS Step Functions、Serverless Orchestration
 </details>
 
 ---
 
-### Question 15
-An application needs consistent performance with baseline CPU and ability to burst above baseline when needed. Which EC2 instance type should be used?
+### 問題 15
+ベースライン CPU 性能を保ちつつ、必要時にバーストしたいアプリがあります。どの EC2 インスタンスタイプが適切ですか？
 
-A. M5 (General Purpose)  
-B. C5 (Compute Optimized)  
-C. T3 (Burstable Performance)  
-D. R5 (Memory Optimized)  
+A. M5（汎用）  
+B. C5（コンピュート最適化）  
+C. T3（バースト性能）  
+D. R5（メモリ最適化）  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **T3/T4g instances** are burstable performance instances
-- Baseline CPU performance with credit system
-- Accumulate CPU credits when below baseline
-- Burst above baseline using credits
-- Cost-effective for variable workloads
+**解説:**
+- **T3/T4g** はバースト可能インスタンス
+- ベースライン CPU + クレジット方式
+- ベースライン以下でクレジット蓄積
+- ベースライン超過時にクレジット消費でバースト
+- 変動負荷でコスト効率が高い
 
-**T3 CPU Credits**:
-- Baseline performance depends on instance size
-- Earn credits when CPU < baseline
-- Spend credits when CPU > baseline
-- **Unlimited mode**: Can burst beyond credits (additional charges)
+**T3 CPU クレジット**:
+- ベースラインはサイズ依存
+- CPU < ベースラインで獲得
+- CPU > ベースラインで消費
+- **Unlimited モード**: クレジット超過バースト可（追加料金）
 
-**T3 Instance Types**:
-- t3.nano: 5% baseline
-- t3.micro: 10% baseline
-- t3.small: 20% baseline
-- t3.medium: 20% baseline
-- t3.large: 30% baseline
+**T3 ベースライン例**:
+- t3.nano: 5%
+- t3.micro: 10%
+- t3.small: 20%
+- t3.medium: 20%
+- t3.large: 30%
 
-**Use Cases**:
-- Web servers, dev/test
-- Small databases
-- Code repositories
-- Microservices
+**ユースケース**:
+- Web サーバー、開発/テスト
+- 小規模 DB
+- コードリポジトリ
+- マイクロサービス
 
-**When NOT to use T3**:
-- Sustained high CPU usage
-- Predictable high performance needs
-- Use C5/M5 for sustained performance
+**T3 が不向きなケース**:
+- 高 CPU 常時利用
+- 予測可能な高性能要求
+- 持続性能は C5/M5 が適切
 
-**References:** T3 Instances, Burstable Performance, CPU Credits
+**参照:** T3 Instances、Burstable Performance、CPU Credits
 </details>
 
 ---
 
-### Question 16
-A company wants to deploy containerized applications using Kubernetes without managing the control plane. Which service should be used?
+### 問題 16
+Kubernetes のコントロールプレーンを管理せずにコンテナアプリをデプロイしたい場合、どのサービスを使うべきですか？
 
 A. Amazon ECS  
 B. Amazon EKS  
@@ -630,44 +630,44 @@ C. AWS Fargate
 D. AWS Elastic Beanstalk  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- **Amazon EKS** (Elastic Kubernetes Service) is managed Kubernetes
-- AWS manages Kubernetes control plane
-- Compatible with standard Kubernetes tools (kubectl, Helm)
-- Multi-AZ control plane for high availability
+**解説:**
+- **Amazon EKS** はマネージド Kubernetes
+- Kubernetes コントロールプレーンを AWS が管理
+- kubectl/Helm など標準ツールと互換
+- 複数 AZ の高可用性コントロールプレーン
 
-**EKS Features**:
-- Managed K8s control plane (etcd, API server)
-- Automatic upgrades and patches
-- Integrate with AWS services (IAM, VPC, ALB, CloudWatch)
-- CNCF certified (standard Kubernetes)
+**EKS の特徴**:
+- 管理対象 K8s コントロールプレーン（etcd、API サーバー）
+- 自動アップグレード/パッチ
+- IAM/VPC/ALB/CloudWatch と統合
+- CNCF 認定（標準 Kubernetes）
 
-**EKS Worker Nodes Options**:
-- **Self-managed nodes**: You manage EC2 instances
-- **Managed node groups**: AWS manages EC2 lifecycle
-- **Fargate**: Serverless, no node management
+**EKS ワーカーノードの選択肢**:
+- **Self-managed nodes**: EC2 を自前管理
+- **Managed node groups**: EC2 ライフサイクルを AWS 管理
+- **Fargate**: ノード管理不要
 
 **ECS vs EKS**:
-- **ECS**: AWS-proprietary, simpler, tight AWS integration
-- **EKS**: Standard Kubernetes, portable, more complex, existing K8s expertise
+- **ECS**: AWS 独自、シンプル、AWS 連携強い
+- **EKS**: 標準 Kubernetes、可搬性高いが複雑
 
-**When to use EKS**:
-- Existing Kubernetes workloads
-- Kubernetes expertise in team
-- Multi-cloud/hybrid requirements
-- Standard Kubernetes tools needed
+**EKS を使う場面**:
+- 既存 Kubernetes ワークロード
+- チームに Kubernetes 経験がある
+- マルチクラウド/ハイブリッド要件
+- 標準 K8s ツールが必要
 
-**References:** Amazon EKS, Kubernetes on AWS
+**参照:** Amazon EKS、Kubernetes on AWS
 </details>
 
 ---
 
-### Question 17
-An Auto Scaling group needs to ensure that newly launched instances are ready to serve traffic before receiving requests. What should be configured?
+### 問題 17
+Auto Scaling グループで、新規起動インスタンスがトラフィック受信前に準備完了していることを担保したいです。何を設定すべきですか？
 
 A. EC2 Status Checks  
 B. ELB Health Checks  
@@ -675,27 +675,27 @@ C. Auto Scaling Health Check Grace Period
 D. CloudWatch Alarms  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **Health Check Grace Period** gives instances time to boot and pass checks
-- Prevents premature termination during initialization
-- Default: 300 seconds (5 minutes)
-- Should be longer than application startup time
+**解説:**
+- **Health Check Grace Period** は起動直後の準備時間を確保
+- 初期化中の早期終了を防止
+- デフォルトは 300 秒（5 分）
+- アプリ起動時間より長く設定する
 
-**Auto Scaling Health Checks**:
-- **EC2 health check**: Instance running (default)
-- **ELB health check**: Instance passes load balancer health checks
-- Grace period applies to both types
+**Auto Scaling のヘルスチェック**:
+- **EC2**: インスタンス稼働状態（既定）
+- **ELB**: ロードバランサーのヘルスチェック合格
+- Grace period は両方に適用
 
-**Recommended Configuration**:
-1. Set grace period > application startup time
-2. Enable ELB health checks
-3. Configure ELB health check with appropriate interval/threshold
+**推奨設定**:
+1. Grace period を起動時間より長くする
+2. ELB ヘルスチェックを有効化
+3. 間隔・しきい値を適切化
 
-**Example**:
+**例**:
 ```bash
 aws autoscaling create-auto-scaling-group \
   --auto-scaling-group-name my-asg \
@@ -703,13 +703,13 @@ aws autoscaling create-auto-scaling-group \
   --health-check-grace-period 600  # 10 minutes
 ```
 
-**References:** Auto Scaling Health Checks, Grace Period
+**参照:** Auto Scaling Health Checks、Grace Period
 </details>
 
 ---
 
-### Question 18
-A company wants to migrate lift-and-shift Windows applications to AWS without refactoring. Which compute option is MOST appropriate?
+### 問題 18
+Windows アプリをリファクタリングせずにリフト＆シフトで AWS へ移行したい企業があります。最も適切なコンピュート選択肢はどれですか？
 
 A. AWS Lambda  
 B. Amazon ECS  
@@ -717,126 +717,125 @@ C. Amazon EC2
 D. AWS Fargate  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **Amazon EC2** for lift-and-shift migrations
-- Run Windows Server, install applications as-is
-- Minimal refactoring required
-- Full control over OS and configuration
+**解説:**
+- **Amazon EC2** はリフト＆シフトに最適
+- Windows Server 上で既存アプリをそのまま実行可能
+- リファクタリングを最小化
+- OS と設定をフル制御
 
-**Migration Strategies (6 R's)**:
-1. **Rehost (Lift-and-Shift)**: Move as-is to EC2
-2. **Replatform (Lift-Tinker-Shift)**: Minor optimizations
-3. **Repurchase**: Move to SaaS
-4. **Refactor/Re-architect**: Redesign for cloud-native
-5. **Retire**: Decommission
-6. **Retain**: Keep on-premises
+**移行戦略（6R）**:
+1. **Rehost**: そのまま移行（Lift-and-Shift）
+2. **Replatform**: 小規模最適化
+3. **Repurchase**: SaaS へ置換
+4. **Refactor/Re-architect**: クラウドネイティブ再設計
+5. **Retire**: 廃止
+6. **Retain**: オンプレ継続
 
-**Lift-and-Shift Approach**:
-- Quick migration
-- Minimal risk
-- Can optimize later
-- Use AWS Application Migration Service (MGN)
+**Lift-and-Shift の特徴**:
+- 迅速に移行できる
+- リスクが低い
+- 後で最適化可能
+- AWS Application Migration Service (MGN) を活用
 
-**Other Options Not Suitable**:
-- Lambda: Requires code changes, event-driven
-- ECS/Fargate: Requires containerization
-- EC2 is best for "as-is" Windows applications
+**他選択肢が不向きな理由**:
+- Lambda: コード変更が必要
+- ECS/Fargate: コンテナ化が必要
+- 「現状維持移行」には EC2 が最適
 
-**References:** Migration Strategies, EC2 for Windows
+**参照:** Migration Strategies、EC2 for Windows
 </details>
 
 ---
 
-### Question 19
-An application running on Lambda is invoked by S3 events. During peak times, thousands of files are uploaded simultaneously. How should Lambda handle this?
+### 問題 19
+S3 イベントで起動する Lambda アプリがあります。ピーク時に何千ものファイルが同時アップロードされます。Lambda はどう処理すべきですか？
 
-A. Increase Lambda memory  
-B. Enable Lambda reserved concurrency  
-C. Lambda automatically scales concurrently  
-D. Use Step Functions  
+A. Lambda メモリを増やす  
+B. Lambda の予約同時実行を有効化  
+C. Lambda は自動的に同時実行スケールする  
+D. Step Functions を使う  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- Lambda automatically scales to handle concurrent invocations
-- Each S3 event triggers separate Lambda invocation
-- Default account concurrency: 1000 (can request increase)
-- No configuration needed for basic scaling
+**解説:**
+- Lambda は同時実行を自動スケール
+- 各 S3 イベントごとに別インボケーション
+- アカウント同時実行デフォルトは 1000（引き上げ可）
+- 基本的なスケールでは追加設定不要
 
-**Lambda Concurrency Types**:
-- **Account concurrency**: Total concurrent executions across all functions (1000 default)
-- **Reserved concurrency**: Dedicated concurrency for specific function
-- **Provisioned concurrency**: Pre-initialized instances (reduce cold starts)
+**Lambda 同時実行の種類**:
+- **Account concurrency**: 全関数合計（既定 1000）
+- **Reserved concurrency**: 関数専用上限/確保
+- **Provisioned concurrency**: 事前初期化（コールドスタート低減）
 
-**When to use Reserved Concurrency**:
-- Limit function concurrency (prevent overwhelming downstream)
-- Guarantee concurrency for critical functions
-- Prevent one function from consuming all account concurrency
+**Reserved concurrency を使う場面**:
+- 下流システムを保護するため上限設定
+- 重要関数に実行枠を確保
+- 1 関数が全体同時実行を使い切るのを防止
 
-**Example Scenario**:
-- 1000 files uploaded to S3
-- Lambda invoked 1000 times concurrently (within account limits)
-- If account limit is 1000, all execute immediately
-- If limit exceeded, some invocations throttled (429 error)
+**例**:
+- 1000 ファイル同時アップロード
+- 同時に 1000 回起動（上限内）
+- 上限超過分はスロットリング（429）
 
-**References:** Lambda Concurrency, Automatic Scaling
+**参照:** Lambda Concurrency、Automatic Scaling
 </details>
 
 ---
 
-### Question 20
-A web application needs to maintain session state. The application runs on multiple EC2 instances behind an Application Load Balancer. How should session state be managed?
+### 問題 20
+Web アプリでセッション状態を維持する必要があります。アプリは ALB 配下の複数 EC2 で動作しています。セッション状態はどう管理すべきですか？
 
-A. Store session data on EC2 instance local storage  
-B. Enable sticky sessions on ALB  
-C. Store session data in Amazon ElastiCache or DynamoDB  
-D. Use NLB instead of ALB  
+A. EC2 のローカルストレージに保存する  
+B. ALB のスティッキーセッションを有効化する  
+C. Amazon ElastiCache または DynamoDB に保存する  
+D. ALB ではなく NLB を使う  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- **External session storage** (ElastiCache/DynamoDB) is best practice
-- Sessions accessible from any instance
-- Survives instance failures
-- True stateless architecture
+**解説:**
+- **外部セッションストア**（ElastiCache/DynamoDB）がベストプラクティス
+- どのインスタンスからもセッション参照可能
+- インスタンス障害でもセッション継続
+- 真のステートレス設計を実現
 
-**Session Management Options**:
+**セッション管理の選択肢**:
 
-| Option | Pros | Cons |
+| 方式 | 長所 | 短所 |
 |--------|------|------|
-| **ElastiCache/DynamoDB** | Stateless, scalable, resilient | Additional service |
-| **Sticky Sessions** | Simple | Uneven load, not resilient |
-| **Local Storage** | Fast | Lost on instance failure |
+| **ElastiCache/DynamoDB** | ステートレス・拡張性・耐障害性 | 追加サービスが必要 |
+| **Sticky Sessions** | 実装が簡単 | 負荷偏り・耐障害性低い |
+| **Local Storage** | 高速 | 障害時に消失 |
 
-**Why ElastiCache/DynamoDB is Better**:
-- ✅ Any instance can serve any request
-- ✅ Auto Scaling works properly
-- ✅ Instance failure doesn't lose sessions
-- ✅ Better load distribution
+**ElastiCache/DynamoDB が優れる理由**:
+- ✅ どのインスタンスでも処理可能
+- ✅ Auto Scaling と相性が良い
+- ✅ 障害時にもセッション損失を回避
+- ✅ 負荷分散が均等化
 
-**Sticky Sessions Issues**:
-- Uneven instance utilization
-- New instances get no traffic initially
-- Instance failure = lost sessions
-- Use only if refactoring is not possible
+**Sticky Sessions の課題**:
+- インスタンス利用率の偏り
+- 新規インスタンスにトラフィックが流れにくい
+- 障害時にセッション喪失
+- リファクタリング不可の場合の暫定策
 
-**References:** Stateless Architecture, Session Management, ElastiCache
+**参照:** Stateless Architecture、Session Management、ElastiCache
 </details>
 
 ---
 
-### Question 21
-A company needs to run AWS services in its own data center to meet strict data residency requirements, while maintaining a consistent hybrid cloud experience. Which AWS service should they use?
+### 問題 21
+厳格なデータ所在地要件のため、自社データセンター内で AWS サービスを実行しつつ、ハイブリッドクラウドとして一貫した運用体験を維持したい企業があります。どの AWS サービスを使うべきですか？
 
 A. AWS Outposts  
 B. Amazon EC2 Dedicated Hosts  
@@ -844,25 +843,25 @@ C. AWS Snowball Edge
 D. AWS Direct Connect  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- AWS Outposts brings native AWS services, infrastructure, and operating models to on-premises data centers
-- Provides a consistent hybrid experience
-- Supports EC2, EBS, RDS, ECS, EKS, S3, and more
-- Dedicated Hosts are for compliance, not hybrid cloud
-- Snowball Edge is for edge computing and data transfer, not full AWS services
-- Direct Connect is for network connectivity, not running AWS services on-premises
+**解説:**
+- AWS Outposts はオンプレミスに AWS ネイティブのサービス/インフラ/運用モデルを提供
+- 一貫したハイブリッド体験を実現
+- EC2、EBS、RDS、ECS、EKS、S3 などをサポート
+- Dedicated Hosts はコンプライアンス分離用途
+- Snowball Edge はエッジ計算やデータ転送用途
+- Direct Connect はネットワーク接続用途
 
-**References:** AWS Outposts, Hybrid Cloud
+**参照:** AWS Outposts、Hybrid Cloud
 </details>
 
 ---
 
-### Question 22
-A research organization needs to run large-scale, high-throughput batch jobs on AWS with automatic job scheduling and resource provisioning. Which service should they use?
+### 問題 22
+研究機関が大規模・高スループットのバッチジョブを AWS 上で実行し、ジョブスケジューリングとリソースプロビジョニングを自動化したいです。どのサービスを使うべきですか？
 
 A. AWS Batch  
 B. Amazon EC2 Auto Scaling  
@@ -870,25 +869,25 @@ C. AWS Lambda
 D. Amazon EMR  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- AWS Batch is a fully managed batch computing service
-- Automatically provisions compute resources and schedules jobs
-- Supports Docker containers and EC2/Spot/Fargate
-- EC2 Auto Scaling is for scaling instances, not job scheduling
-- Lambda is for short-lived, event-driven compute
-- EMR is for big data processing, not general batch jobs
+**解説:**
+- AWS Batch はフルマネージドなバッチコンピューティングサービス
+- コンピュートリソースの調達とジョブスケジューリングを自動化
+- Docker と EC2/Spot/Fargate をサポート
+- EC2 Auto Scaling はインスタンス拡張向けでジョブ管理は弱い
+- Lambda は短時間イベント駆動向け
+- EMR はビッグデータ処理向け
 
-**References:** AWS Batch, Batch Computing
+**参照:** AWS Batch、Batch Computing
 </details>
 
 ---
 
-### Question 23
-A development team wants to share and deploy serverless applications published by AWS and third parties. Which AWS service should they use?
+### 問題 23
+AWS やサードパーティが公開したサーバーレスアプリケーションを共有・デプロイしたい開発チームがあります。どのサービスを使うべきですか？
 
 A. AWS Serverless Application Repository  
 B. AWS Marketplace  
@@ -896,24 +895,24 @@ C. AWS Lambda Layers
 D. AWS CloudFormation StackSets  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- AWS Serverless Application Repository is a managed repository for serverless apps
-- Allows sharing and deployment of Lambda-based applications
-- Marketplace is for commercial software, not serverless apps
-- Lambda Layers are for code sharing, not full applications
-- CloudFormation StackSets is for multi-account deployments
+**解説:**
+- AWS Serverless Application Repository はサーバーレスアプリ向けの管理リポジトリ
+- Lambda ベースアプリの共有/デプロイが可能
+- Marketplace は商用ソフト流通向け
+- Lambda Layers はコード共有向け
+- StackSets はマルチアカウント展開向け
 
-**References:** AWS Serverless Application Repository, Serverless Deployment
+**参照:** AWS Serverless Application Repository、Serverless Deployment
 </details>
 
 ---
 
-### Question 24
-A company wants to run VMware workloads on AWS with seamless integration and management using familiar VMware tools. Which solution should they use?
+### 問題 24
+VMware ツールをそのまま使って統合運用しながら、AWS 上で VMware ワークロードを実行したい企業があります。どのソリューションを使うべきですか？
 
 A. VMware Cloud on AWS  
 B. AWS Outposts  
@@ -921,25 +920,25 @@ C. Amazon EC2 Dedicated Hosts
 D. AWS Snowball Edge  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- VMware Cloud on AWS integrates VMware vSphere, NSX, and vSAN with AWS infrastructure
-- Enables seamless migration and hybrid operations
-- Managed by both AWS and VMware
-- Outposts is for running AWS services on-premises
-- Dedicated Hosts are for compliance
-- Snowball Edge is for edge computing
+**解説:**
+- VMware Cloud on AWS は vSphere/NSX/vSAN と AWS インフラを統合
+- シームレスな移行とハイブリッド運用を実現
+- AWS と VMware が共同でマネージド提供
+- Outposts は AWS サービスのオンプレ展開
+- Dedicated Hosts はコンプライアンス用途
+- Snowball Edge はエッジ用途
 
-**References:** VMware Cloud on AWS, Hybrid VMware
+**参照:** VMware Cloud on AWS、Hybrid VMware
 </details>
 
 ---
 
-### Question 25
-A global enterprise needs to deploy AWS compute and storage services at the edge of mobile networks to deliver ultra-low latency applications. Which AWS service should they use?
+### 問題 25
+モバイルネットワークのエッジに AWS の計算/ストレージを配置し、超低レイテンシのアプリを提供したいグローバル企業があります。どの AWS サービスを使うべきですか？
 
 A. AWS Wavelength  
 B. AWS Outposts  
@@ -947,49 +946,49 @@ C. Amazon CloudFront
 D. AWS Direct Connect  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- AWS Wavelength brings AWS services to the edge of 5G networks
-- Enables ultra-low latency applications for mobile and edge devices
-- Outposts is for on-premises data centers
-- CloudFront is a CDN, not edge compute
-- Direct Connect is for network connectivity
+**解説:**
+- AWS Wavelength は 5G ネットワークのエッジへ AWS サービスを提供
+- モバイル/エッジ向け超低レイテンシを実現
+- Outposts はオンプレ DC 向け
+- CloudFront は CDN
+- Direct Connect は専用線接続
 
-**References:** AWS Wavelength, Edge Computing
+**参照:** AWS Wavelength、Edge Computing
 </details>
 
 ---
 
-### Question 26
-A company wants to run Amazon ECS and EKS workloads on its own infrastructure outside AWS, managed from the AWS Console. Which services should they use?
+### 問題 26
+AWS 外の自社インフラで ECS/EKS ワークロードを実行し、AWS Console から管理したい企業があります。どのサービスを使うべきですか？
 
-A. Amazon ECS Anywhere and Amazon EKS Anywhere  
+A. Amazon ECS Anywhere と Amazon EKS Anywhere  
 B. AWS Outposts  
 C. AWS Fargate  
 D. Amazon EC2 Dedicated Hosts  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- ECS Anywhere and EKS Anywhere extend container orchestration to on-premises infrastructure
-- Managed from AWS Console
-- Outposts is for running AWS infrastructure on-premises
-- Fargate is for serverless containers in AWS
-- Dedicated Hosts are for compliance
+**解説:**
+- ECS Anywhere / EKS Anywhere はオンプレ基盤にコンテナ運用を拡張
+- AWS Console から管理できる
+- Outposts は AWS インフラ自体をオンプレ配置
+- Fargate は AWS 内サーバーレス実行
+- Dedicated Hosts はコンプライアンス用途
 
-**References:** ECS Anywhere, EKS Anywhere, Hybrid Containers
+**参照:** ECS Anywhere、EKS Anywhere、Hybrid Containers
 </details>
 
 ---
 
-### Question 27
-A team needs a managed, scalable Apache Cassandra-compatible database for their application. Which AWS service should they use?
+### 問題 27
+アプリ向けに、Apache Cassandra 互換のマネージドでスケーラブルなデータベースが必要です。どの AWS サービスを使うべきですか？
 
 A. Amazon Keyspaces  
 B. Amazon DynamoDB  
@@ -997,23 +996,23 @@ C. Amazon RDS for PostgreSQL
 D. Amazon Aurora  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- Amazon Keyspaces is a managed Cassandra-compatible database
-- Supports Cassandra Query Language (CQL)
-- DynamoDB is NoSQL but not Cassandra-compatible
-- RDS and Aurora are relational databases
+**解説:**
+- Amazon Keyspaces は Cassandra 互換のマネージド DB
+- CQL（Cassandra Query Language）をサポート
+- DynamoDB は NoSQL だが Cassandra 互換ではない
+- RDS/Aurora はリレーショナル DB
 
-**References:** Amazon Keyspaces, Managed Cassandra
+**参照:** Amazon Keyspaces、Managed Cassandra
 </details>
 
 ---
 
-### Question 28
-A financial institution needs a fully managed, immutable, cryptographically verifiable ledger database. Which AWS service should they use?
+### 問題 28
+金融機関が、完全マネージドで不変かつ暗号学的に検証可能な台帳データベースを必要としています。どの AWS サービスを使うべきですか？
 
 A. Amazon QLDB  
 B. Amazon Aurora  
@@ -1021,89 +1020,20 @@ C. Amazon RDS
 D. Amazon DynamoDB  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**答え: A**
 
-**Explanation:**
-- Amazon QLDB (Quantum Ledger Database) is a fully managed ledger database
-- Provides immutable, cryptographically verifiable transaction log
-- Aurora, RDS, and DynamoDB are not ledger databases
+**解説:**
+- Amazon QLDB（Quantum Ledger Database）はマネージド台帳 DB
+- 不変で暗号学的検証可能なトランザクションログを提供
+- Aurora/RDS/DynamoDB は台帳 DB ではない
 
-**References:** Amazon QLDB, Ledger Database
+**参照:** Amazon QLDB、Ledger Database
 </details>
 
 ---
 
-## Summary
+## まとめ
 
-**Total Questions**: 28  
-**Topics Covered**:
-- EC2 Instance Types and Pricing (On-Demand, Reserved, Spot, Dedicated)
-- Auto Scaling (Policies, Health Checks, Lifecycle)
-- Elastic Load Balancing (ALB, NLB, CLB, GLB)
-- AWS Lambda (Configuration, Limits, Concurrency)
-- Container Services (ECS, EKS, Fargate)
-- Elastic Beanstalk (PaaS)
-- Placement Groups
-- Session Management
-- AWS Outposts
-- AWS Batch
-- AWS Serverless Application Repository
-- VMware Cloud on AWS
-- AWS Wavelength
-- ECS Anywhere
-- EKS Anywhere
-- Amazon Keyspaces
-- Amazon QLDB
-
-**Exam Tips**:
-
-**EC2 Pricing**:
-- **Spot**: Cheapest (90% discount), can be interrupted
-- **Reserved**: 1-3 year commitment, up to 72% discount
-- **Savings Plans**: Flexible commitment, up to 66% discount
-- **On-Demand**: No commitment, highest price
-- **Dedicated Hosts**: BYOL, compliance, most expensive
-
-**Auto Scaling Policies**:
-- **Target Tracking**: Easiest, maintain metric at target
-- **Scheduled**: Predictable patterns
-- **Step**: Multiple thresholds
-- **Predictive**: ML-based forecasting
-
-**Load Balancers**:
-- **ALB**: Layer 7, HTTP/HTTPS, advanced routing
-- **NLB**: Layer 4, extreme performance, static IP
-- **CLB**: Legacy, basic
-- **GLB**: Layer 3, virtual appliances
-
-**Lambda**:
-- Max timeout: 15 minutes
-- Memory: 128 MB - 10 GB
-- CPU scales with memory
-- Automatic concurrent scaling
-
-**Containers**:
-- **ECS + EC2**: Manage instances
-- **ECS + Fargate**: Serverless containers
-- **EKS**: Managed Kubernetes
-
-**Placement Groups**:
-- **Cluster**: Low latency, single AZ
-- **Spread**: Max availability, 7/AZ
-- **Partition**: Large distributed apps
-
-**Best Practices**:
-1. Use IAM roles for EC2 (not access keys)
-2. External session storage (ElastiCache/DynamoDB)
-3. Multi-AZ for high availability
-4. Right-size instances (use CloudWatch metrics)
-5. Use Spot for fault-tolerant workloads
-6. Target Tracking for most Auto Scaling scenarios
-
-**Next Steps**:
-- Practice identifying correct pricing model for scenarios
-- Understand when to use each load balancer type
-- Know Lambda limitations and when to use alternatives
-- Compare ECS vs EKS, Fargate vs EC2 launch types
+**総問題数**: 28  
