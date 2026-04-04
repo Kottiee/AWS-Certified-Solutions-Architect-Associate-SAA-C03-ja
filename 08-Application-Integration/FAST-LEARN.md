@@ -1,405 +1,334 @@
-# ⚡ Fast Learning - Application Integration
+# ⚡ 高速学習 - ネットワークとコンテンツ配信
 
-> **Time to Complete**: 45-60 minutes | **Exam Weight**: ~10-15%
+> **所要時間**: 75-90 分 | **試験の重み**: ~20-25%
 
-## 🎯 Must-Know Concepts (5 Minutes)
+## 🎯 必須コンセプト (5分)
 
-### Integration Service Selector (SSKE-AS)
+### ネットワークの基礎 (VPC-SING)
 ```
-MESSAGE QUEUE? → SQS (Simple Queue Service)
-PUB/SUB? → SNS (Simple Notification Service)
-EVENT BUS? → EventBridge
-ORCHESTRATION? → Step Functions
-API GATEWAY? → API Gateway
-STREAMING? → Kinesis
-APP WORKFLOW? → SWF (legacy, use Step Functions)
-```
-
-**Memory Aid**: "SQS Sends, SNS Notifies, Kinesis Streams, EventBridge Acts, Step functions Sequence"
-
-## 📊 Quick Reference Tables
-
-### SQS vs SNS vs EventBridge
-| Feature | SQS | SNS | EventBridge |
-|---------|-----|-----|-------------|
-| **Type** | Queue (pull) | Pub/Sub (push) | Event bus |
-| **Pattern** | Point-to-point | Fan-out (1-to-many) | Event routing |
-| **Persistence** | Yes (4-14 days) | No (immediate delivery) | No |
-| **Consumers** | Poll for messages | Push to subscribers | Rules route events |
-| **Use Case** | Decouple apps | Notifications | Event-driven architecture |
-| **Max Size** | 256 KB | 256 KB | 256 KB |
-
-### SQS Queue Types
-| Feature | Standard | FIFO |
-|---------|----------|------|
-| **Order** | Best-effort | Guaranteed |
-| **Duplicates** | Possible | Exactly-once |
-| **Throughput** | Unlimited | 300 msg/s (batch: 3,000) |
-| **Use Case** | High throughput | Order matters |
-| **Naming** | Any name | Must end in .fifo |
-
-**Memory Aid**: "FIFO = First In First Out, ordered, Fewer messages"
-
-## 🔥 Exam Hot Topics
-
-### 1. SQS Deep Dive
-```
-KEY CONCEPTS:
-├── Visibility Timeout (default 30s, max 12h)
-│   └── Message invisible to other consumers after polling
-├── Message Retention (default 4 days, max 14 days)
-│   └── How long messages stay in queue
-├── Long Polling (0-20s)
-│   └── Wait for messages (reduces costs, preferred)
-├── Short Polling (default)
-│   └── Immediate return (can return empty)
-└── Dead Letter Queue (DLQ)
-    └── Failed messages after max receives
-
-LIMITS:
-├── Message size: 256 KB (max)
-├── Max retention: 14 days
-├── Visibility timeout: 12 hours (max)
-└── Delay: 0-900 seconds (15 min)
+VPC → Virtual Private Cloud (プライベートネットワーク)
+SUBNETS (サブネット) → VPCをセグメントに分割 (パブリック/プライベート)
+INTERNET GATEWAY (インターネットゲートウェイ) → インターネットへの接続
+NAT GATEWAY → プライベートサブネットからのアウトバウンド接続
+ROUTE TABLES (ルートテーブル) → トラフィックのルーティングルール
+SECURITY GROUPS (セキュリティグループ) → インスタンス単位のファイアウォール (ステートフル)
+NACLs (ネットワークACL) → サブネット単位のファイアウォール (ステートレス)
 ```
 
-**Common Pattern**: Producer → SQS → Consumer (Auto Scaling based on queue depth)
+**暗記のコツ**: "VPC Secures Internet Networks Globally"（VPCはインターネットネットワークをグローバルに保護する）
 
-### 2. SNS Features
+## 📊 クイックリファレンステーブル
+
+### VPCコンポーネント構成マトリクス
+| コンポーネント | レベル | 状態 (State) | デフォルト | 許可/拒否 |
+|-----------|-------|-------|---------|------------|
+| **セキュリティグループ** | インスタンス | ステートフル | 全インバウンド拒否 | 許可のみ |
+| **NACL** | サブネット | ステートレス | 全許可 | 許可 & 拒否 |
+| **ルートテーブル** | サブネット | N/A | ローカルルート | ルートのみ |
+| **インターネットゲートウェイ** | VPC | N/A | なし | 全トラフィック |
+| **NAT ゲートウェイ** | AZ | N/A | なし | アウトバウンドのみ |
+
+### セキュリティグループ vs NACL (重要！)
+| 特徴 | セキュリティグループ | NACL |
+|---------|----------------|------|
+| **レベル** | インスタンス (ENI) | サブネット |
+| **ルール** | 許可のみ | 許可 & 拒否 |
+| **状態** | ステートフル (戻りは自動) | ステートレス (両方の設定が必要) |
+| **順序** | 全ルールを評価 | 番号順に評価 |
+| **デフォルト** | インバウンド拒否、アウトバウンド許可 | 全許可 |
+| **関連付け** | 1インスタンスに複数可 | 1サブネットに1つのみ |
+
+**暗記のコツ**: "SG = Stateful Good guy (許可のみ), NACL = Stateless Number rules (許可/拒否)"
+
+## 🔥 試験の頻出トピック
+
+### 1. VPC CIDR ブロック
 ```
-SUBSCRIBERS:
-├── HTTP/HTTPS endpoints
-├── Email/Email-JSON
-├── SMS (text messages)
-├── SQS queues
-├── Lambda functions
-├── Mobile push (APNS, GCM, etc.)
-└── Kinesis Data Firehose
+有効な範囲: /16 から /28
+例: 10.0.0.0/16 = 65,536 IP
 
-FEATURES:
-├── Message filtering (subscribers choose)
-├── FIFO topics (ordering + deduplication)
-├── Encryption (at rest with KMS)
-├── Access policies
-└── Message attributes
+プライベート IP 範囲 (RFC 1918)
+├── 10.0.0.0/8      (10.0.0.0 - 10.255.255.255)
+├── 172.16.0.0/12   (172.16.0.0 - 172.31.255.255)
+└── 192.168.0.0/16  (192.168.0.0 - 192.168.255.255)
 
-USE CASES:
-├── Fan-out pattern (SNS → multiple SQS)
-├── Alerts and notifications
-├── Mobile push notifications
-└── Email campaigns
-```
-
-### 3. SNS + SQS Fan-Out Pattern
-```
-        [SNS Topic]
-            |
-    ________|________
-    |       |       |
-  [SQS]  [SQS]  [SQS]
-    |       |       |
- [App1] [App2] [App3]
-
-BENEFITS:
-✅ Fully decoupled
-✅ No data loss
-✅ Parallel asynchronous processing
-✅ Add subscribers easily
-```
-
-### 4. Kinesis Family
-| Service | Purpose | Use Case | Data Retention |
-|---------|---------|----------|----------------|
-| **Data Streams** | Real-time streaming | Process streaming data | 1-365 days |
-| **Data Firehose** | Load streams to storage | ETL to S3/Redshift | None (immediate) |
-| **Data Analytics** | SQL on streams | Real-time analytics | N/A |
-| **Video Streams** | Video streaming | Security cameras, video | 1-7 days |
-
-**Memory Aid**: "DFAV" = Data streams (raw), Firehose (load), Analytics (analyze), Video
-
-## 💡 Common Exam Scenarios
-
-### Scenario 1: Decouple Application Tiers
-**Q**: Web tier and processing tier need to be independent
-**✅ ANSWER**: SQS queue between tiers
-
-### Scenario 2: Send Same Message to Multiple Services
-**Q**: One event needs to trigger 3 different Lambda functions
-**✅ ANSWER**: SNS topic with 3 Lambda subscriptions
-
-### Scenario 3: Process Messages in Order
-**Q**: Orders must be processed in exact sequence
-**✅ ANSWER**: SQS FIFO queue (not Standard)
-
-### Scenario 4: Handle Traffic Spikes
-**Q**: Application receives 10,000 requests in 1 minute, process over 1 hour
-**✅ ANSWER**: SQS Standard queue + Auto Scaling based on queue depth
-
-### Scenario 5: Real-Time Log Processing
-**Q**: Process millions of log records per second in real-time
-**✅ ANSWER**: Kinesis Data Streams
-
-### Scenario 6: Send to S3 and Multiple SQS Queues
-**Q**: S3 upload event needs to trigger 3 different processing workflows
-**✅ ANSWER**: S3 → SNS → 3 SQS queues (fan-out pattern)
-
-### Scenario 7: Coordinate Microservices
-**Q**: Multi-step workflow with error handling and retries
-**✅ ANSWER**: AWS Step Functions (state machine)
-
-### Scenario 8: Route Events to Different Targets
-**Q**: Different EC2 state changes go to different Lambda functions
-**✅ ANSWER**: EventBridge with rules
-
-## 🎓 Speed Learning Tips
-
-### API Gateway Quick Facts
-```
-TYPES:
-├── REST API (feature-rich)
-├── HTTP API (cheaper, simpler)
-└── WebSocket API (bidirectional)
-
-FEATURES:
-├── Caching
-├── Request/response transformation
-├── Authentication (IAM, Cognito, Lambda)
-├── Throttling (rate limiting)
-├── API versioning
-└── CORS support
-
-INTEGRATION TARGETS:
-├── Lambda (serverless)
-├── HTTP endpoints
-├── AWS services (S3, DynamoDB)
-├── VPC Link (private resources)
-└── Mock responses
+予約済み IP (サブネットごと、最初4つ + 最後1つ)
+10.0.0.0/24 の例:
+├── 10.0.0.0   - ネットワークアドレス
+├── 10.0.0.1   - VPC ルーター
+├── 10.0.0.2   - DNS サーバー
+├── 10.0.0.3   - 将来の利用のため
+└── 10.0.0.255 - ブロードキャスト (未使用だが予約済み)
 ```
 
-### Step Functions Basics
+**利用可能な IP 数** = 合計 - 5 (例: /24 = 256 - 5 = 251 利用可能)
+
+### 2. パブリック vs プライベートサブネット
 ```
-WHAT: Serverless orchestration
-HOW: Visual workflows (state machines)
+パブリックサブネット
+├── インターネットゲートウェイへのルートを持つ (0.0.0.0/0 → IGW)
+├── インスタンスがパブリック IP を持つ
+├── 用途: Web サーバー、ロードバランサー
+└── インターネットからアクセス可能
 
-STATE TYPES:
-├── Task - Do work (Lambda, etc.)
-├── Choice - Branching logic
-├── Parallel - Run in parallel
-├── Wait - Delay
-├── Succeed/Fail - End states
-└── Map - Loop over items
-
-WORKFLOW TYPES:
-├── Standard (max 1 year, exactly-once)
-└── Express (max 5 min, at-least-once)
-
-USE CASES:
-├── Multi-step applications
-├── ETL processes
-├── Order processing
-└── Human approval workflows
+プライベートサブネット
+├── インターネットゲートウェイへの直接ルートを持たない
+├── アウトバウンド接続に NAT ゲートウェイを使用する
+├── 用途: データベース、アプリサーバー
+└── インターネットから直接アクセス不可
 ```
 
-### EventBridge Key Concepts
+**重要**: ルートテーブルがパブリックかプライベートかを決定する！
+
+### 3. VPC 接続オプション
+| オプション | ユースケース | 帯域幅 | コスト |
+|--------|----------|-----------|------|
+| **インターネットゲートウェイ** | パブリックインターネット接続 | 無制限 | 無料 |
+| **NAT ゲートウェイ** | プライベート → インターネット (アウトバウンド) | 45 Gbps | $$$ |
+| **VPC ピアリング** | 2つの VPC を接続 | 帯域制限なし | $ |
+| **Transit Gateway** | 複数の VPC のハブ | 50 Gbps/アタッチメント | $$ |
+| **VPN** | オンプレミスから AWS (暗号化) | 最大 1.25 Gbps | $ |
+| **Direct Connect** | 専用線での接続 | 1-100 Gbps | $$$ |
+| **PrivateLink** | サービスへのプライベートアクセス | 10 Gbps | $$ |
+
+### 4. Route 53 ルーティングポリシー
+| ポリシー | ユースケース | 仕組み |
+|--------|----------|--------------|
+| **シンプル** | 単一のリソース | 1つの値を返す |
+| **加重** | A/B テスト、段階的な移行 | 各リソースに % で割り当て |
+| **レイテンシー** | 最高のパフォーマンス | 最も低遅延のリージョンを選択 |
+| **フェイルオーバー** | アクティブ/パッシブ DR | ヘルスチェックに基づく |
+| **位置情報** | 場所に基づくコンテンツ | ユーザーの所在地に基づく |
+| **地理的近接性** | 地理に基づくトラフィックフロー | 距離 + バイアス |
+| **複数値回答** | ヘルスチェック付きの複数 IP | 複数の値を返す |
+
+## 💡 試験によく出るシナリオ
+
+### シナリオ 1: EC2 がインターネットにアクセスできない
+**チェックリスト**:
+1. ✅ サブネットはパブリックか？ (IGW へのルート)
+2. ✅ インスタンスにパブリック IP はあるか？
+3. ✅ セキュリティグループでアウトバウンドが許可されているか？
+4. ✅ NACL でアウトバウンド + インバウンドの戻りが許可されているか？
+5. ✅ ルートテーブルに 0.0.0.0/0 → IGW があるか？
+
+### シナリオ 2: プライベートサブネットにインターネット接続が必要
+**Q**: プライベートサブネットの DB がパッチをダウンロードする必要がある
+**✅ 回答**: パブリックサブネットに NAT ゲートウェイを配置 + ルート 0.0.0.0/0 → NAT を設定
+
+### シナリオ 3: 複数の VPC を接続する
+**Q**: 3つの VPC が相互通信する必要がある
+**❌ 間違い**: 3つの個別 VPC ピアリング (スケールしない)
+**✅ 正解**: AWS Transit Gateway (ハブアンドスポーク構成)
+
+### シナリオ 4: オンプレミスから AWS へ
+**Q**: データセンターから VPC への安全な接続が必要
+- **迅速なセットアップ、暗号化**: Site-to-Site VPN
+- **専用線、高帯域幅**: Direct Connect
+- **両方 (冗長化)**: Direct Connect + VPN バックアップ
+
+### シナリオ 5: 特定の IP アドレスをブロックする
+**Q**: 悪意のある IP からのアクセスをブロックしたい
+**❌ 間違い**: セキュリティグループ (拒否ルールが使えない)
+**✅ 正解**: NACL (拒否ルールをサポート) または AWS WAF
+
+### シナリオ 6: ユーザーの所在地に基づいてルーティング
+**Q**: EU ユーザーは EU リソースへ、US ユーザーは US リソースへ
+**✅ 回答**: Route 53 位置情報ルーティングポリシー
+
+### シナリオ 7: 他の AWS アカウントにサービスを公開
+**Q**: 顧客に対して自社サービスへのプライベートアクセスを提供したい
+**✅ 回答**: AWS PrivateLink (VPC エンドポイントサービス)
+
+## 🎓 高速学習のヒント
+
+### VPC フローログ
 ```
-COMPONENTS:
-├── Event Bus (receives events)
-├── Rules (filter & route)
-├── Targets (where to send)
-└── Schema Registry (structure)
+キャプチャ対象: ENI を通過する IP トラフィック
+保存先: CloudWatch Logs または S3
+レベル: VPC、サブネット、または ENI
+用途: トラブルシューティング、セキュリティ分析
 
-EVENT SOURCES:
-├── AWS services (100+)
-├── Custom applications
-├── SaaS partners (Zendesk, etc.)
-└── Scheduled (cron)
-
-TARGETS:
-├── Lambda functions
-├── SQS queues
-├── SNS topics
-├── Step Functions
-├── EC2 actions
-└── 20+ AWS services
-
-VS CloudWatch Events:
-└── EventBridge = CloudWatch Events + SaaS + custom apps
+キャプチャされないもの:
+❌ メタデータ (169.254.169.254)
+❌ DHCP
+❌ AWS DNS
+❌ Windows ライセンス認証
 ```
 
-## 📝 Rapid-Fire Facts
+### VPC ピアリングのルール
+✅ リージョンを跨いだピアリングが可能
+✅ アカウントを跨いだピアリングが可能
+✅ 推移的ピアリングは不可 (A-B-C：AからCへは届かない)
+✅ CIDR ブロックは重複不可
+❌ 重複する CIDR は設定できない
+❌ エッジツーエッジルーティングは不可
 
-### SQS Important Settings
+### CloudFront の重要コンセプト
 ```
-VISIBILITY TIMEOUT
-├── Default: 30 seconds
-├── Max: 12 hours
-├── Purpose: Prevent duplicate processing
-└── ChangeMessageVisibility API to extend
+概要: コンテンツ配信ネットワーク (CDN)
+場所: 世界 400 以上のエッジロケーション
+ユースケース:
+├── 静的コンテンツ (S3)
+├── 動的コンテンツ (API, ビデオ)
+├── HTTPS 必須要件
+└── DDoS 保護 (AWS Shield)
 
-RECEIVE MESSAGE WAIT TIME (Long Polling)
-├── Default: 0 (short polling)
-├── Max: 20 seconds
-├── Benefit: Reduce costs, fewer empty responses
-└── Recommended: Enable long polling
+オリジン:
+├── S3 バケット (静的)
+├── EC2 インスタンス
+├── ALB/ELB
+├── カスタム HTTP サーバー
+└── MediaPackage
 
-DELAY QUEUES
-├── Default: 0 seconds
-├── Max: 15 minutes (900 seconds)
-├── Purpose: Postpone message delivery
-└── Use: Implement delays in processing
-```
-
-### SNS vs SQS Decision
-```
-Use SNS when:
-✅ Multiple subscribers
-✅ Push-based delivery
-✅ Real-time notifications
-✅ Mobile push
-✅ Email/SMS needed
-
-Use SQS when:
-✅ Decouple applications
-✅ Buffer requests
-✅ Pull-based processing
-✅ Persist messages
-✅ Control processing rate
+セキュリティ:
+├── OAI (Origin Access Identity) - CloudFront 経由のみ S3 許可
+├── 署名付き URL/Cookie - アクセス制限
+├── 地理的制限 - 国単位でのブロック
+└── WAF - Web アプリケーションファイアウォール
 ```
 
-### Kinesis Data Streams
-- **Shards**: Throughput unit (1 MB/s in, 2 MB/s out)
-- **Retention**: 1-365 days (default 24 hours)
-- **Partition Key**: Determines which shard
-- **Consumers**: Multiple can read same data
-- **Use**: Real-time analytics, log processing
+## 📝 ラピッドファイア・ファクト
 
-### Kinesis Firehose
-- **No shards**: Fully managed scaling
-- **Destinations**: S3, Redshift, Elasticsearch, Splunk
-- **Transformations**: Lambda can transform data
-- **Buffering**: By size (1-128 MB) or time (60-900s)
-- **Use**: Load streaming data to storage
+### サブネット CIDR サイズガイド
+| CIDR | 合計 IP 数 | 利用可能 IP 数 | 一般的な用途 |
+|------|-----------|------------|------------|
+| /28 | 16 | 11 | 非常に小さなサブネット |
+| /27 | 32 | 27 | 小さなサブネット |
+| /26 | 64 | 59 | 中規模サブネット |
+| /25 | 128 | 123 | 中規模サブネット |
+| /24 | 256 | 251 | **最も一般的** |
+| /20 | 4,096 | 4,091 | 大規模サブネット |
+| /16 | 65,536 | 65,531 | **VPC の最大サイズ** |
 
-## 🚀 5-Minute Master Review
+### NAT インスタンス vs NAT ゲートウェイ
+| 特徴 | NAT ゲートウェイ | NAT インスタンス |
+|---------|-------------|--------------|
+| **管理** | AWS | ユーザー |
+| **可用性** | AZ 内で高可用 | スクリプト等でのフェイルオーバーが必要 |
+| **帯域幅** | 45 Gbps | インスタンスタイプに依存 |
+| **コスト** | 高い | 低い |
+| **セキュリティグループ** | N/A | 必要 (自分で管理) |
+| **踏み台サーバー** | 不可 | 踏み台として利用可能 |
+| **推奨** | ✅ 推奨 | ❌ レガシー |
 
-### Integration Decision Tree
+### VPC エンドポイントの種類
 ```
-1. What's your pattern?
-   QUEUE (pull) → SQS
-   PUB/SUB (push) → SNS
-   STREAMING → Kinesis
-   ORCHESTRATION → Step Functions
-   API → API Gateway
-   EVENT ROUTING → EventBridge
+インターフェイスエンドポイント (PrivateLink)
+├── サブネット内の ENI
+├── ほとんどの AWS サービスに対応
+├── 時間単価 + データ転送料金が発生
+└── 例: EC2, SNS, CloudWatch
+
+ゲートウェイエンドポイント
+├── ルートテーブルのターゲットとして設定
+├── S3 と DynamoDB のみ
+├── 無料！
+└── S3/DynamoDB にはこれが優先される
+```
+
+**暗記のコツ**: "Gateway for S3 & DynamoDB = Free (無料), Interface for everything else = Fee (有料)"
+
+### Direct Connect
+- **速度**: 1 Gbps, 10 Gbps, 100 Gbps
+- **セットアップ期間**: 数週間から数ヶ月
+- **暗号化**: デフォルトでは非暗号化 (DX 上で VPN を使用)
+- **ユースケース**: 安定した高スループット
+- **仮想インターフェイス**: パブリック VIF, プライベート VIF, トランジット VIF
+
+## 🚀 5分間マスター復習
+
+### ネットワーク決定ツリー
+```
+1. パブリックサブネットからインターネットが必要？
+   → インターネットゲートウェイ + パブリック IP + ルート設定
    
-2. For queuing, need order?
-   YES → SQS FIFO
-   NO → SQS Standard
+2. プライベートサブネットからインターネットが必要？
+   → NAT ゲートウェイ (パブリックサブネットに配置)
    
-3. For streaming, need processing?
-   RAW STREAMING → Data Streams
-   LOAD TO STORAGE → Firehose
-   ANALYTICS → Data Analytics
+3. VPC 同士を接続したい？
+   2つの VPC → VPC ピアリング
+   3つ以上の VPC → Transit Gateway
    
-4. Multiple consumers for same message?
-   YES → SNS (pub/sub)
-   NO → SQS (queue)
+4. オンプレミスと接続したい？
+   迅速/暗号化 → VPN
+   専用/高速 → Direct Connect
+   
+5. IP をブロックしたい？
+   → NACL または AWS WAF
+   
+6. DNS ルーティングが必要？
+   場所ベース → 位置情報ルーティング
+   遅延ベース → レイテンシーベース
+   災害復旧 → フェイルオーバー
 ```
 
-### Common Patterns
-```
-1. DECOUPLING PATTERN
-   App1 → SQS → App2
-   
-2. FAN-OUT PATTERN
-   S3 → SNS → [SQS, SQS, SQS] → [Lambda, Lambda, Lambda]
-   
-3. LOAD LEVELING
-   Requests → SQS → Auto Scaling Group (process at own pace)
-   
-4. PRIORITY QUEUE
-   High priority → SQS1
-   Low priority → SQS2
-   
-5. EVENT-DRIVEN
-   AWS Service → EventBridge → Lambda
-```
+### セキュリティのベストプラクティス
+✅ データベースにはプライベートサブネットを使用する
+✅ セキュリティグループを主要なファイアウォールとして使用する
+✅ NACL を追加の保護レイヤーとして使用する
+✅ VPC フローログを有効にする
+✅ AWS サービスへのアクセスには VPC エンドポイントを使用する
+✅ パブリックサブネットにデータベースを置かない
+✅ NAT インスタンスではなく NAT ゲートウェイを使用する
+✅ 多層防御 (Defense in Depth) を実施する
 
-### Common Mistakes to Avoid
-❌ Using SNS when you need message persistence (use SQS)
-❌ Not setting appropriate visibility timeout (messages reprocess)
-❌ Using SQS Standard when order matters (use FIFO)
-❌ Forgetting to enable long polling (higher costs)
-❌ Not using Dead Letter Queue for failed messages
-❌ Polling empty SQS queues frequently (use long polling)
-❌ Not implementing exponential backoff for retries
-❌ Using Step Functions for simple tasks (use Lambda)
+### 避けるべき一般的な間違い
+❌ サブネットごとの 5 つの予約 IP を忘れる
+❌ NAT ゲートウェイの代わりに NAT インスタンスを使う
+❌ プライベートサブネットに NAT ゲートウェイを置く
+❌ VPC ピアリングが推移的であると勘違いする (そうではない！)
+❌ ピアリング対象の CIDR ブロックを重複させる
+❌ NACL にアウトバウンドルールしか設定しない (ステートレスなので両方必要！)
+❌ セキュリティグループで拒否しようとする (NACL を使う)
+❌ S3/DynamoDB に VPC エンドポイントを使わない (コスト増！)
 
-## 🎯 Exam Practice Speedrun
+## 🎯 試験対策スピードラン
 
-**Quick Questions** (Answers at bottom)
+**クイッククエスチョン** (答えは下部)
 
-1. SQS max message size? __
-2. SQS max retention period? __
-3. What ensures message order in SQS? __
-4. SNS delivers to how many types of endpoints? __
-5. What enables fan-out pattern? __
-6. Which Kinesis service loads to S3? __
-7. Max visibility timeout for SQS? __
-8. API Gateway can integrate with? __
+1. サブネットごとに予約されている IP 数は？ __
+2. セキュリティグループはステートフル？ステートレス？ __
+3. セキュリティグループでトラフィックを「拒否」できる？ __
+4. VPC CIDR の最大サイズは？ __
+5. インターフェイス型とゲートウェイ型、無料なのはどっち？ __
+6. VPC ピアリングは推移的（A-B-CでAからCへ届く）？ __
+7. 高可用性 (HA) な NAT を提供するのは？ __
+8. DR (災害復旧) に適した Route 53 ポリシーは？ __
 
 ---
 
-### AppSync (GraphQL)
-```
-WHAT: Managed GraphQL service
-USE: Mobile/web apps with real-time data
+### Global Accelerator vs CloudFront
+| 特徴 | CloudFront | Global Accelerator |
+|---------|------------|-------------------|
+| **目的** | コンテンツのキャッシュ | 最適なエンドポイントへのルーティング |
+| **ユースケース** | 静的/動的コンテンツ | 非 HTTP (TCP/UDP) |
+| **キャッシュ** | あり | なし |
+| **IP アドレス** | 変動する | 固定 (2つの Anycast IP) |
+| **プロトコル** | HTTP/HTTPS | 全般 (TCP/UDP) |
 
-FEATURES:
-├── Real-time subscriptions
-├── Offline sync
-├── Multiple data sources
-├── Automatic scaling
-└── Built-in security
+### Elastic IP の事実
+- 静的なパブリック IPv4 アドレス
+- インスタンス停止時も維持される
+- 別のインスタンスに付け替え可能
+- リージョンごとに最大 5 つ (緩和可能)
+- 実行中のインスタンスに未アタッチだと課金される
+- 実行中のインスタンスにアタッチされていれば無料
 
-DATA SOURCES:
-├── DynamoDB
-├── Lambda
-├── HTTP endpoints
-├── RDS (via Lambda)
-└── Elasticsearch
-```
-
-### Amazon MQ
-```
-WHAT: Managed message broker
-PROTOCOLS: AMQP, MQTT, OpenWire, STOMP, WebSocket
-ENGINES: ActiveMQ, RabbitMQ
-
-WHEN TO USE:
-✅ Migrating from on-premises message brokers
-✅ Need industry-standard protocols
-✅ Existing applications using JMS, AMQP
-
-WHEN NOT TO USE:
-❌ New cloud-native apps (use SQS/SNS)
-```
-
-## ⏱️ Next Steps
-- Time spent: ~45-60 min
-- Practice: Create SQS queue, SNS topic, fan-out pattern
-- Ready for: Application Integration practice questions
-- Move to: Module 09 - Monitoring
+## ⏱️ 次のステップ
+- 経過時間: ~75-90 分
+- 実習: VPC、サブネット、ルートテーブル、セキュリティグループを作成してみる
+- 準備完了: ネットワークの練習問題へ
+- 次へ: モジュール 07 - セキュリティ
 
 ---
 
-**Quick Answers**: 
-1) 256 KB
-2) 14 days
-3) FIFO queue
-4) 6+ (HTTP, Email, SMS, SQS, Lambda, Kinesis, etc.)
-5) SNS → multiple SQS queues
-6) Kinesis Data Firehose
-7) 12 hours
-8) Lambda, HTTP, AWS services, VPC Link
-
+**クイックアンサー**: 
+1) 5 (最初 4 + 最後 1)
+2) ステートフル
+3) いいえ (許可のみ)
+4) /16 (65,536 IP)
+5) ゲートウェイエンドポイント (S3/DynamoDB)
+6) いいえ
+7) NAT ゲートウェイ
+8) フェイルオーバールーティングポリシー
