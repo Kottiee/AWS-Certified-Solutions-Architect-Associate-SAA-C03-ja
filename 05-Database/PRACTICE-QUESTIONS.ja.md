@@ -1,108 +1,108 @@
-# Database Services - Practice Questions
+# データベースサービス - 練習問題
 
-> **⚠️ DISCLAIMER:** These are **original practice questions** created for educational purposes based on AWS documentation. They are **NOT actual exam questions** from the AWS certification exam.
+> **⚠️ 免責事項:** これらは AWS ドキュメントに基づいて教育目的で作成した**オリジナル練習問題**です。AWS 認定試験の**実際の試験問題ではありません**。
 
-## Exam-Standard Questions (SAA-C03)
+## 試験標準問題（SAA-C03）
 
 ---
 
-### Question 1
-A company needs a relational database with automatic scaling, high availability across multiple AZs, and automatic failover. They want minimal database administration. Which service should be used?
+### 問題 1
+ある企業は、自動スケーリング・複数 AZ にまたがる高可用性・自動フェイルオーバーを備えたリレーショナルデータベースを必要としています。データベース運用は最小限にしたい場合、どのサービスを使うべきですか？
 
-A. Amazon RDS MySQL  
-B. Amazon Aurora  
-C. Amazon DynamoDB  
-D. Amazon Redshift  
+A. Amazon RDS MySQL
+B. Amazon Aurora
+C. Amazon DynamoDB
+D. Amazon Redshift
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- **Amazon Aurora** provides:
+**解説:**
+- **Amazon Aurora** のポイント:
   - MySQL/PostgreSQL compatibility
   - 5x performance of MySQL, 3x of PostgreSQL
-  - Automatic scaling (storage up to 128 TB)
+  - 自動スケーリング (storage up to 128 TB)
   - Multi-AZ by design (6 copies across 3 AZs)
-  - Automatic failover (< 30 seconds)
-  - Serverless option available
+  - 自動フェイルオーバー (< 30 seconds)
+  - Serverless オプションあり
 
 **Aurora vs RDS**:
 - **Aurora**: Better performance, auto-scaling storage, faster replication
 - **RDS**: Standard MySQL/PostgreSQL, simpler
 
-**Aurora Features**:
+**Aurora 機能**:
 - Up to 15 read replicas
-- Continuous backup to S3
-- Point-in-time recovery
+- S3 への継続バックアップ
+- ポイントインタイムリカバリ
 - Backtrack (rewind database)
 
-**References:** Amazon Aurora, RDS vs Aurora
+**参照:** Amazon Aurora, RDS vs Aurora
 </details>
 
 ---
 
-### Question 2
-An application requires sub-millisecond latency for read/write operations with automatic scaling to handle millions of requests per second. Which database should be used?
+### 問題 2
+アプリケーションで読み書きにサブミリ秒レイテンシが必要で、毎秒数百万リクエストに対応するため自動スケーリングも必要です。どのデータベースを使うべきですか？
 
-A. Amazon RDS  
-B. Amazon DynamoDB  
-C. Amazon Aurora  
-D. Amazon DocumentDB  
+A. Amazon RDS
+B. Amazon DynamoDB
+C. Amazon Aurora
+D. Amazon DocumentDB
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- **Amazon DynamoDB** is fully managed NoSQL database
-  - Single-digit millisecond latency
-  - Scales to 10+ trillion requests/day
-  - Automatic scaling
-  - Multi-AZ replication built-in
-  - Serverless option (on-demand pricing)
+**解説:**
+- **Amazon DynamoDB** はフルマネージドの NoSQL データベースです
+  - 1 桁ミリ秒レイテンシ
+  - 1 日 10 兆超リクエストまでスケール
+  - 自動スケーリング
+  - マルチ AZ レプリケーションを標準搭載
+  - Serverless オプション（オンデマンド課金）
 
-**DynamoDB Features**:
+**DynamoDB 機能**:
 - Key-value and document database
 - DynamoDB Streams (change data capture)
 - Global Tables (multi-region replication)
 - DynamoDB Accelerator (DAX) for microsecond latency
-- Point-in-time recovery
+- ポイントインタイムリカバリ
 - On-demand and provisioned capacity modes
 
-**When to use DynamoDB**:
+**利用する場面 DynamoDB**:
 - Need extreme scale
 - Variable workloads
 - Need sub-10ms latency
 - Key-value or document data model
 
-**References:** Amazon DynamoDB, NoSQL Databases
+**参照:** Amazon DynamoDB, NoSQL Databases
 </details>
 
 ---
 
-### Question 3
-A company wants to cache database query results to reduce read load on their RDS database and improve response times. Which service should be used?
+### 問題 3
+企業はデータベースクエリ結果をキャッシュして RDS の読み取り負荷を下げ、応答時間を改善したいと考えています。どのサービスを使うべきですか？
 
-A. Amazon CloudFront  
-B. Amazon ElastiCache  
-C. DynamoDB Accelerator (DAX)  
-D. Amazon S3  
+A. Amazon CloudFront
+B. Amazon ElastiCache
+C. DynamoDB Accelerator (DAX)
+D. Amazon S3
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
+**解説:**
 - **Amazon ElastiCache** provides in-memory caching
   - Redis or Memcached engines
   - Microsecond latency
-  - Reduces database load
-  - Session storage
-  - Leaderboards, real-time analytics
+  - データベース負荷を軽減
+  - セッションストレージ
+  - リーダーボード、リアルタイム分析
 
 **ElastiCache Engines**:
 
@@ -115,38 +115,38 @@ D. Amazon S3
 | **Sorted Sets** | Yes (leaderboards) | No |
 | **Multi-threaded** | No | Yes |
 
-**Common Pattern**: Application → ElastiCache → RDS (cache-aside)
+**一般的なパターン**: Application → ElastiCache → RDS (cache-aside)
 
-**References:** Amazon ElastiCache, Caching Strategies
+**参照:** Amazon ElastiCache, Caching Strategies
 </details>
 
 ---
 
-### Question 4
-A data warehouse requires complex analytical queries across petabytes of data. Which AWS database service is MOST appropriate?
+### 問題 4
+データウェアハウスで、ペタバイト規模データに対する複雑な分析クエリが必要です。最も適切な AWS データベースサービスはどれですか？
 
-A. Amazon RDS  
-B. Amazon DynamoDB  
-C. Amazon Redshift  
-D. Amazon Aurora  
+A. Amazon RDS
+B. Amazon DynamoDB
+C. Amazon Redshift
+D. Amazon Aurora
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- **Amazon Redshift** is data warehouse service
-  - Columnar storage
-  - Massively parallel processing (MPP)
+**解説:**
+- **Amazon Redshift** はデータウェアハウスサービスです
+  - 列指向ストレージ
+  - 超並列処理（MPP）
   - Petabyte-scale
   - SQL queries (PostgreSQL-compatible)
   - Integration with S3, EMR, Glue
 
-**Redshift Features**:
-- Columnar storage (better compression, faster queries)
+**Redshift 機能**:
+- 列指向ストレージ (better compression, faster queries)
 - Redshift Spectrum (query S3 data directly)
-- Automatic backups and snapshots
+- 自動バックアップ and snapshots
 - Encryption at rest and in transit
 - Concurrency Scaling (handle burst queries)
 - Result caching
@@ -155,78 +155,78 @@ D. Amazon Aurora
 - **Redshift**: Analytics, OLAP, data warehouse
 - **RDS**: Transactional, OLTP, operational database
 
-**Use Cases**:
+**ユースケース**:
 - Business intelligence
 - Historical data analysis
 - Large-scale analytics
 - Reporting
 
-**References:** Amazon Redshift, Data Warehousing
+**参照:** Amazon Redshift, Data Warehousing
 </details>
 
 ---
 
-### Question 5
-A MongoDB application needs to be migrated to AWS with minimal changes. Which service should be used?
+### 問題 5
+MongoDB アプリケーションを最小限の変更で AWS に移行する必要があります。どのサービスを使うべきですか？
 
-A. Amazon RDS  
-B. Amazon DynamoDB  
-C. Amazon DocumentDB  
-D. Amazon Neptune  
+A. Amazon RDS
+B. Amazon DynamoDB
+C. Amazon DocumentDB
+D. Amazon Neptune
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- **Amazon DocumentDB** is MongoDB-compatible document database
-  - Fully managed
+**解説:**
+- **Amazon DocumentDB** は MongoDB 互換のドキュメントデータベースです
+  - フルマネージド
   - MongoDB 3.6 and 4.0 compatibility
   - Scales to millions of requests/second
   - Multi-AZ replication
-  - Automatic backups
+  - 自動バックアップ
 
-**DocumentDB Features**:
+**DocumentDB 機能**:
 - Document data model (JSON)
 - MongoDB drivers and tools compatible
-- Storage auto-scales to 64 TB
+- ストレージは 64 TB まで自動スケール
 - Up to 15 read replicas
-- Continuous backup to S3
+- S3 への継続バックアップ
 
-**Migration**: Use AWS Database Migration Service (DMS)
+**移行**: Use AWS Database Migration Service (DMS)
 
-**When to use**:
+**利用する場面**:
 - Existing MongoDB workloads
 - Document-oriented data
 - Need managed service
 
-**References:** Amazon DocumentDB, MongoDB on AWS
+**参照:** Amazon DocumentDB, MongoDB on AWS
 </details>
 
 ---
 
-### Question 6
-An application needs to store relationships between data entities (social network connections, fraud detection). Which database is MOST suitable?
+### 問題 6
+アプリケーションでデータエンティティ間の関係（SNS のつながり、詐欺検知など）を保存する必要があります。最も適したデータベースはどれですか？
 
-A. Amazon RDS  
-B. Amazon DynamoDB  
-C. Amazon Neptune  
-D. Amazon DocumentDB  
+A. Amazon RDS
+B. Amazon DynamoDB
+C. Amazon Neptune
+D. Amazon DocumentDB
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- **Amazon Neptune** is graph database
+**解説:**
+- **Amazon Neptune** はグラフデータベースです
   - Store and query highly connected data
-  - Supports Gremlin and SPARQL
-  - Fast relationship queries
+  - Gremlin と SPARQL をサポート
+  - 高速な関係性クエリ
   - Multi-AZ replication
 
-**Neptune Use Cases**:
+**Neptune ユースケース**:
 - Social networks
 - Fraud detection
 - Recommendation engines
@@ -239,39 +239,39 @@ D. Amazon DocumentDB
 - **Relational**: Joins become expensive for deep relationships
 - Graph databases optimize for relationship queries
 
-**References:** Amazon Neptune, Graph Databases
+**参照:** Amazon Neptune, Graph Databases
 </details>
 
 ---
 
-### Question 7
-A company needs to run an RDS database with automatic failover to a standby instance in another AZ. What should be configured?
+### 問題 7
+企業は、別 AZ のスタンバイインスタンスへ自動フェイルオーバーする RDS を運用したいと考えています。何を設定すべきですか？
 
-A. RDS Read Replicas  
-B. RDS Multi-AZ Deployment  
-C. RDS Snapshots  
-D. RDS Cross-Region Replication  
+A. RDS Read Replicas
+B. RDS Multi-AZ Deployment
+C. RDS Snapshots
+D. RDS Cross-Region Replication
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- **RDS Multi-AZ** provides high availability
-  - Synchronous replication to standby
-  - Automatic failover (1-2 minutes)
-  - Same region, different AZ
-  - No manual intervention
+**解説:**
+- **RDS Multi-AZ** provides 高可用性
+  - スタンバイへの同期レプリケーション
+  - 自動フェイルオーバー (1-2 minutes)
+  - 同一リージョン内の別 AZ
+  - 手動介入不要
 
 **Multi-AZ vs Read Replicas**:
 
 | Feature | Multi-AZ | Read Replicas |
 |---------|----------|---------------|
-| **Purpose** | High availability | Read scaling |
-| **Replication** | Synchronous | Asynchronous |
-| **Failover** | Automatic | Manual promotion |
-| **Access** | Standby not accessible | Can read from replicas |
+| **目的** | High availability | Read scaling |
+| **Replication** | 同期 | 非同期 |
+| **Failover** | Automatic | 手動昇格 |
+| **Access** | スタンバイには直接アクセス不可 | レプリカから読み取り可能 |
 | **Region** | Same | Same or cross-region |
 
 **Multi-AZ Failover Triggers**:
@@ -280,25 +280,25 @@ D. RDS Cross-Region Replication
 - Storage failure
 - Software patching (planned)
 
-**References:** RDS Multi-AZ, High Availability
+**参照:** RDS Multi-AZ, High Availability
 </details>
 
 ---
 
-### Question 8
-An application requires DynamoDB but needs to support complex queries with multiple attributes. What feature should be used?
+### 問題 8
+アプリケーションで DynamoDB を使用しつつ、複数属性を使った複雑なクエリに対応する必要があります。どの機能を使うべきですか？
 
-A. DynamoDB Streams  
-B. DynamoDB Global Secondary Index (GSI)  
-C. DynamoDB Auto Scaling  
-D. DynamoDB Accelerator (DAX)  
+A. DynamoDB Streams
+B. DynamoDB Global Secondary Index (GSI)
+C. DynamoDB Auto Scaling
+D. DynamoDB Accelerator (DAX)
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
+**解説:**
 - **Global Secondary Index (GSI)**:
   - Query on non-primary key attributes
   - Different partition and sort keys than base table
@@ -312,7 +312,7 @@ D. DynamoDB Accelerator (DAX)
 | **LSI** | Same partition key | Can choose | At table creation only |
 | **GSI** | Different keys | Can choose | Anytime |
 
-**GSI Use Cases**:
+**GSI ユースケース**:
 - Query by different attributes
 - Support multiple access patterns
 - Flexible querying
@@ -322,30 +322,30 @@ D. DynamoDB Accelerator (DAX)
 - GSI: Partition Key = Email
 - Can now query by email
 
-**References:** DynamoDB Indexes, GSI vs LSI
+**参照:** DynamoDB Indexes, GSI vs LSI
 </details>
 
 ---
 
-### Question 9
-A company wants to achieve microsecond latency for DynamoDB read operations. Which feature should be enabled?
+### 問題 9
+企業は DynamoDB の読み取りでマイクロ秒レイテンシを実現したいと考えています。どの機能を有効化すべきですか？
 
-A. DynamoDB Streams  
-B. DynamoDB Global Tables  
-C. DynamoDB Accelerator (DAX)  
-D. DynamoDB Auto Scaling  
+A. DynamoDB Streams
+B. DynamoDB Global Tables
+C. DynamoDB Accelerator (DAX)
+D. DynamoDB Auto Scaling
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
+**解説:**
 - **DynamoDB Accelerator (DAX)**:
-  - In-memory cache for DynamoDB
+  - DynamoDB 向けインメモリキャッシュ
   - Microsecond latency (vs millisecond)
-  - Fully managed, highly available
-  - No application code changes (drop-in replacement)
+  - フルマネージド, highly available
+  - アプリコード変更なし（drop-in replacement）
 
 **DAX Benefits**:
 - 10x performance improvement for read-heavy workloads
@@ -357,39 +357,39 @@ D. DynamoDB Auto Scaling
 - **DAX**: DynamoDB-specific, easier integration
 - **ElastiCache**: General purpose, more control
 
-**When to use DAX**:
+**利用する場面 DAX**:
 - Read-heavy workloads
 - Need microsecond latency
 - Repeated reads of same items
 - Real-time bidding, gaming
 
-**References:** DynamoDB Accelerator (DAX), Caching
+**参照:** DynamoDB Accelerator (DAX), Caching
 </details>
 
 ---
 
-### Question 10
-An RDS database needs to handle increased read traffic. Write traffic is low. What is the MOST cost-effective solution?
+### 問題 10
+RDS データベースで読み取りトラフィックが増加しています。書き込みトラフィックは低いです。最も費用対効果の高い解決策はどれですか？
 
-A. Upgrade to larger instance  
-B. Enable RDS Multi-AZ  
-C. Create RDS Read Replicas  
-D. Use ElastiCache  
+A. Upgrade to larger instance
+B. Enable RDS Multi-AZ
+C. Create RDS Read Replicas
+D. Use ElastiCache
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
+**解説:**
 - **RDS Read Replicas**:
-  - Asynchronous replication
+  - 非同期 replication
   - Offload read traffic from primary
   - Up to 15 replicas (Aurora)
   - Same region or cross-region
   - Can be promoted to standalone
 
-**Read Replica Use Cases**:
+**Read Replica ユースケース**:
 - Read-heavy workloads
 - Reporting/analytics (separate from production)
 - Cross-region disaster recovery (promotion)
@@ -402,25 +402,25 @@ D. Use ElastiCache
 
 **Replication Lag**: Monitor with CloudWatch metric
 
-**References:** RDS Read Replicas, Read Scaling
+**参照:** RDS Read Replicas, Read Scaling
 </details>
 
 ---
 
-### Question 11
-A global application requires DynamoDB tables to be replicated across multiple AWS regions with low-latency local reads and writes. Which feature should be used?
+### 問題 11
+グローバルアプリケーションで、複数 AWS リージョンに DynamoDB テーブルをレプリケーションし、各リージョンで低レイテンシの読み書きを実現する必要があります。どの機能を使うべきですか？
 
-A. DynamoDB Streams  
-B. DynamoDB Global Tables  
-C. DynamoDB Cross-Region Replication  
-D. AWS Database Migration Service  
+A. DynamoDB Streams
+B. DynamoDB Global Tables
+C. DynamoDB Cross-Region Replication
+D. AWS Database Migration Service
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
+**解説:**
 - **DynamoDB Global Tables**:
   - Multi-region, multi-active replication
   - Bi-directional replication
@@ -433,32 +433,32 @@ D. AWS Database Migration Service
 - Same table name across regions
 - Same primary key structure
 
-**Use Cases**:
+**ユースケース**:
 - Global applications
 - Disaster recovery
-- Multi-region high availability
+- Multi-region 高可用性
 - Reduce latency for global users
 
-**References:** DynamoDB Global Tables, Multi-Region
+**参照:** DynamoDB Global Tables, Multi-Region
 </details>
 
 ---
 
-### Question 12
-A company needs to ensure RDS database backups are retained for 90 days for compliance. What should be configured?
+### 問題 12
+企業はコンプライアンスのため RDS バックアップを 90 日保持する必要があります。何を設定すべきですか？
 
-A. Automated Backups with 90-day retention  
-B. Manual Snapshots  
-C. Both automated backups (35 days) and manual snapshots  
-D. RDS Cross-Region Replication  
+A. Automated Backups with 90-day 保持期間
+B. Manual Snapshots
+C. Both automated backups (35 days) and manual snapshots
+D. RDS Cross-Region Replication
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- **RDS Automated Backups**: Max 35 days retention
+**解説:**
+- **RDS Automated Backups**: Max 35 days 保持期間
 - **Manual Snapshots**: Retained until explicitly deleted
 - For > 35 days: Use manual snapshots
 
@@ -466,51 +466,51 @@ D. RDS Cross-Region Replication
 
 | Type | Retention | Deleted with DB | Use Case |
 |------|-----------|-----------------|----------|
-| **Automated** | 1-35 days | Yes | Point-in-time recovery |
-| **Manual** | Until deleted | No | Long-term retention |
+| **Automated** | 1-35 days | Yes | ポイントインタイムリカバリ |
+| **Manual** | Until deleted | No | Long-term 保持期間 |
 
-**Best Practice for Long Retention**:
+**ベストプラクティス for Long Retention**:
 1. Enable automated backups (35 days)
 2. Create manual snapshots for long-term
 3. Use lifecycle policies to copy to S3/Glacier
 
-**Automated Backup Features**:
+**Automated Backup 機能**:
 - Daily full snapshot
 - Transaction logs every 5 minutes
-- Point-in-time recovery within retention period
+- ポイントインタイムリカバリ within 保持期間 period
 
-**References:** RDS Backups, Backup Retention
+**参照:** RDS Backups, Backup Retention
 </details>
 
 ---
 
-### Question 13
-An application needs time-series data storage for IoT sensor data with automatic data retention policies. Which database is MOST appropriate?
+### 問題 13
+IoT センサーデータ向けに、自動データ保持ポリシー付きの時系列データ保存が必要です。最も適したデータベースはどれですか？
 
-A. Amazon DynamoDB  
-B. Amazon RDS  
-C. Amazon Timestream  
-D. Amazon Redshift  
+A. Amazon DynamoDB
+B. Amazon RDS
+C. Amazon Timestream
+D. Amazon Redshift
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
+**解説:**
 - **Amazon Timestream** is purpose-built for time-series data
   - IoT, DevOps, analytics
   - Automatic data lifecycle management
   - Built-in time-series analytics
   - 1000x faster, 1/10th cost vs relational
 
-**Timestream Features**:
+**Timestream 機能**:
 - Automatic tiering (memory → magnetic)
 - Built-in time-series functions
 - Serverless, auto-scaling
 - SQL queries
 
-**Use Cases**:
+**ユースケース**:
 - IoT sensor data
 - Application monitoring
 - DevOps metrics
@@ -519,27 +519,27 @@ D. Amazon Redshift
 **Timestream vs Alternatives**:
 - **DynamoDB**: General NoSQL, manual TTL
 - **Redshift**: Data warehouse, not optimized for time-series
-- **Timestream**: Purpose-built, best for time-series
+- **Timestream**: 目的-built, best for time-series
 
-**References:** Amazon Timestream, Time-Series Databases
+**参照:** Amazon Timestream, Time-Series Databases
 </details>
 
 ---
 
-### Question 14
-A company wants to migrate an on-premises Oracle database to AWS with minimal downtime. Which service should be used?
+### 問題 14
+企業はオンプレミス Oracle データベースを最小ダウンタイムで AWS へ移行したいと考えています。どのサービスを使うべきですか？
 
-A. AWS Database Migration Service (DMS)  
-B. AWS DataSync  
-C. AWS Snowball  
-D. Manual export/import  
+A. AWS Database Migration Service (DMS)
+B. AWS DataSync
+C. AWS Snowball
+D. Manual export/import
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
+**解説:**
 - **AWS DMS** (Database Migration Service):
   - Migrate databases with minimal downtime
   - Source database remains operational
@@ -550,10 +550,10 @@ D. Manual export/import
 1. **Homogeneous**: Oracle → Oracle, MySQL → Aurora MySQL
 2. **Heterogeneous**: Oracle → Aurora PostgreSQL (use SCT)
 
-**DMS Features**:
+**DMS 機能**:
 - Continuous replication
-- Multi-AZ for high availability
-- Automatic failover
+- Multi-AZ for 高可用性
+- 自動フェイルオーバー
 - Supports many database engines
 
 **Migration Steps**:
@@ -563,25 +563,25 @@ D. Manual export/import
 4. Full load + CDC (Change Data Capture)
 5. Cutover when ready
 
-**References:** AWS Database Migration Service, Database Migration
+**参照:** AWS Database Migration Service, Database Migration
 </details>
 
 ---
 
-### Question 15
-An application uses RDS MySQL. The company wants to encrypt an existing unencrypted database. What is the correct approach?
+### 問題 15
+アプリケーションは RDS MySQL を使用しています。既存の未暗号化データベースを暗号化したい場合、正しい手順はどれですか？
 
-A. Enable encryption on the existing database  
-B. Create encrypted snapshot, restore to new encrypted instance  
-C. Use AWS KMS to encrypt in-place  
-D. Export data and re-import to encrypted instance  
+A. Enable encryption on the existing database
+B. Create encrypted snapshot, restore to new encrypted instance
+C. Use AWS KMS to encrypt in-place
+D. Export data and re-import to encrypted instance
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
+**解説:**
 - **Cannot encrypt existing RDS instance directly**
 - Must create encrypted copy
 
@@ -600,32 +600,32 @@ D. Export data and re-import to encrypted instance
 
 **Alternative**: Use AWS DMS to migrate with encryption enabled
 
-**References:** RDS Encryption, Encrypting Existing Databases
+**参照:** RDS Encryption, Encrypting Existing Databases
 </details>
 
 ---
 
-### Question 16
-A DynamoDB table experiences variable traffic patterns throughout the day. What capacity mode should be used to optimize costs?
+### 問題 16
+DynamoDB テーブルのトラフィックが日中に大きく変動します。コスト最適化のため、どのキャパシティモードを使うべきですか？
 
-A. Provisioned Capacity  
-B. On-Demand Capacity  
-C. Reserved Capacity  
-D. Auto Scaling  
+A. Provisioned Capacity
+B. On-Demand Capacity
+C. Reserved Capacity
+D. Auto Scaling
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
+**解説:**
 - **On-Demand Capacity**:
-  - Pay per request
-  - No capacity planning
-  - Scales automatically
-  - Ideal for unpredictable/variable workloads
+  - リクエスト課金
+  - キャパシティ計画不要
+  - 自動スケール
+  - Ideal for unpredictable/変動ワークロード
 
-**Capacity Modes Comparison**:
+**Capacity Modes 比較**:
 
 | Mode | Best For | Pricing | Scaling |
 |------|----------|---------|---------|
@@ -640,32 +640,32 @@ D. Auto Scaling
 
 **Can switch between modes** once per 24 hours
 
-**References:** DynamoDB Capacity Modes, On-Demand vs Provisioned
+**参照:** DynamoDB Capacity Modes, On-Demand vs Provisioned
 </details>
 
 ---
 
-### Question 17
-An application requires ACID transactions across multiple DynamoDB tables. Which feature should be used?
+### 問題 17
+アプリケーションで複数の DynamoDB テーブルにまたがる ACID トランザクションが必要です。どの機能を使うべきですか？
 
-A. DynamoDB Streams  
-B. DynamoDB Transactions  
-C. DynamoDB Batch Operations  
-D. DynamoDB Global Tables  
+A. DynamoDB Streams
+B. DynamoDB Transactions
+C. DynamoDB Batch Operations
+D. DynamoDB Global Tables
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
+**解説:**
 - **DynamoDB Transactions**:
   - ACID properties (Atomicity, Consistency, Isolation, Durability)
   - All-or-nothing operations
   - Up to 100 items or 4 MB per transaction
   - TransactWriteItems and TransactGetItems
 
-**Transaction Use Cases**:
+**Transaction ユースケース**:
 - Financial transactions
 - Order processing
 - Inventory management
@@ -677,30 +677,30 @@ D. DynamoDB Global Tables
 
 **Cost**: 2x the cost of standard reads/writes
 
-**References:** DynamoDB Transactions, ACID Compliance
+**参照:** DynamoDB Transactions, ACID Compliance
 </details>
 
 ---
 
-### Question 18
-A company wants to track changes to DynamoDB items in real-time to update materialized views and trigger workflows. Which feature should be used?
+### 問題 18
+企業は DynamoDB アイテムの変更をリアルタイムで追跡し、マテリアライズドビュー更新やワークフロー起動を行いたいと考えています。どの機能を使うべきですか？
 
-A. DynamoDB Auto Scaling  
-B. DynamoDB Streams  
-C. DynamoDB Backups  
-D. CloudWatch Events  
+A. DynamoDB Auto Scaling
+B. DynamoDB Streams
+C. DynamoDB Backups
+D. CloudWatch Events
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
+**解説:**
 - **DynamoDB Streams**:
-  - Ordered record of item-level changes
-  - Near real-time (typically < 1 second)
-  - 24-hour retention
-  - Exactly-once delivery
+  - アイテム単位変更の順序付き記録
+  - ほぼリアルタイム（通常 1 秒未満）
+  - 24-hour 保持期間
+  - Exactly-once 配信
 
 **Stream View Types**:
 - **KEYS_ONLY**: Only key attributes
@@ -708,34 +708,34 @@ D. CloudWatch Events
 - **OLD_IMAGE**: Entire item before change
 - **NEW_AND_OLD_IMAGES**: Both before and after
 
-**Use Cases**:
+**ユースケース**:
 - Update materialized views
 - Trigger Lambda functions
 - Cross-region replication (Global Tables)
 - Data pipelines
 - Analytics
 
-**Common Pattern**: DynamoDB Streams → Lambda → Process changes
+**一般的なパターン**: DynamoDB Streams → Lambda → Process changes
 
-**References:** DynamoDB Streams, Change Data Capture
+**参照:** DynamoDB Streams, Change Data Capture
 </details>
 
 ---
 
-### Question 19
-An Aurora database cluster needs to handle analytics queries without impacting production traffic. What should be configured?
+### 問題 19
+Aurora DB クラスターで、本番トラフィックに影響を与えず分析クエリを処理する必要があります。何を設定すべきですか？
 
-A. Aurora Read Replicas  
-B. Aurora Serverless  
-C. Aurora Global Database  
-D. RDS Read Replicas  
+A. Aurora Read Replicas
+B. Aurora Serverless
+C. Aurora Global Database
+D. RDS Read Replicas
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
+**解説:**
 - **Aurora Read Replicas**:
   - Up to 15 replicas
   - Low replication lag (< 10ms)
@@ -748,31 +748,31 @@ D. RDS Read Replicas
 
 **Reader Endpoint**:
 - Load balances across all read replicas
-- Automatic failover if primary fails
+- 自動フェイルオーバー if primary fails
 
 **Aurora Auto Scaling**:
 - Automatically add/remove replicas based on load
 
-**References:** Aurora Read Replicas, Aurora Endpoints
+**参照:** Aurora Read Replicas, Aurora Endpoints
 </details>
 
 ---
 
-### Question 20
-A serverless application needs a database that automatically scales capacity based on workload. Which option is MOST suitable?
+### 問題 20
+サーバーレスアプリケーションで、ワークロードに応じてキャパシティが自動スケールするデータベースが必要です。最も適した選択肢はどれですか？
 
-A. RDS with Auto Scaling  
-B. Aurora Serverless  
-C. DynamoDB On-Demand  
-D. Both B and C  
+A. RDS with Auto Scaling
+B. Aurora Serverless
+C. DynamoDB On-Demand
+D. Both B and C
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: D**
+**解答: D**
 
-**Explanation:**
-Both are suitable for serverless applications:
+**解説:**
+Both are suitable for サーバーレスアプリケーション:
 
 **Aurora Serverless**:
 - Automatically scales compute capacity
@@ -782,75 +782,75 @@ Both are suitable for serverless applications:
 
 **DynamoDB On-Demand**:
 - Automatically scales throughput
-- Pay per request
+- リクエスト課金
 - NoSQL database
 - Sub-10ms latency
 
-**Choose Based On**:
+**選定基準**:
 - **Need SQL, relational** → Aurora Serverless
 - **Need NoSQL, extreme scale** → DynamoDB On-Demand
 - **Intermittent workloads** → Both work
 - **Dev/test environments** → Aurora Serverless
 - **Serverless apps** → Both work
 
-**References:** Aurora Serverless, DynamoDB On-Demand, Serverless Databases
+**参照:** Aurora Serverless, DynamoDB On-Demand, Serverless Databases
 </details>
 
 ---
 
-### Question 21
-A development team needs a fully managed, scalable, and highly available Apache Cassandra-compatible database for their application. Which AWS service should they use?
+### 問題 21
+開発チームは、フルマネージドでスケーラブルかつ高可用な Apache Cassandra 互換データベースを必要としています。どの AWS サービスを使うべきですか？
 
-A. Amazon Keyspaces  
-B. Amazon DynamoDB  
-C. Amazon RDS for PostgreSQL  
-D. Amazon Aurora  
+A. Amazon Keyspaces
+B. Amazon DynamoDB
+C. Amazon RDS for PostgreSQL
+D. Amazon Aurora
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
-- Amazon Keyspaces is a managed Cassandra-compatible database
+**解説:**
+- Amazon Keyspaces is a マネージドな Cassandra 互換データベース
 - Supports Cassandra Query Language (CQL)
 - DynamoDB is NoSQL but not Cassandra-compatible
 - RDS and Aurora are relational databases
 
-**References:** Amazon Keyspaces, Managed Cassandra
+**参照:** Amazon Keyspaces, Managed Cassandra
 </details>
 
 ---
 
-### Question 22
-A financial institution needs a fully managed, immutable, cryptographically verifiable ledger database for recording transactions. Which AWS service should they use?
+### 問題 22
+金融機関が、取引記録のためにフルマネージドで不変かつ暗号学的に検証可能な台帳データベースを必要としています。どの AWS サービスを使うべきですか？
 
-A. Amazon QLDB  
-B. Amazon Aurora  
-C. Amazon RDS  
-D. Amazon DynamoDB  
+A. Amazon QLDB
+B. Amazon Aurora
+C. Amazon RDS
+D. Amazon DynamoDB
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
+**解説:**
 - Amazon QLDB (Quantum Ledger Database) is a fully managed ledger database
-- Provides immutable, cryptographically verifiable transaction log
+- 不変かつ暗号学的に検証可能なトランザクションログを提供
 - Aurora, RDS, and DynamoDB are not ledger databases
 
-**References:** Amazon QLDB, Ledger Database
+**参照:** Amazon QLDB, Ledger Database
 </details>
 
 ---
 
-## Summary
+## まとめ
 
-**Total Questions**: 22  
-**Topics Covered**:
+**総問題数**: 22
+**対象トピック**:
 - Amazon RDS (Multi-AZ, Read Replicas, Backups, Encryption)
-- Amazon Aurora (Features, Read Replicas, Serverless)
+- Amazon Aurora (機能, Read Replicas, Serverless)
 - Amazon DynamoDB (Capacity Modes, Indexes, Streams, Transactions, DAX, Global Tables)
 - Amazon ElastiCache (Redis vs Memcached)
 - Amazon Redshift (Data Warehousing)
@@ -861,9 +861,9 @@ D. Amazon DynamoDB
 - Amazon Keyspaces (Cassandra-compatible)
 - Amazon QLDB (Ledger Database)
 
-**Exam Tips**:
+**試験のコツ**:
 
-**Database Selection**:
+**データベース選定**:
 - **Relational (OLTP)**: RDS, Aurora
 - **NoSQL Key-Value**: DynamoDB
 - **NoSQL Document**: DocumentDB
@@ -876,8 +876,8 @@ D. Amazon DynamoDB
 - **Aurora**: Better performance, auto-scaling, more expensive
 - **RDS**: Standard engines, simpler
 
-**High Availability**:
-- **RDS Multi-AZ**: Automatic failover, synchronous
+**高可用性**:
+- **RDS Multi-AZ**: 自動フェイルオーバー, synchronous
 - **Read Replicas**: Read scaling, asynchronous
 
 **DynamoDB**:
@@ -892,17 +892,17 @@ D. Amazon DynamoDB
 - **Redis**: Advanced features, persistence, replication
 - **Memcached**: Simple, multi-threaded
 
-**Migration**:
+**移行**:
 - **AWS DMS**: Minimal downtime migration
 - **SCT**: Convert schema for heterogeneous migrations
 
-**Capacity Planning**:
+**キャパシティ計画**:
 - **Predictable**: Provisioned capacity
 - **Variable**: On-Demand or Auto Scaling
 - **Intermittent**: Serverless (Aurora Serverless, DynamoDB On-Demand)
 
-**Next Steps**:
-- Understand use cases for each database type
-- Know when to use Multi-AZ vs Read Replicas
-- Memorize DynamoDB features and when to use them
-- Practice database selection based on requirements
+**次のステップ**:
+- 各データベース種別のユースケースを理解する
+- Multi-AZ と Read Replicas の使い分けを理解する
+- DynamoDB の機能と使いどころを整理する
+- 要件に応じたデータベース選定を練習する

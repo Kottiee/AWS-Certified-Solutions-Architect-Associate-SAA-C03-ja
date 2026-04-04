@@ -1,10 +1,10 @@
-# ⚡ Fast Learning - Database Services
+# ⚡ 速習 - データベースサービス
 
 > **完了時間**: 60-75 分 | **試験配点**: ~15-20%
 
 ## 🎯 必須理解コンセプト（5分）
 
-### Database Service Selector (RANDI-NERD)
+### データベースサービス選択（RANDI-NERD）
 ```
 RELATIONAL SQL? → RDS (managed RDBMS)
 NOSQL KEY-VALUE? → DynamoDB
@@ -17,19 +17,19 @@ LEDGER? → QLDB
 DOCUMENT? → DocumentDB (MongoDB compatible)
 ```
 
-**記憶法**: "RDS for Relational, Dynamo for Dynamic data"
+**記憶法**: 「RDS は Relational、Dynamo は Dynamic data」
 
 ## 📊 クイックリファレンステーブル
 
-### RDS Database Engines
+### RDS データベースエンジン
 | Engine | Type | 最大 Storage | 用途 |
 |--------|------|-------------|----------|
-| **MySQL** | Open source | 64 TiB | Web apps, general |
-| **PostgreSQL** | Open source | 64 TiB | Advanced features |
-| **MariaDB** | Open source | 64 TiB | MySQL fork |
-| **Oracle** | Commercial | 64 TiB | Enterprise apps |
-| **SQL Server** | Commercial | 16 TiB | Microsoft ecosystem |
-| **Aurora** | AWS proprietary | 128 TiB | High performance |
+| **MySQL** | Open source | 64 TiB | Web アプリ、汎用 |
+| **PostgreSQL** | Open source | 64 TiB | 高度な機能 |
+| **MariaDB** | Open source | 64 TiB | MySQL フォーク |
+| **Oracle** | Commercial | 64 TiB | エンタープライズアプリ |
+| **SQL Server** | Commercial | 16 TiB | Microsoft エコシステム |
+| **Aurora** | AWS proprietary | 128 TiB | 高パフォーマンス |
 
 ### RDS vs Aurora vs DynamoDB
 | Feature | RDS | Aurora | DynamoDB |
@@ -40,7 +40,7 @@ DOCUMENT? → DocumentDB (MongoDB compatible)
 | **Scaling** | Vertical | Vertical + Horizontal | Horizontal (auto) |
 | **Performance** | Standard | 5x MySQL, 3x PostgreSQL | Milliseconds |
 | **Maintenance** | 要対応 | 最小限 | なし |
-| **Cost** | $$ | $$$ | $ (pay per use) |
+| **Cost** | $$ | $$$ | $ (従量課金) |
 
 ## 🔥 試験頻出トピック
 
@@ -63,9 +63,9 @@ READ REPLICAS (Read Scaling)
 └── Use: Read-heavy workloads, reporting
 ```
 
-**記憶法**: Multi-AZ = Availability, Read Replica = Read performance
+**記憶法**: Multi-AZ = 可用性、Read Replica = 読み取り性能
 
-### 2. Aurora Features (Critical!)
+### 2. Aurora の機能（超重要!）
 ```
 AURORA ADVANTAGES
 ├── 5x faster than MySQL
@@ -87,18 +87,18 @@ AURORA SERVERLESS
 ### 3. DynamoDB 主要コンセプト
 | Concept | Description | 試験のコツ |
 |---------|-------------|----------|
-| **Partition Key** | Primary key (hash) | Unique identifier |
-| **Sort Key** | Optional second key | Range queries |
-| **GSI** | グローバル Secondary Index | Query on non-key attributes |
-| **LSI** | Local Secondary Index | Same partition key, different sort |
-| **Streams** | Change data capture | Trigger Lambda |
-| **DAX** | In-memory cache | Microsecond latency |
+| **Partition Key** | Primary key (hash) | 一意な識別子 |
+| **Sort Key** | Optional second key | 範囲クエリ |
+| **GSI** | グローバル Secondary Index | 非キー属性でクエリ |
+| **LSI** | Local Secondary Index | 同じ partition key、別 sort key |
+| **Streams** | Change data capture | Lambda をトリガー |
+| **DAX** | In-memory cache | マイクロ秒レイテンシ |
 
 **Capacity Modes**:
-- **Provisioned**: Set RCU/WCU (cheaper if predictable)
-- **On-Demand**: Pay per request (unpredictable traffic)
+- **Provisioned**: RCU/WCU を設定（予測可能なら安価）
+- **On-Demand**: リクエストごとの従量課金（予測不能トラフィック向け）
 
-### 4. ElastiCache Quick Comparison
+### 4. ElastiCache クイック比較
 | Feature | Redis | Memcached |
 |---------|-------|-----------|
 | **Data Types** | Complex (lists, sets) | Simple (strings) |
@@ -106,47 +106,47 @@ AURORA SERVERLESS
 | **Replication** | Yes (Multi-AZ) | なし |
 | **Backup** | Yes | なし |
 | **Multi-threaded** | なし | Yes |
-| **用途** | Advanced caching | Simple caching |
+| **用途** | 高機能キャッシュ | シンプルキャッシュ |
 
-**記憶法**: "Redis = Rich features, Memcached = Memory のみ"
+**記憶法**: 「Redis = Rich features、Memcached = Memory のみ」
 
 ## 💡 よくある試験シナリオ
 
-### Scenario 1: High Availability for RDS
-**質問**: Database must survive AZ failure with minimal downtime
-**✅ 正解**: Enable RDS Multi-AZ deployment (automatic failover)
+### Scenario 1: RDS の高可用性
+**質問**: DB を AZ 障害から最小ダウンタイムで守りたい
+**✅ 正解**: RDS Multi-AZ デプロイメントを有効化（自動フェイルオーバー）
 
-### Scenario 2: Read-Heavy Workload
-**質問**: Database experiencing heavy read traffic, writes are normal
-**✅ 正解**: Add RDS Read Replicas (up to 5 or 15 for Aurora)
+### Scenario 2: 読み取り負荷が高いワークロード
+**質問**: DB の読み取りトラフィックが重く、書き込みは通常
+**✅ 正解**: RDS Read Replica を追加（通常は最大 5、Aurora は最大 15）
 
-### Scenario 3: グローバル Low-Latency Reads
-**質問**: Users worldwide need fast read access to data
-**✅ 正解**: DynamoDB グローバル Tables (multi-region, active-active)
+### Scenario 3: グローバル低レイテンシ読み取り
+**質問**: 世界中のユーザーが高速に読み取りできる必要がある
+**✅ 正解**: DynamoDB グローバル Tables（マルチリージョン、active-active）
 
-### Scenario 4: Reduce Database Load
-**質問**: Same queries repeatedly hitting database
-**✅ 正解**: ElastiCache (Redis or Memcached) in front of database
+### Scenario 4: データベース負荷の削減
+**質問**: 同じクエリが繰り返し DB に到達している
+**✅ 正解**: DB の前段に ElastiCache（Redis または Memcached）
 
-### Scenario 5: Unpredictable Database Usage
-**質問**: Database usage varies greatly, sometimes idle
-**✅ 正解**: Aurora Serverless (auto-scales, pay per second)
+### Scenario 5: 予測しづらい DB 利用
+**質問**: DB 利用量の変動が大きく、時にはアイドルになる
+**✅ 正解**: Aurora Serverless（自動スケール、秒単位課金）
 
 ### Scenario 6: Point-in-Time Recovery
-**質問**: Need to recover database to specific time yesterday
-**✅ 正解**: RDS automated backups (retention 1-35 days) + restore
+**質問**: 昨日の特定時刻へ DB を復旧したい
+**✅ 正解**: RDS 自動バックアップ（保持 1-35 日）+ 復元
 
-### Scenario 7: なしSQL with Consistent Performance
-**質問**: Need single-digit millisecond latency at any scale
-**✅ 正解**: DynamoDB (fully managed なしSQL)
+### Scenario 7: なしSQL で一貫した性能
+**質問**: あらゆるスケールで 1 桁ミリ秒レイテンシが必要
+**✅ 正解**: DynamoDB（フルマネージド なしSQL）
 
-### Scenario 8: Data Warehouse for Analytics
-**質問**: Run complex queries on petabytes of data
-**✅ 正解**: Amazon Redshift (columnar storage, MPP)
+### Scenario 8: 分析用データウェアハウス
+**質問**: ペタバイト級データに対して複雑クエリを実行したい
+**✅ 正解**: Amazon Redshift（列指向ストレージ、MPP）
 
 ## 🎓 速習のコツ
 
-### RDS Backup Types
+### RDS バックアップの種類
 ```
 AUTOMATED BACKUPS
 ├── Daily full backup during maintenance window
@@ -163,7 +163,7 @@ MANUAL SNAPSHOTS
 └── Charged for storage
 ```
 
-### DynamoDB Consistency
+### DynamoDB の整合性
 ```
 EVENTUALLY CONSISTENT READS (デフォルト)
 ├── May not reflect recent write
@@ -176,7 +176,7 @@ STRONGLY CONSISTENT READS
 └── Use: When latest data required
 ```
 
-### RDS Scaling Options
+### RDS のスケーリングオプション
 ```
 VERTICAL SCALING
 └── Change instance type
@@ -196,97 +196,97 @@ STORAGE SCALING
 
 ## 📝 ラピッドファイア事実集
 
-### RDS Important Limits
-- **最大 Read Replicas**: 5 (regular RDS), 15 (Aurora)
-- **Backup Retention**: 0-35 days (0 = disabled)
-- **Multi-AZ**: Automatic failover < 2 分
-- **Encryption**: Cannot encrypt existing DB (must create new)
-- **Instance Types**: db.t3, db.m5, db.r5, etc.
+### RDS 重要制限
+- **最大 Read Replicas**: 5（通常の RDS）、15（Aurora）
+- **バックアップ保持**: 0-35 日（0 = 無効）
+- **Multi-AZ**: 自動フェイルオーバー < 2 分
+- **暗号化**: 既存 DB は暗号化不可（新規作成が必要）
+- **インスタンスタイプ**: db.t3、db.m5、db.r5 など
 
-### DynamoDB Performance
-- **Single-digit millisecond** latency
-- **DAX**: Microsecond latency (in-memory cache)
-- **Partition Key**: Choose high-cardinality (many unique values)
-- **Hot Partitions**: Avoid → Distribute access evenly
+### DynamoDB パフォーマンス
+- **1 桁ミリ秒** レイテンシ
+- **DAX**: マイクロ秒レイテンシ（インメモリキャッシュ）
+- **Partition Key**: 高カーディナリティ（一意値が多い）を選ぶ
+- **Hot Partitions**: 回避 → アクセスを均等分散
 
-### Aurora Pricing Components
-1. **Storage**: $0.10/GB-month (automatically scales)
+### Aurora 料金要素
+1. **Storage**: $0.10/GB-month（自動スケール）
 2. **I/O Requests**: $0.20/million requests
-3. **Backups**: Free up to DB size
-4. **Data Transfer**: Standard AWS rates
+3. **Backups**: DB サイズまで無料
+4. **Data Transfer**: 標準 AWS 料金
 
-### Redshift Quick Facts
-- **Type**: データウェアハウス (OLAP, not OLTP)
-- **Columnar Storage**: Fast for analytics
+### Redshift クイックファクト
+- **Type**: データウェアハウス（OLAP、OLTP ではない）
+- **Columnar Storage**: 分析に高速
 - **Massively Parallel Processing (MPP)**
 - **Petabyte scale**
-- **Single-AZ** (not Multi-AZ)
-- **Snapshots**: To S3, can copy to other regions
+- **Single-AZ**（Multi-AZ ではない）
+- **Snapshots**: S3 へ保存、他リージョンへコピー可能
 
 ## 🚀 5分マスターレビュー
 
-### Database Decision Tree
+### データベース選択ツリー
 ```
 1. What type of data?
    RELATIONAL (SQL) → Continue to 2
    KEY-VALUE (なしSQL) → DynamoDB
    CACHE → ElastiCache
    ANALYTICS → Redshift
-   
+
 2. Need AWS-optimized?
    あり → Aurora (5x MySQL, 3x PostgreSQL)
    NO → RDS (MySQL, PostgreSQL, etc.)
-   
+
 3. For ElastiCache, need persistence?
    あり → Redis
    NO → Memcached
-   
+
 4. For DynamoDB, predictable traffic?
    あり → Provisioned capacity
    NO → On-Demand capacity
 ```
 
 ### RDS ベストプラクティス
-✅ Enable automated backups (1-35 days)
-✅ Use Multi-AZ for production
-✅ Encrypt databases with sensitive data
-✅ Use Read Replicas for read-heavy loads
-✅ Monitor with CloudWatch/Performance Insights
-✅ Regular maintenance windows
-✅ Use IAM database authentication
-✅ Enable deletion protection for production
+✅ 自動バックアップを有効化（1-35 日）
+✅ 本番環境では Multi-AZ を使用
+✅ 機密データを含む DB を暗号化
+✅ 読み取り負荷が高い場合は Read Replica を使用
+✅ CloudWatch / Performance Insights で監視
+✅ 定期的なメンテナンスウィンドウを設定
+✅ IAM DB 認証を使用
+✅ 本番環境では削除保護を有効化
 
 ### DynamoDB ベストプラクティス
-✅ Choose good partition key (high cardinality)
-✅ Use GSI for alternate query patterns
-✅ Enable DynamoDB Streams for change tracking
-✅ Use DAX for read-heavy, cache-friendly workloads
-✅ Enable point-in-time recovery for critical tables
-✅ Use on-demand for unpredictable traffic
-✅ Enable encryption at rest
+✅ 良い partition key（高カーディナリティ）を選ぶ
+✅ 別のクエリパターンには GSI を使用
+✅ 変更追跡のため DynamoDB Streams を有効化
+✅ 読み取り中心でキャッシュ向きのワークロードには DAX を使用
+✅ 重要テーブルでは point-in-time recovery を有効化
+✅ 予測不能トラフィックには on-demand を使用
+✅ 保存時暗号化を有効化
 
 ### 避けるべきよくあるミス
-❌ Using Multi-AZ for read scaling (use Read Replicas)
+❌ 読み取りスケーリングに Multi-AZ を使う（Read Replica を使う）
 ❌ 自動バックアップを有効化しない
-❌ Choosing wrong DynamoDB partition key (hot partitions)
-❌ Using Redshift for OLTP (it's for OLAP)
-❌ Forgetting Aurora is MySQL/PostgreSQL compatible のみ
-❌ 繰り返しクエリにElastiCacheを使用しない
-❌ Thinking Multi-AZ standby is readable (it's not!)
-❌ Using provisioned capacity for unpredictable DynamoDB traffic
+❌ 不適切な DynamoDB partition key を選ぶ（hot partition）
+❌ OLTP に Redshift を使う（Redshift は OLAP 向け）
+❌ Aurora が MySQL/PostgreSQL 互換のみであることを忘れる
+❌ 繰り返しクエリに ElastiCache を使わない
+❌ Multi-AZ の standby は読み取り可能だと思い込む（不可）
+❌ 予測不能な DynamoDB トラフィックで provisioned capacity を使う
 
 ## 🎯 試験練習スピードラン
 
 **クイック問題**（答えは下）
 
-1. 最大 Read Replicas for Aurora? __
-2. Is Multi-AZ standby readable? __
-3. DynamoDB consistency models? __
-4. Which cache supports persistence? __
-5. 最大 backup retention for RDS? __
-6. Aurora storage scales up to? __
-7. What's faster: Redis or DAX for DynamoDB? __
-8. Redshift is for OLTP or OLAP? __
+1. Aurora の最大 Read Replica 数は? __
+2. Multi-AZ の standby は読み取り可能? __
+3. DynamoDB の整合性モデルは? __
+4. 永続化をサポートするキャッシュは? __
+5. RDS の最大 backup retention は? __
+6. Aurora storage の最大は? __
+7. DynamoDB では Redis と DAX のどちらが高速? __
+8. Redshift は OLTP と OLAP のどちら向け? __
 
 ---
 
@@ -303,24 +303,24 @@ ENCRYPTION IN TRANSIT
 └── Force with rds.force_ssl parameter
 ```
 
-### Database Migration Options
+### データベース移行オプション
 | Source | Target | Tool |
 |--------|--------|------|
-| On-prem DB | RDS | DMS (Database Migration Service) |
-| RDS | RDS | Snapshots or DMS |
-| Different engines | Any | DMS + SCT (Schema Conversion) |
-| Large datasets | RDS | Snowball + DMS |
+| オンプレ DB | RDS | DMS (Database Migration Service) |
+| RDS | RDS | Snapshots または DMS |
+| 異なるエンジン | Any | DMS + SCT (Schema Conversion) |
+| 大規模データセット | RDS | Snowball + DMS |
 
 ### Aurora グローバル Database
-- **Regions**: Up to 5 secondary regions
-- **Latency**: < 1 second cross-region replication
-- **Recovery**: < 1分ute RTO
-- **Read replicas**: 16 per region
-- **用途**: グローバル applications, DR
+- **Regions**: 最大 5 つのセカンダリリージョン
+- **Latency**: リージョン間レプリケーション < 1 秒
+- **Recovery**: RTO < 1分ute
+- **Read replicas**: リージョンごとに 16
+- **用途**: グローバルアプリケーション、DR
 
 ## ⏱️ 次のステップ
 - 学習時間: ~60-75分
-- 演習: Create RDS instance, DynamoDB table
+- 演習: RDS インスタンスと DynamoDB テーブルを作成
 - 準備完了: Database practice questions
 - 次へ: Module 06 - Networking
 
@@ -328,11 +328,10 @@ ENCRYPTION IN TRANSIT
 
 **クイック解答**:
 1) 15
-2) なし (のみ in failover)
-3) Eventually consistent & Strongly consistent
-4) Redis (Memcached does not)
+2) なし（failover 時のみ）
+3) Eventually consistent と Strongly consistent
+4) Redis（Memcached は非対応）
 5) 35 days
 6) 128 TiB
-7) DAX (microseconds vs milliseconds)
-8) OLAP (analytics, not transactions)
-
+7) DAX（マイクロ秒 vs ミリ秒）
+8) OLAP（分析向け、トランザクション向けではない）
