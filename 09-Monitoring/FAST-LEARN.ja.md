@@ -1,399 +1,398 @@
-# ⚡ Fast Learning - Monitoring & Management
+# ⚡ 速習 - モニタリング＆管理
 
-> **Time to Complete**: 45-60 minutes | **Exam Weight**: ~10-15%
+> **所要時間**: 45〜60分 | **試験の出題割合**: 約10〜15%
 
-## 🎯 Must-Know Concepts (5 Minutes)
+## 🎯 必須概念（5分）
 
-### Monitoring Service Selector (CCTXE)
+### モニタリングサービス選択ガイド（CCTXE）
 ```
-METRICS & ALARMS? → CloudWatch
-API CALL LOGGING? → CloudTrail
-RESOURCE COMPLIANCE? → Config
-DISTRIBUTED TRACING? → X-Ray
-AUTOMATION? → Systems Manager, EventBridge
+メトリクス＆アラーム？ → CloudWatch
+APIコールのロギング？ → CloudTrail
+リソースのコンプライアンス？ → Config
+分散トレーシング？ → X-Ray
+自動化？ → Systems Manager、EventBridge
 ```
 
-**Memory Aid**: "CloudWatch Watches, CloudTrail Tracks, Config Checks, X-Ray eXamines"
+**覚え方**: 「CloudWatchは監視、CloudTrailは追跡、Configは確認、X-Rayは検査」
 
-## 📊 Quick Reference Tables
+## 📊 クイックリファレンス表
 
 ### CloudWatch vs CloudTrail vs Config
-| Question | Service | What It Captures |
-|----------|---------|------------------|
-| "How's my app performing?" | **CloudWatch** | Metrics, logs, alarms |
-| "Who did what when?" | **CloudTrail** | API calls, user actions |
-| "Is resource compliant?" | **Config** | Configuration changes |
-| "Where's the bottleneck?" | **X-Ray** | Request traces |
+| 質問 | サービス | 取得内容 |
+|------|---------|---------|
+| 「アプリのパフォーマンスは？」 | **CloudWatch** | メトリクス、ログ、アラーム |
+| 「誰が何をいつやった？」 | **CloudTrail** | APIコール、ユーザー操作 |
+| 「リソースは準拠している？」 | **Config** | 設定変更 |
+| 「ボトルネックはどこ？」 | **X-Ray** | リクエストトレース |
 
-### Monitoring Services Matrix
-| Service | Purpose | Data Type | Retention |
-|---------|---------|-----------|-----------|
-| **CloudWatch Metrics** | Performance monitoring | Numeric time-series | 15 months |
-| **CloudWatch Logs** | Log aggregation | Text logs | Configurable |
-| **CloudWatch Alarms** | Alert on thresholds | Based on metrics | N/A |
-| **CloudTrail** | Audit trail | API events | 90 days (event history) |
-| **Config** | Compliance | Config snapshots | Configurable |
-| **X-Ray** | Tracing | Request traces | 30 days |
+### モニタリングサービス一覧
+| サービス | 目的 | データ種別 | 保持期間 |
+|---------|------|----------|---------|
+| **CloudWatch メトリクス** | パフォーマンス監視 | 数値時系列 | 15ヶ月 |
+| **CloudWatch ログ** | ログ集約 | テキストログ | 設定可能 |
+| **CloudWatch アラーム** | 閾値アラート | メトリクス基準 | N/A |
+| **CloudTrail** | 監査証跡 | APIイベント | 90日（イベント履歴） |
+| **Config** | コンプライアンス | 設定スナップショット | 設定可能 |
+| **X-Ray** | トレーシング | リクエストトレース | 30日 |
 
-## 🔥 Exam Hot Topics
+## 🔥 試験頻出トピック
 
-### 1. CloudWatch Core Concepts
+### 1. CloudWatch コア概念
 ```
-METRICS (What to Monitor)
-├── Default Metrics (free, 5-min intervals)
-│   └── EC2: CPU, Network, Disk (NOT memory/disk space)
-├── Custom Metrics (charged, any interval)
-│   └── Application-level, memory, disk space
-└── Detailed Monitoring (1-min intervals, extra cost)
+メトリクス（何を監視するか）
+├── デフォルトメトリクス（無料、5分間隔）
+│   └── EC2: CPU、ネットワーク、ディスク（メモリ・ディスク容量は含まない）
+├── カスタムメトリクス（有料、任意の間隔）
+│   └── アプリレベル、メモリ、ディスク容量
+└── 詳細モニタリング（1分間隔、追加料金）
 
-ALARMS (When to Alert)
-├── OK - Metric within threshold
-├── ALARM - Metric breached threshold
-├── INSUFFICIENT_DATA - Not enough data
-└── Actions: SNS, Auto Scaling, EC2 actions
+アラーム（いつ通知するか）
+├── OK - メトリクスが閾値内
+├── ALARM - メトリクスが閾値を超過
+├── INSUFFICIENT_DATA - データ不足
+└── アクション: SNS、Auto Scaling、EC2アクション
 
-LOGS (Centralized Logging)
-├── Log Groups (application grouping)
-├── Log Streams (instance/resource)
-├── Metric Filters (extract metrics from logs)
-├── Insights (query and analyze)
-└── Export to S3 (archival)
+ログ（一元的なロギング）
+├── ロググループ（アプリケーション単位）
+├── ログストリーム（インスタンス/リソース単位）
+├── メトリクスフィルター（ログからメトリクスを抽出）
+├── Insights（クエリと分析）
+└── S3へのエクスポート（アーカイブ）
 
-EVENTS/EVENTBRIDGE (Automation)
-├── Schedule-based (cron)
-├── Event-based (state changes)
-└── Targets: Lambda, SNS, SQS, etc.
-```
-
-**Memory Aid**: "MALE" = Metrics, Alarms, Logs, Events
-
-### 2. CloudWatch Metrics - Important Facts
-```
-DEFAULT EC2 METRICS (Every 5 min, free)
-✅ CPUUtilization
-✅ NetworkIn/Out
-✅ DiskReadOps/WriteOps
-✅ StatusCheckFailed
-
-NOT DEFAULT (Need custom metrics or CloudWatch agent)
-❌ Memory utilization
-❌ Disk space utilization
-❌ Swap usage
-❌ Process count
-
-STANDARD RESOLUTION: 1 minute
-HIGH RESOLUTION: 1 second (custom metrics only)
+イベント/EVENTBRIDGE（自動化）
+├── スケジュールベース（cron）
+├── イベントベース（状態変化）
+└── ターゲット: Lambda、SNS、SQSなど
 ```
 
-### 3. CloudTrail Key Features
+**覚え方**: 「MALE」= Metrics（メトリクス）、Alarms（アラーム）、Logs（ログ）、Events（イベント）
+
+### 2. CloudWatch メトリクス - 重要事項
 ```
-WHAT IT LOGS:
-├── Management Events (control plane)
-│   └── CreateBucket, TerminateInstance, etc.
-├── Data Events (data plane, charged)
-│   └── S3 GetObject, Lambda Invoke, DynamoDB PutItem
-└── Insights Events (unusual activity, ML-based)
+EC2 デフォルトメトリクス（5分ごと、無料）
+✅ CPUUtilization（CPU使用率）
+✅ NetworkIn/Out（ネットワーク入出力）
+✅ DiskReadOps/WriteOps（ディスク読み書き操作）
+✅ StatusCheckFailed（ステータスチェック失敗）
 
-DELIVERY:
-├── Event history: 90 days (free, console)
-├── Trail: Ongoing delivery to S3
-├── CloudWatch Logs: Real-time monitoring
-└── EventBridge: Trigger automated responses
+デフォルト外（カスタムメトリクスまたはCloudWatchエージェントが必要）
+❌ メモリ使用率
+❌ ディスク容量使用率
+❌ スワップ使用量
+❌ プロセス数
 
-VALIDATION:
-├── Log file integrity validation
-├── Digest files (hash signatures)
-└── Detect tampering
+標準解像度: 1分
+高解像度: 1秒（カスタムメトリクスのみ）
 ```
 
-**Exam Tip**: CloudTrail is region-specific unless you create a multi-region trail
-
-### 4. AWS Config Rules
+### 3. CloudTrail 主要機能
 ```
-TYPES:
-├── AWS Managed Rules (pre-built, 200+)
+ログ対象:
+├── 管理イベント（コントロールプレーン）
+│   └── CreateBucket、TerminateInstanceなど
+├── データイベント（データプレーン、有料）
+│   └── S3 GetObject、Lambda Invoke、DynamoDB PutItem
+└── Insightsイベント（異常なアクティビティ、ML基盤）
+
+配信先:
+├── イベント履歴: 90日（無料、コンソール）
+├── Trail: S3への継続的な配信
+├── CloudWatch Logs: リアルタイム監視
+└── EventBridge: 自動レスポンスのトリガー
+
+検証:
+├── ログファイル整合性検証
+├── ダイジェストファイル（ハッシュ署名）
+└── 改ざん検知
+```
+
+**試験のポイント**: CloudTrailはマルチリージョンのTrailを作成しない限りリージョン固有
+
+### 4. AWS Config ルール
+```
+種類:
+├── AWSマネージドルール（事前定義済み、200種類以上）
 │   └── s3-bucket-public-read-prohibited
 │   └── required-tags
 │   └── encrypted-volumes
-└── Custom Rules (Lambda-based)
+└── カスタムルール（Lambdaベース）
 
-COMPLIANCE:
-├── Compliant (meets requirements)
-├── Non-Compliant (violates rules)
-└── Not Applicable (doesn't apply)
+コンプライアンス状態:
+├── Compliant（準拠）
+├── Non-Compliant（非準拠）
+└── Not Applicable（対象外）
 
-REMEDIATION:
-├── Manual remediation
-├── Automatic (Systems Manager Automation)
-└── Example: Auto-enable encryption
+修復:
+├── 手動修復
+├── 自動修復（Systems Manager Automation）
+└── 例: 暗号化の自動有効化
 ```
 
-## 💡 Common Exam Scenarios
+## 💡 試験頻出シナリオ
 
-### Scenario 1: Monitor EC2 Memory
-**Q**: CloudWatch doesn't show EC2 memory usage
-**✅ ANSWER**: Install CloudWatch agent on EC2, push custom metrics
+### シナリオ1: EC2メモリの監視
+**Q**: CloudWatchにEC2のメモリ使用量が表示されない
+**✅ 回答**: EC2にCloudWatchエージェントをインストールし、カスタムメトリクスをプッシュする
 
-### Scenario 2: Audit Who Deleted S3 Object
-**Q**: Need to know who deleted specific S3 object
-**✅ ANSWER**: CloudTrail with S3 data events enabled
+### シナリオ2: S3オブジェクト削除の監査
+**Q**: 特定のS3オブジェクトを誰が削除したか確認したい
+**✅ 回答**: S3データイベントを有効にしたCloudTrailを使用する
 
-### Scenario 3: Auto-Scale Based on Custom Metric
-**Q**: Scale EC2 based on application queue depth
-**✅ ANSWER**: Publish custom metric to CloudWatch → CloudWatch Alarm → Auto Scaling
+### シナリオ3: カスタムメトリクスによるAuto Scaling
+**Q**: アプリケーションのキュー深度に基づいてEC2をスケールしたい
+**✅ 回答**: カスタムメトリクスをCloudWatchに発行 → CloudWatchアラーム → Auto Scaling
 
-### Scenario 4: Alert on High CPU
-**Q**: Get notified when EC2 CPU > 80% for 5 minutes
-**✅ ANSWER**: CloudWatch Alarm on CPUUtilization → SNS topic
+### シナリオ4: 高CPU使用率のアラート
+**Q**: EC2のCPUが5分間80%超で通知を受けたい
+**✅ 回答**: CPUUtilizationのCloudWatchアラーム → SNSトピック
 
-### Scenario 5: Find Performance Bottleneck
-**Q**: Distributed app slow, need to find which service causing delay
-**✅ ANSWER**: AWS X-Ray (distributed tracing)
+### シナリオ5: パフォーマンスボトルネックの特定
+**Q**: 分散アプリが遅い。どのサービスが原因か特定したい
+**✅ 回答**: AWS X-Ray（分散トレーシング）
 
-### Scenario 6: Ensure All S3 Buckets Encrypted
-**Q**: Continuously verify S3 bucket encryption compliance
-**✅ ANSWER**: AWS Config with s3-bucket-server-side-encryption-enabled rule
+### シナリオ6: S3バケットの暗号化確認
+**Q**: S3バケットの暗号化コンプライアンスを継続的に検証したい
+**✅ 回答**: AWS Configのs3-bucket-server-side-encryption-enabledルールを使用
 
-### Scenario 7: Automate Response to Security Event
-**Q**: Auto-revoke IAM key if exposed
-**✅ ANSWER**: GuardDuty → EventBridge → Lambda (revoke key)
+### シナリオ7: セキュリティイベントへの自動対応
+**Q**: IAMキーが漏洩した場合に自動で無効化したい
+**✅ 回答**: GuardDuty → EventBridge → Lambda（キーの無効化）
 
-### Scenario 8: Centralize Logs from Multiple Accounts
-**Q**: Aggregate logs from 50 AWS accounts
-**✅ ANSWER**: CloudWatch Logs with cross-account subscriptions
+### シナリオ8: 複数アカウントのログ集約
+**Q**: 50のAWSアカウントからログを集約したい
+**✅ 回答**: クロスアカウントサブスクリプションを使ったCloudWatch Logs
 
-## 🎓 Speed Learning Tips
+## 🎓 速習Tips
 
-### CloudWatch Alarm States
+### CloudWatch アラームの状態
 ```
-OK → ALARM → OK (cycle)
+OK → ALARM → OK（サイクル）
 
-TRANSITIONS:
-├── OK to ALARM: Metric breached
-├── ALARM to OK: Metric back to normal
-└── Any to INSUFFICIENT_DATA: Missing data
+状態遷移:
+├── OK → ALARM: 閾値を超過
+├── ALARM → OK: 正常値に戻る
+└── 任意 → INSUFFICIENT_DATA: データ欠損
 
-ACTIONS (can configure per state):
-├── OK: Optional action
-├── ALARM: Send notification, scale, etc.
-└── INSUFFICIENT_DATA: Optional action
+アクション（状態ごとに設定可能）:
+├── OK: 任意のアクション
+├── ALARM: 通知送信、スケールなど
+└── INSUFFICIENT_DATA: 任意のアクション
 ```
 
-### CloudWatch Logs Insights Query Examples
+### CloudWatch Logs Insights クエリ例
 ```
-# Find errors in last hour
+# 直近1時間のエラーを検索
 fields @timestamp, @message
 | filter @message like /ERROR/
 | sort @timestamp desc
 | limit 20
 
-# Count by status code
+# ステータスコード別の件数
 stats count() by status_code
 
-# Average response time
+# 平均レスポンスタイム
 stats avg(response_time) by bin(5m)
 ```
 
-### Systems Manager Capabilities
+### Systems Manager の機能
 ```
 PATCH MANAGER
-└── Automate OS patching
+└── OSパッチ適用の自動化
 
 SESSION MANAGER
-└── Secure shell access (no SSH keys)
+└── セキュアなシェルアクセス（SSHキー不要）
 
 RUN COMMAND
-└── Execute commands on fleet
+└── フリートへのコマンド実行
 
 PARAMETER STORE
-└── Secure secrets/config storage
+└── シークレット・設定のセキュアな保管
 
 AUTOMATION
-└── Runbooks for common tasks
+└── 一般的なタスクのRunbook
 
 STATE MANAGER
-└── Maintain desired state
+└── 望ましい状態の維持
 
 INVENTORY
-└── Collect metadata from instances
+└── インスタンスからのメタデータ収集
 ```
 
-## 📝 Rapid-Fire Facts
+## 📝 重要事実まとめ
 
-### CloudWatch Metrics Retention
-- **< 60 seconds** (high resolution): 3 hours
-- **60 seconds** (1 minute): 15 days
-- **300 seconds** (5 minutes): 63 days
-- **3600 seconds** (1 hour): 455 days
-- **Aggregated**: 15 months
+### CloudWatch メトリクス保持期間
+- **60秒未満**（高解像度）: 3時間
+- **60秒**（1分）: 15日
+- **300秒**（5分）: 63日
+- **3600秒**（1時間）: 455日
+- **集計済み**: 15ヶ月
 
-### CloudWatch Logs Concepts
+### CloudWatch ログの概念
 ```
-LOG HIERARCHY:
-└── Log Group (application)
-    └── Log Stream (instance/container)
-        └── Log Events (individual logs)
+ログ階層:
+└── ロググループ（アプリケーション）
+    └── ログストリーム（インスタンス/コンテナ）
+        └── ログイベント（個々のログ）
 
-FEATURES:
-├── Retention: 1 day to 10 years, never expire
-├── Encryption: KMS at rest
-├── Export: To S3 (up to 12 hours delay)
-├── Subscription: Real-time to Lambda, Kinesis, etc.
-└── Insights: SQL-like queries
-```
-
-### CloudTrail vs VPC Flow Logs
-| Feature | CloudTrail | VPC Flow Logs |
-|---------|------------|---------------|
-| **What** | API calls | Network traffic |
-| **Level** | Account | VPC/Subnet/ENI |
-| **Format** | JSON | Space-delimited |
-| **Storage** | S3, CloudWatch Logs | S3, CloudWatch Logs |
-| **Use** | Audit actions | Troubleshoot network |
-
-### X-Ray Concepts
-```
-SEGMENTS: Single service request/response
-SUBSEGMENTS: Granular timing (DB calls, HTTP requests)
-TRACES: End-to-end request path
-SERVICE MAP: Visual representation of architecture
-ANNOTATIONS: Indexed metadata (searchable)
-METADATA: Non-indexed data
-
-SAMPLING: Control cost (not every request)
-└── Default: First request/sec + 5% thereafter
+機能:
+├── 保持期間: 1日〜10年、または無期限
+├── 暗号化: KMSによる保存時暗号化
+├── エクスポート: S3へ（最大12時間の遅延）
+├── サブスクリプション: Lambda、Kinesisなどへのリアルタイム転送
+└── Insights: SQLライクなクエリ
 ```
 
-## 🚀 5-Minute Master Review
+### CloudTrail vs VPC フローログ
+| 機能 | CloudTrail | VPC フローログ |
+|------|-----------|--------------|
+| **対象** | APIコール | ネットワークトラフィック |
+| **レベル** | アカウント | VPC/サブネット/ENI |
+| **形式** | JSON | スペース区切り |
+| **保存先** | S3、CloudWatch Logs | S3、CloudWatch Logs |
+| **用途** | 操作の監査 | ネットワークのトラブルシュート |
 
-### Monitoring Decision Tree
+### X-Ray の概念
 ```
-1. What do you need?
-   PERFORMANCE → CloudWatch Metrics
-   WHO DID IT → CloudTrail
-   COMPLIANCE → Config
-   BOTTLENECKS → X-Ray
+セグメント: 単一サービスのリクエスト/レスポンス
+サブセグメント: 詳細なタイミング（DBコール、HTTPリクエスト）
+トレース: エンドツーエンドのリクエストパス
+サービスマップ: アーキテクチャの視覚的表現
+アノテーション: インデックス付きメタデータ（検索可能）
+メタデータ: インデックスなしのデータ
+
+サンプリング: コスト制御（全リクエストではない）
+└── デフォルト: 毎秒最初の1リクエスト＋以降5%
+```
+
+## 🚀 5分マスターレビュー
+
+### モニタリング判断フロー
+```
+1. 何が必要？
+   パフォーマンス → CloudWatch メトリクス
+   誰がやったか → CloudTrail
+   コンプライアンス → Config
+   ボトルネック → X-Ray
    
-2. For CloudWatch, what specifically?
-   METRICS → Performance data
-   LOGS → Application logs
-   ALARMS → Notifications
-   EVENTS → Automation
+2. CloudWatchの場合、具体的には？
+   メトリクス → パフォーマンスデータ
+   ログ → アプリケーションログ
+   アラーム → 通知
+   イベント → 自動化
    
-3. For logging, what's the source?
-   APPLICATION → CloudWatch Logs
-   API CALLS → CloudTrail
-   NETWORK → VPC Flow Logs
-   LOAD BALANCER → ALB/NLB access logs
+3. ログの場合、ソースは？
+   アプリケーション → CloudWatch Logs
+   APIコール → CloudTrail
+   ネットワーク → VPC フローログ
+   ロードバランサー → ALB/NLB アクセスログ
 ```
 
-### CloudWatch Best Practices
-✅ Use detailed monitoring for critical workloads
-✅ Set up alarms for key metrics
-✅ Aggregate logs in CloudWatch Logs
-✅ Use metric filters to extract metrics from logs
-✅ Set appropriate log retention periods
-✅ Use CloudWatch Insights for log analysis
-✅ Enable cross-region/account monitoring
-✅ Use dashboards for visualization
+### CloudWatch ベストプラクティス
+✅ 重要なワークロードには詳細モニタリングを使用  
+✅ 主要メトリクスのアラームを設定  
+✅ ログをCloudWatch Logsに集約  
+✅ メトリクスフィルターでログからメトリクスを抽出  
+✅ 適切なログ保持期間を設定  
+✅ ログ分析にCloudWatch Insightsを活用  
+✅ クロスリージョン/クロスアカウント監視を有効化  
+✅ ダッシュボードで可視化  
 
-### Common Monitoring Patterns
+### よくある監視パターン
 ```
-1. AUTO-SCALING PATTERN
-   CloudWatch Metric → Alarm → Auto Scaling Policy
+1. AUTO-SCALINGパターン
+   CloudWatch メトリクス → アラーム → Auto Scalingポリシー
    
-2. ALERTING PATTERN
-   CloudWatch Alarm → SNS → Email/SMS/Lambda
+2. アラートパターン
+   CloudWatch アラーム → SNS → メール/SMS/Lambda
    
-3. LOG ANALYSIS PATTERN
-   App → CloudWatch Logs → Metric Filter → Alarm
+3. ログ分析パターン
+   アプリ → CloudWatch Logs → メトリクスフィルター → アラーム
    
-4. COMPLIANCE PATTERN
-   Config Rule → Non-Compliant → EventBridge → Lambda (remediate)
+4. コンプライアンスパターン
+   Config ルール → 非準拠 → EventBridge → Lambda（修復）
    
-5. INCIDENT RESPONSE
+5. インシデント対応
    GuardDuty/CloudTrail → EventBridge → Lambda → SNS
 ```
 
-### Common Mistakes to Avoid
-❌ Expecting EC2 memory in default metrics (need agent)
-❌ Not enabling CloudTrail in all regions
-❌ Forgetting CloudTrail data events cost extra
-❌ Not setting log retention (unnecessary costs)
-❌ Using CloudWatch when you need audit trail (use CloudTrail)
-❌ Not using metric filters to extract data from logs
-❌ Creating too many high-resolution custom metrics (expensive)
-❌ Not configuring alarm actions properly
+### よくある間違い
+❌ EC2のメモリがデフォルトメトリクスに含まれると思い込む（エージェントが必要）  
+❌ CloudTrailを全リージョンで有効化しない  
+❌ CloudTrailデータイベントが追加料金であることを忘れる  
+❌ ログ保持期間を設定しない（不要なコストが発生）  
+❌ 監査証跡が必要なのにCloudWatchを使う（CloudTrailを使うべき）  
+❌ ログからデータを抽出するメトリクスフィルターを使わない  
+❌ 高解像度カスタムメトリクスを過剰に作成する（コスト大）  
+❌ アラームアクションを正しく設定しない  
 
-## 🎯 Exam Practice Speedrun
+## 🎯 試験練習スピードラン
 
-**Quick Questions** (Answers at bottom)
+**クイッククイズ**（答えは下部）
 
-1. Does CloudWatch monitor EC2 memory by default? __
-2. What service tracks API calls? __
-3. How long is CloudTrail event history free? __
-4. What service checks resource compliance? __
-5. What service provides distributed tracing? __
-6. CloudWatch Logs default retention? __
-7. Can CloudTrail log data events by default? __
-8. What's the default CloudWatch metrics interval? __
+1. CloudWatchはデフォルトでEC2のメモリを監視する？ __
+2. APIコールを追跡するサービスは？ __
+3. CloudTrailのイベント履歴は無料で何日間？ __
+4. リソースのコンプライアンスを確認するサービスは？ __
+5. 分散トレーシングを提供するサービスは？ __
+6. CloudWatch Logsのデフォルト保持期間は？ __
+7. CloudTrailはデフォルトでデータイベントをログに記録する？ __
+8. CloudWatchのデフォルトメトリクス間隔は？ __
 
----
+***
 
-### CloudWatch Dashboard
+### CloudWatch ダッシュボード
 ```
-FEATURES:
-├── Multiple regions in one view
-├── Automatic refresh
-├── Shareable (public or within account)
-├── Widget types: Line, Number, Gauge, etc.
-└── Free: 3 dashboards (50 metrics each)
-    Paid: $3/dashboard/month
+機能:
+├── 複数リージョンを1画面で表示
+├── 自動更新
+├── 共有可能（公開またはアカウント内）
+├── ウィジェット種類: 折れ線、数値、ゲージなど
+└── 無料: 3ダッシュボード（各50メトリクス）
+    有料: 月$3/ダッシュボード
 ```
 
-### EventBridge (CloudWatch Events)
+### EventBridge（CloudWatch Events）
 ```
-EVENT SOURCES:
-├── AWS services (EC2 state change, etc.)
-├── Custom applications
-├── SaaS partners
-└── Scheduled (cron/rate expressions)
+イベントソース:
+├── AWSサービス（EC2の状態変化など）
+├── カスタムアプリケーション
+├── SaaSパートナー
+└── スケジュール（cron/rate式）
 
-TARGETS (20+ AWS services):
-├── Lambda functions
-├── SNS topics
-├── SQS queues
+ターゲット（20以上のAWSサービス）:
+├── Lambda関数
+├── SNSトピック
+├── SQSキュー
 ├── Step Functions
-├── ECS tasks
+├── ECSタスク
 ├── Systems Manager
-└── Many more
+└── その他多数
 
-RULES: Filter events → Route to targets
+ルール: イベントをフィルタリング → ターゲットにルーティング
 ```
 
 ### AWS Personal Health Dashboard
-- **Service Health Dashboard**: Global AWS service status
-- **Personal Health Dashboard**: Account-specific alerts
-  - Impacts YOUR resources
-  - Proactive notifications
-  - Detailed remediation guidance
-  - Integration with EventBridge
+- **Service Health Dashboard**: グローバルなAWSサービス状況
+- **Personal Health Dashboard**: アカウント固有のアラート
+  - 自分のリソースへの影響を表示
+  - プロアクティブな通知
+  - 詳細な修復ガイダンス
+  - EventBridgeとの統合
 
-## ⏱️ Next Steps
-- Time spent: ~45-60 min
-- Practice: Create CloudWatch alarm, enable CloudTrail, Config rule
-- Ready for: Monitoring practice questions
-- Move to: Module 10 - Migration
+## ⏱️ 次のステップ
+- 所要時間: 約45〜60分
+- 実践: CloudWatchアラームの作成、CloudTrailの有効化、Configルールの設定
+- 次に進む準備: モニタリングの練習問題
+- 次のモジュール: モジュール10 - 移行
 
----
+***
 
-**Quick Answers**: 
-1) No (need CloudWatch agent)
-2) AWS CloudTrail
-3) 90 days
-4) AWS Config
-5) AWS X-Ray
-6) Never expire (unless configured)
-7) No (must explicitly enable, charged extra)
-8) 5 minutes
-
+**クイズの答え**:  
+1) いいえ（CloudWatchエージェントが必要）  
+2) AWS CloudTrail  
+3) 90日  
+4) AWS Config  
+5) AWS X-Ray  
+6) 無期限（設定しない限り）  
+7) いいえ（明示的に有効化が必要、追加料金あり）  
+8) 5分
