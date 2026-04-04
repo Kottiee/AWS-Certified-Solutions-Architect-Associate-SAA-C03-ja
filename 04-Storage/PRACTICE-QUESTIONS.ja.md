@@ -1,13 +1,13 @@
-# Storage Services - Practice Questions
+# ストレージサービス - 練習問題
 
-> **⚠️ DISCLAIMER:** These are **original practice questions** created for educational purposes based on AWS documentation. They are **NOT actual exam questions** from the AWS certification exam.
+> **⚠️ 免責事項:** これらは AWS ドキュメントに基づき教育目的で作成した**オリジナル練習問題**です。AWS 認定試験の**実際の問題ではありません**。
 
-## Exam-Standard Questions (SAA-C03)
+## 試験標準問題（SAA-C03）
 
 ---
 
-### Question 1
-A company needs to store frequently accessed data with the lowest latency and highest throughput. Cost is not the primary concern. Which S3 storage class should be used?
+### 問題 1
+ある企業は、低レイテンシかつ高スループットで頻繁にアクセスされるデータを保存する必要があります。コストは主な懸念事項ではありません。どの S3 ストレージクラスを使うべきですか？
 
 A. S3 Standard  
 B. S3 Intelligent-Tiering  
@@ -15,33 +15,33 @@ C. S3 Standard-IA
 D. S3 One Zone-IA  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: A**
 
-**Explanation:**
-- **S3 Standard** provides:
-  - Millisecond latency
-  - High throughput
-  - 99.99% availability
-  - 11 9's durability
-  - Designed for frequently accessed data
+**解説:**
+- **S3 Standard** の特長:
+  - ミリ秒レイテンシ
+  - 高スループット
+  - 99.99% の可用性
+  - 11 ナインの耐久性
+  - 頻繁にアクセスされるデータ向け
 
-**S3 Storage Classes Comparison**:
-- **Standard**: Frequent access, highest cost
-- **Intelligent-Tiering**: Unknown/changing patterns, automatic tiering
-- **Standard-IA**: Infrequent access, lower cost, retrieval fees
-- **One Zone-IA**: Infrequent, single AZ, lowest IA cost
-- **Glacier**: Archive, minutes to hours retrieval
-- **Glacier Deep Archive**: Long-term archive, 12+ hours retrieval
+**S3 ストレージクラス比較**:
+- **Standard**: 高頻度アクセス、最も高コスト
+- **Intelligent-Tiering**: 不明/変動するアクセスパターン、自動階層化
+- **Standard-IA**: 低頻度アクセス、低コスト、取り出し料金あり
+- **One Zone-IA**: 低頻度アクセス、単一 AZ、IA で最安
+- **Glacier**: アーカイブ、取り出しは数分〜数時間
+- **Glacier Deep Archive**: 長期アーカイブ、取り出しは 12 時間以上
 
 **References:** S3 Storage Classes, S3 Standard
 </details>
 
 ---
 
-### Question 2
-A company stores infrequently accessed data in S3 Standard-IA. They need to access this data immediately when required. What is the retrieval time?
+### 問題 2
+企業は S3 Standard-IA に低頻度アクセスデータを保存しています。必要になったらこのデータへ即時アクセスしたい場合、取り出し時間はどれですか？
 
 A. 12 hours  
 B. 3-5 hours  
@@ -49,19 +49,19 @@ C. 1-5 minutes
 D. Milliseconds (immediate)  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: D**
 
-**Explanation:**
-- **S3 Standard-IA** provides immediate access (milliseconds)
-- "IA" means Infrequent Access, not slow access
-- Lower storage cost than Standard
-- Retrieval fees apply per GB
-- Minimum storage duration: 30 days
-- Minimum object size: 128 KB
+**解説:**
+- **S3 Standard-IA** は即時アクセス（ミリ秒）を提供
+- "IA" は Infrequent Access を意味し、遅いアクセスという意味ではない
+- Standard より保存コストは低い
+- GB 単位の取り出し料金が発生
+- 最低保存期間: 30 日
+- 最小オブジェクトサイズ: 128 KB
 
-**S3 Retrieval Times**:
+**S3 取り出し時間**:
 - **Standard/Standard-IA/One Zone-IA**: Milliseconds
 - **Intelligent-Tiering**: Milliseconds
 - **Glacier Instant Retrieval**: Milliseconds
@@ -78,8 +78,8 @@ D. Milliseconds (immediate)
 
 ---
 
-### Question 3
-A company needs to store compliance data that must be retained for 7 years and accessed once or twice per year. Cost optimization is critical. Which storage solution is MOST cost-effective?
+### 問題 3
+企業は 7 年間保持が必要で、年に 1〜2 回しかアクセスしないコンプライアンスデータを保存する必要があります。コスト最適化が最重要です。最も費用対効果の高いストレージはどれですか？
 
 A. S3 Standard  
 B. S3 Glacier Flexible Retrieval  
@@ -87,36 +87,36 @@ C. S3 Glacier Deep Archive
 D. S3 Intelligent-Tiering  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: C**
 
-**Explanation:**
-- **S3 Glacier Deep Archive** is cheapest S3 storage class
-- Designed for long-term retention (7-10+ years)
-- Retrieval time: 12-48 hours (acceptable for rare access)
-- Lowest cost per GB
-- Perfect for compliance, regulatory archives
+**解説:**
+- **S3 Glacier Deep Archive** は S3 で最も安価なストレージクラス
+- 長期保持（7〜10 年以上）向け
+- 取り出し時間: 12〜48 時間（まれなアクセスなら許容可能）
+- GB 単価が最安
+- コンプライアンス・規制アーカイブに最適
 
-**Cost Comparison (approximate)**:
-- **Deep Archive**: $0.00099/GB/month (cheapest)
+**コスト比較（概算）**:
+- **Deep Archive**: $0.00099/GB/month（最安）
 - **Glacier Flexible**: $0.0036/GB/month
 - **Standard-IA**: $0.0125/GB/month
 - **Standard**: $0.023/GB/month
 
-**When to Use**:
-- **Deep Archive**: Rarely accessed, 7+ years retention
-- **Glacier Flexible**: Occasionally accessed archives
-- **Standard-IA**: Monthly access
-- **Standard**: Frequent access
+**使い分け**:
+- **Deep Archive**: ほぼアクセスしない、7 年以上保持
+- **Glacier Flexible**: ときどきアクセスするアーカイブ
+- **Standard-IA**: 月次でアクセス
+- **Standard**: 高頻度アクセス
 
 **References:** S3 Glacier Deep Archive, Archive Storage
 </details>
 
 ---
 
-### Question 4
-A web application serves static content (images, CSS, JS) to global users. The content is stored in S3. What is the BEST way to improve performance and reduce latency?
+### 問題 4
+ある Web アプリケーションは静的コンテンツ（images, CSS, JS）をグローバルユーザーへ配信しています。コンテンツは S3 に保存されています。性能向上とレイテンシ削減のための最適な方法はどれですか？
 
 A. Enable S3 Transfer Acceleration  
 B. Use CloudFront with S3 as origin  
@@ -124,35 +124,35 @@ C. Enable S3 Cross-Region Replication
 D. Use S3 Standard storage class  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **CloudFront** is AWS's CDN (Content Delivery Network)
-- Caches content at 400+ edge locations globally
-- Reduces latency for users worldwide
-- Reduces load on origin S3 bucket
+**解説:**
+- **CloudFront** は AWS の CDN（Content Delivery Network）
+- 世界中 400 以上のエッジロケーションでコンテンツをキャッシュ
+- 世界中のユーザー向けにレイテンシを削減
+- オリジン S3 バケットの負荷を低減
 
-**CloudFront Benefits**:
-- Low latency (content served from nearest edge)
-- High transfer speeds
-- DDoS protection (AWS Shield)
-- SSL/TLS support
-- Reduced S3 data transfer costs
+**CloudFront の利点**:
+- 低レイテンシ（最寄りエッジから配信）
+- 高速転送
+- DDoS 保護（AWS Shield）
+- SSL/TLS サポート
+- S3 データ転送コストの削減
 
-**Other Options**:
-- **Transfer Acceleration**: Speeds up uploads to S3, not downloads
-- **Cross-Region Replication**: Multi-region redundancy, not CDN
-- **Storage class**: Doesn't affect delivery performance
+**その他の選択肢**:
+- **Transfer Acceleration**: S3 へのアップロード高速化であり、ダウンロード高速化ではない
+- **Cross-Region Replication**: マルチリージョン冗長化であり、CDN ではない
+- **Storage class**: 配信性能には直接影響しない
 
 **References:** Amazon CloudFront, S3 with CloudFront
 </details>
 
 ---
 
-### Question 5
-A company needs block storage for an EC2 instance running a database that requires consistent high IOPS. Which storage option should be used?
+### 問題 5
+企業は、安定した高 IOPS が必要なデータベースを実行する EC2 インスタンス向けにブロックストレージを必要としています。どのストレージオプションを使うべきですか？
 
 A. Instance Store  
 B. EBS General Purpose SSD (gp3)  
@@ -160,18 +160,18 @@ C. EBS Provisioned IOPS SSD (io2)
 D. Amazon EFS  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: C**
 
-**Explanation:**
-- **EBS Provisioned IOPS SSD (io2/io2 Block Express)** for high-performance databases
-- Consistent IOPS performance
-- Up to 64,000 IOPS per volume (io2)
-- Up to 256,000 IOPS (io2 Block Express)
+**解説:**
+- 高性能データベースには **EBS Provisioned IOPS SSD (io2/io2 Block Express)**
+- 一貫した IOPS 性能
+- 1 ボリュームあたり最大 64,000 IOPS（io2）
+- 最大 256,000 IOPS（io2 Block Express）
 - 99.999% durability
 
-**EBS Volume Types**:
+**EBS ボリュームタイプ**:
 
 | Type | Use Case | IOPS | Throughput |
 |------|----------|------|------------|
@@ -181,19 +181,19 @@ D. Amazon EFS
 | **st1** | Big data, data warehouses | 500 | 500 MB/s |
 | **sc1** | Cold storage | 250 | 250 MB/s |
 
-**When to Use**:
-- **io2**: Databases needing high, consistent IOPS
-- **gp3**: Most workloads, cost-effective
-- **st1**: Throughput-intensive, sequential
-- **Instance Store**: Temporary, highest performance
+**使い分け**:
+- **io2**: 高い一貫 IOPS が必要なデータベース
+- **gp3**: ほとんどのワークロード、コスト効率良
+- **st1**: スループット重視、シーケンシャル
+- **Instance Store**: 一時用途、最高性能
 
 **References:** EBS Volume Types, Provisioned IOPS
 </details>
 
 ---
 
-### Question 6
-An application requires shared file storage accessible from multiple EC2 instances across multiple Availability Zones using NFS protocol. Which service should be used?
+### 問題 6
+アプリケーションでは、NFS プロトコルを使って複数 AZ にまたがる複数の EC2 インスタンスからアクセス可能な共有ファイルストレージが必要です。どのサービスを使うべきですか？
 
 A. Amazon EBS  
 B. Amazon S3  
@@ -201,19 +201,19 @@ C. Amazon EFS
 D. Instance Store  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: C**
 
-**Explanation:**
-- **Amazon EFS** (Elastic File System) provides:
-  - Shared NFS file system
-  - Multi-AZ access
-  - Automatic scaling
-  - Linux-compatible (NFS v4)
-  - Concurrent access from 1000s of instances
+**解説:**
+- **Amazon EFS**（Elastic File System）の提供内容:
+  - 共有 NFS ファイルシステム
+  - マルチ AZ アクセス
+  - 自動スケーリング
+  - Linux 互換（NFS v4）
+  - 数千インスタンスから同時アクセス可能
 
-**Storage Service Comparison**:
+**ストレージサービス比較**:
 
 | Service | Protocol | Multi-Instance | Multi-AZ | Use Case |
 |---------|----------|----------------|----------|----------|
@@ -222,21 +222,21 @@ D. Instance Store
 | **FSx for Windows** | SMB | Yes | Yes | Windows file shares |
 | **S3** | HTTP/S | Yes | Yes | Object storage |
 
-**EFS Performance Modes**:
-- **General Purpose**: Low latency, most workloads
-- **Max I/O**: Higher latency, massive parallel access
+**EFS パフォーマンスモード**:
+- **General Purpose**: 低レイテンシ、ほとんどのワークロード向け
+- **Max I/O**: 高レイテンシだが大規模並列アクセス向け
 
-**EFS Throughput Modes**:
-- **Bursting**: Throughput scales with size
-- **Provisioned**: Set throughput independent of size
+**EFS スループットモード**:
+- **Bursting**: サイズに応じてスループット拡張
+- **Provisioned**: サイズに依存せずスループット指定
 
 **References:** Amazon EFS, Shared File Storage
 </details>
 
 ---
 
-### Question 7
-A company wants to automatically move S3 objects to cheaper storage classes based on access patterns. They don't want to manage this manually. What should they use?
+### 問題 7
+企業は、アクセスパターンに基づいて S3 オブジェクトをより安価なストレージクラスへ自動移動したいと考えています。手動管理はしたくありません。何を使うべきですか？
 
 A. S3 Lifecycle Policies  
 B. S3 Intelligent-Tiering  
@@ -244,38 +244,38 @@ C. Manual scripts
 D. AWS Lambda functions  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **S3 Intelligent-Tiering** automatically moves objects between tiers
-- Monitors access patterns
-- No retrieval fees (unlike IA classes)
-- Small monthly monitoring fee per object
+**解説:**
+- **S3 Intelligent-Tiering** はオブジェクトを階層間で自動移動
+- アクセスパターンをモニタリング
+- IA クラスと異なり取り出し料金なし
+- オブジェクトごとに小さな月額モニタリング料金
 
-**Intelligent-Tiering Access Tiers**:
-1. **Frequent Access**: Default, accessed frequently
-2. **Infrequent Access**: 30 days no access
-3. **Archive Instant Access**: 90 days no access
+**Intelligent-Tiering のアクセス階層**:
+1. **Frequent Access**: デフォルト、高頻度アクセス
+2. **Infrequent Access**: 30 日間アクセスなし
+3. **Archive Instant Access**: 90 日間アクセスなし
 4. **Archive Access** (optional): 90-270 days no access
 5. **Deep Archive Access** (optional): 180-730 days no access
 
 **Intelligent-Tiering vs Lifecycle**:
-- **Intelligent-Tiering**: Automatic based on access, no retrieval fees
-- **Lifecycle**: Rule-based transitions, set schedule
+- **Intelligent-Tiering**: アクセスベースで自動、取り出し料金なし
+- **Lifecycle**: ルールベース遷移、スケジュール指定
 
-**When to Use**:
-- **Intelligent-Tiering**: Unknown or changing access patterns
-- **Lifecycle**: Known patterns (e.g., move to Glacier after 90 days)
+**使い分け**:
+- **Intelligent-Tiering**: アクセスパターンが不明または変動
+- **Lifecycle**: パターンが既知（例: 90 日後に Glacier へ）
 
 **References:** S3 Intelligent-Tiering, Automatic Cost Optimization
 </details>
 
 ---
 
-### Question 8
-A company needs to ensure S3 objects are encrypted at rest. They want AWS to manage the encryption keys. Which encryption method should be used?
+### 問題 8
+企業は S3 オブジェクトを保管時に暗号化する必要があります。暗号鍵の管理は AWS に任せたいです。どの暗号化方式を使うべきですか？
 
 A. SSE-C (Customer-Provided Keys)  
 B. SSE-S3 (S3-Managed Keys)  
@@ -283,18 +283,18 @@ C. SSE-KMS (KMS-Managed Keys)
 D. Client-Side Encryption  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **SSE-S3** uses S3-managed encryption keys
-- AWS handles all key management
-- AES-256 encryption
-- No additional cost
-- Simplest encryption option
+**解説:**
+- **SSE-S3** は S3 管理の暗号鍵を使用
+- AWS が鍵管理をすべて実施
+- AES-256 暗号化
+- 追加費用なし
+- 最もシンプルな暗号化オプション
 
-**S3 Encryption Options**:
+**S3 暗号化オプション**:
 
 | Method | Key Management | Cost | Use Case |
 |--------|----------------|------|----------|
@@ -303,21 +303,21 @@ D. Client-Side Encryption
 | **SSE-C** | Customer provides | Free | Customer controls keys |
 | **Client-Side** | Customer | Free | Encrypt before upload |
 
-**SSE-KMS Benefits** (when needed):
-- Audit trail (CloudTrail)
-- Key rotation
-- Granular permissions
+**SSE-KMS の利点**（必要時）:
+- 監査証跡（CloudTrail）
+- 鍵ローテーション
+- きめ細かなアクセス権限
 - Envelope encryption
 
-**For exam**: If question says "AWS manages keys, simplest", choose SSE-S3
+**試験対策**: 「AWS が鍵管理」「最もシンプル」とあれば SSE-S3 を選ぶ
 
 **References:** S3 Encryption, SSE-S3, SSE-KMS
 </details>
 
 ---
 
-### Question 9
-A company needs to replicate S3 objects from us-east-1 to eu-west-1 for disaster recovery. What feature should be enabled?
+### 問題 9
+企業は、災害対策のため S3 オブジェクトを us-east-1 から eu-west-1 にレプリケートする必要があります。どの機能を有効化すべきですか？
 
 A. S3 Versioning  
 B. S3 Cross-Region Replication (CRR)  
@@ -325,37 +325,37 @@ C. S3 Same-Region Replication (SRR)
 D. S3 Transfer Acceleration  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **S3 Cross-Region Replication (CRR)** replicates objects across regions
-- Automatic, asynchronous replication
-- Requires versioning enabled on both buckets
-- Use cases: Compliance, disaster recovery, latency reduction
+**解説:**
+- **S3 Cross-Region Replication (CRR)** はリージョン間レプリケーション
+- 自動・非同期で複製
+- 送信元/送信先バケット両方で versioning が必要
+- 用途: コンプライアンス、災害対策、レイテンシ削減
 
-**CRR Requirements**:
-1. Versioning enabled on source and destination
-2. Appropriate IAM permissions
-3. Different AWS regions
+**CRR 要件**:
+1. 送信元と送信先で versioning を有効化
+2. 適切な IAM 権限
+3. 異なる AWS リージョン
 
 **CRR vs SRR**:
-- **CRR**: Different regions, disaster recovery, compliance
-- **SRR**: Same region, log aggregation, replication between accounts
+- **CRR**: 別リージョン、災害対策、コンプライアンス
+- **SRR**: 同一リージョン、ログ集約、アカウント間レプリケーション
 
-**Replication Options**:
-- **Replication Time Control (RTC)**: 99.99% replicated within 15 minutes
-- **Delete marker replication**: Optional
-- **Existing object replication**: Manual batch operation
+**レプリケーションオプション**:
+- **Replication Time Control (RTC)**: 99.99% を 15 分以内に複製
+- **Delete marker replication**: オプション
+- **Existing object replication**: 手動バッチ操作
 
 **References:** S3 Cross-Region Replication, Disaster Recovery
 </details>
 
 ---
 
-### Question 10
-An application generates temporary data that needs high-performance storage. The data can be lost if the instance stops. Which storage should be used?
+### 問題 10
+あるアプリケーションが一時データを生成しており、高性能ストレージが必要です。インスタンス停止時にデータ消失しても構いません。どのストレージを使うべきですか？
 
 A. EBS General Purpose SSD  
 B. EBS Provisioned IOPS SSD  
@@ -363,29 +363,29 @@ C. Instance Store
 D. Amazon EFS  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: C**
 
-**Explanation:**
-- **Instance Store** provides:
-  - Ephemeral storage (temporary)
-  - Physically attached to host
-  - Highest IOPS performance
-  - No additional cost
-  - Data lost on instance stop/termination
+**解説:**
+- **Instance Store** の特長:
+  - Ephemeral storage（一時）
+  - ホストに物理接続
+  - 最高 IOPS 性能
+  - 追加コストなし
+  - インスタンス stop/termination でデータ消失
 
-**Instance Store Characteristics**:
-- **Performance**: Millions of IOPS possible
-- **Persistence**: Data lost on stop/terminate
-- **Size**: Varies by instance type
-- **Use cases**: Cache, buffers, temporary data, scratch data
+**Instance Store の特性**:
+- **Performance**: 数百万 IOPS も可能
+- **Persistence**: stop/terminate で消失
+- **Size**: インスタンスタイプ依存
+- **Use cases**: キャッシュ、バッファ、一時データ、スクラッチデータ
 
 **Instance Store vs EBS**:
-- **Instance Store**: Temporary, highest performance, free
-- **EBS**: Persistent, network-attached, survives stop/start
+- **Instance Store**: 一時、最高性能、無料
+- **EBS**: 永続、ネットワーク接続、stop/start 後も維持
 
-**Exam Tip**: Look for keywords:
+**試験のコツ**: キーワードで判断:
 - "Temporary", "can be lost", "cache" → Instance Store
 - "Persistent", "database", "survives restart" → EBS
 
@@ -394,8 +394,8 @@ D. Amazon EFS
 
 ---
 
-### Question 11
-A company wants to ensure deleted S3 objects can be recovered for 30 days. What should be enabled?
+### 問題 11
+企業は、削除された S3 オブジェクトを 30 日間復元可能にしたいと考えています。何を有効化すべきですか？
 
 A. S3 Lifecycle Policies  
 B. S3 Versioning  
@@ -403,37 +403,37 @@ C. S3 Object Lock
 D. MFA Delete  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **S3 Versioning** preserves all versions of objects
-- Deleted objects become delete markers (recoverable)
-- Previous versions retained
-- Protection against accidental deletion
+**解説:**
+- **S3 Versioning** はオブジェクトの全バージョンを保持
+- 削除されたオブジェクトは delete marker になり復元可能
+- 過去バージョンを保持
+- 誤削除対策になる
 
-**S3 Versioning Features**:
-- Stores all versions (including deleted)
-- Recover from accidental deletes
-- Recover from application failures
-- Can suspend (not disable completely)
-- Each version counted for storage costs
+**S3 Versioning の機能**:
+- 全バージョンを保存（削除含む）
+- 誤削除から復旧
+- アプリケーション障害から復旧
+- 一時停止はできる（完全無効化は不可）
+- 各バージョン分のストレージ課金あり
 
-**Related Features**:
-- **MFA Delete**: Requires MFA to delete versions or suspend versioning
-- **Object Lock**: WORM (Write Once Read Many), compliance
-- **Lifecycle**: Transition or delete versions after time period
+**関連機能**:
+- **MFA Delete**: バージョン削除や versioning 停止に MFA 必須
+- **Object Lock**: WORM（Write Once Read Many）、コンプライアンス
+- **Lifecycle**: 一定期間後にバージョン遷移/削除
 
-**Best Practice**: Enable versioning + lifecycle to delete old versions
+**ベストプラクティス**: versioning + lifecycle で古いバージョンを削除
 
 **References:** S3 Versioning, Data Protection
 </details>
 
 ---
 
-### Question 12
-A Windows application running on EC2 needs shared file storage accessible via SMB protocol. Which service should be used?
+### 問題 12
+EC2 上で動作する Windows アプリケーションが、SMB プロトコルでアクセス可能な共有ファイルストレージを必要としています。どのサービスを使うべきですか？
 
 A. Amazon EFS  
 B. Amazon FSx for Windows File Server  
@@ -441,27 +441,27 @@ C. Amazon EBS
 D. Amazon S3  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
+**解説:**
 - **Amazon FSx for Windows File Server**:
-  - Native Windows file system
-  - SMB protocol support
-  - Active Directory integration
-  - Windows NTFS features
-  - Multi-AZ deployment
+  - ネイティブ Windows ファイルシステム
+  - SMB プロトコル対応
+  - Active Directory 統合
+  - Windows NTFS 機能
+  - Multi-AZ 配置
 
-**FSx Family**:
-- **FSx for Windows**: Windows workloads, SMB, AD
-- **FSx for Lustre**: HPC, ML, high-performance
-- **FSx for NetApp ONTAP**: Enterprise NAS, multi-protocol
-- **FSx for OpenZFS**: Linux workloads, snapshots
+**FSx ファミリー**:
+- **FSx for Windows**: Windows ワークロード、SMB、AD
+- **FSx for Lustre**: HPC、ML、高性能
+- **FSx for NetApp ONTAP**: エンタープライズ NAS、マルチプロトコル
+- **FSx for OpenZFS**: Linux ワークロード、スナップショット
 
-**File Storage Options**:
-- **Windows apps**: FSx for Windows (SMB)
-- **Linux apps**: EFS (NFS)
+**ファイルストレージの選択**:
+- **Windows apps**: FSx for Windows（SMB）
+- **Linux apps**: EFS（NFS）
 - **HPC/ML**: FSx for Lustre
 - **Block storage**: EBS
 
@@ -470,8 +470,8 @@ D. Amazon S3
 
 ---
 
-### Question 13
-A company needs to store petabytes of data for machine learning training with the fastest possible throughput. Which storage service is MOST appropriate?
+### 問題 13
+企業は、機械学習トレーニングのためにペタバイト級データを可能な限り高いスループットで保存する必要があります。最も適切なストレージサービスはどれですか？
 
 A. Amazon S3  
 B. Amazon EFS  
@@ -479,31 +479,31 @@ C. Amazon FSx for Lustre
 D. Amazon EBS  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: C**
 
-**Explanation:**
-- **FSx for Lustre** designed for:
+**解説:**
+- **FSx for Lustre** は次の用途向けに設計:
   - High-performance computing (HPC)
   - Machine learning
   - Media processing
-  - Sub-millisecond latencies
-  - Hundreds of GB/s throughput
-  - Millions of IOPS
+  - サブミリ秒レイテンシ
+  - 数百 GB/s のスループット
+  - 数百万 IOPS
 
-**FSx for Lustre Features**:
-- Integrates with S3 (lazy loading)
-- POSIX-compliant file system
-- Scratch and persistent deployment types
-- Scales to petabytes
+**FSx for Lustre の特徴**:
+- S3 連携（lazy loading）
+- POSIX 準拠ファイルシステム
+- Scratch と Persistent のデプロイタイプ
+- ペタバイト級までスケール
 
-**Deployment Types**:
-- **Scratch**: Temporary, highest performance, no replication
-- **Persistent**: Long-term, replication, automatic failover
+**デプロイタイプ**:
+- **Scratch**: 一時用途、最高性能、レプリケーションなし
+- **Persistent**: 長期用途、レプリケーションあり、自動フェイルオーバー
 
-**ML/HPC Storage**:
-- **Training**: FSx for Lustre (from S3)
+**ML/HPC ストレージ**:
+- **Training**: FSx for Lustre（from S3）
 - **Inference**: EFS or S3
 - **Dataset storage**: S3
 - **Processing**: FSx for Lustre
@@ -513,8 +513,8 @@ D. Amazon EBS
 
 ---
 
-### Question 14
-A company wants to move infrequently accessed EBS snapshots to cheaper storage automatically. What feature should be used?
+### 問題 14
+企業は、低頻度アクセスの EBS スナップショットを自動で安価なストレージに移したいと考えています。どの機能を使うべきですか？
 
 A. S3 Lifecycle Policies  
 B. EBS Snapshot Archive  
@@ -522,39 +522,39 @@ C. EBS Cold HDD volumes
 D. Amazon Glacier  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **EBS Snapshot Archive** tier:
-  - 75% cheaper than standard snapshots
-  - For snapshots stored 90+ days
-  - Restore time: 24-72 hours
-  - Minimum 90-day storage
+**解説:**
+- **EBS Snapshot Archive** ティア:
+  - 標準スナップショットより 75% 安価
+  - 90 日以上保存するスナップショット向け
+  - 復元時間: 24-72 hours
+  - 最低 90 日保存
 
-**EBS Snapshot Management**:
-- **Standard**: Fast restore (minutes), higher cost
-- **Archive**: Cheaper, slower restore (24-72 hrs)
-- Automatic archival with lifecycle policies
+**EBS スナップショット管理**:
+- **Standard**: 高速復元（数分）、高コスト
+- **Archive**: 低コスト、低速復元（24-72 hrs）
+- lifecycle policies による自動アーカイブ
 
-**EBS Snapshot Features**:
-- Incremental backups (only changed blocks)
-- Stored in S3 (managed by AWS)
-- Cross-region copy available
-- Fast Snapshot Restore (FSR) for instant recovery
+**EBS スナップショット機能**:
+- 増分バックアップ（変更ブロックのみ）
+- S3 に保存（AWS 管理）
+- リージョン間コピー可能
+- 即時復旧向け Fast Snapshot Restore (FSR)
 
-**Use Cases**:
-- **Standard**: Frequent restores, DR
-- **Archive**: Compliance, long-term retention
+**ユースケース**:
+- **Standard**: 頻繁な復元、DR
+- **Archive**: コンプライアンス、長期保持
 
 **References:** EBS Snapshots, Snapshot Archive
 </details>
 
 ---
 
-### Question 15
-An application writes data to S3 frequently. The company wants to be notified immediately when objects are created. What should be configured?
+### 問題 15
+アプリケーションは S3 に頻繁にデータを書き込みます。企業はオブジェクト作成時に即時通知を受け取りたいです。何を設定すべきですか？
 
 A. S3 Event Notifications  
 B. CloudWatch Logs  
@@ -562,23 +562,23 @@ C. AWS Config
 D. CloudTrail  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: A**
 
-**Explanation:**
-- **S3 Event Notifications** trigger on bucket events
-- Near real-time notifications
-- Destinations: SNS, SQS, Lambda
+**解説:**
+- **S3 Event Notifications** はバケットイベントでトリガー
+- ほぼリアルタイム通知
+- 送信先: SNS、SQS、Lambda
 
-**S3 Events**:
+**S3 イベント**:
 - Object created (PUT, POST, COPY, CompleteMultipartUpload)
 - Object deleted
 - Object restored from Glacier
 - Replication events
 - Lifecycle transitions
 
-**Event Notification Setup**:
+**イベント通知設定例**:
 ```json
 {
   "Event": "s3:ObjectCreated:*",
@@ -586,20 +586,20 @@ D. CloudTrail
 }
 ```
 
-**Common Patterns**:
-- **S3 → Lambda**: Process uploaded files
-- **S3 → SQS**: Queue processing
-- **S3 → SNS**: Multi-subscriber notifications
+**一般的なパターン**:
+- **S3 → Lambda**: アップロードファイル処理
+- **S3 → SQS**: キュー処理
+- **S3 → SNS**: 複数購読者へ通知
 
-**Alternative**: EventBridge (more advanced filtering)
+**代替**: EventBridge（より高度なフィルタリング）
 
 **References:** S3 Event Notifications, Event-Driven Architecture
 </details>
 
 ---
 
-### Question 16
-A company needs to ensure S3 objects are never deleted or overwritten for regulatory compliance. Which feature should be used?
+### 問題 16
+企業は、規制コンプライアンスのために S3 オブジェクトが削除・上書きされないようにしたいです。どの機能を使うべきですか？
 
 A. S3 Versioning  
 B. S3 Object Lock  
@@ -607,42 +607,42 @@ C. MFA Delete
 D. S3 Lifecycle Policies  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **S3 Object Lock** provides WORM (Write Once Read Many)
-- Prevents deletion/overwrite for specified retention period
-- Compliance and governance modes
+**解説:**
+- **S3 Object Lock** は WORM（Write Once Read Many）を提供
+- 指定保持期間中の削除/上書きを防止
+- コンプライアンスモードとガバナンスモードを提供
 
-**Object Lock Modes**:
-- **Compliance**: Can't be overwritten/deleted by anyone (even root)
-- **Governance**: Users with special permissions can override
-- **Legal Hold**: Indefinite protection, manually removed
+**Object Lock モード**:
+- **Compliance**: 誰も（root でも）上書き/削除不可
+- **Governance**: 特別権限ユーザーは上書き可能
+- **Legal Hold**: 期限なし保護、手動解除
 
 **Object Lock vs Versioning**:
-- **Versioning**: Protects but versions can be deleted
-- **Object Lock**: Enforces retention, truly immutable
+- **Versioning**: 保護できるがバージョン削除は可能
+- **Object Lock**: 保持を強制し、真に不変
 
-**Requirements**:
-- Versioning must be enabled
-- Set at bucket creation
-- Retention period or legal hold
+**要件**:
+- Versioning 有効化必須
+- バケット作成時に設定
+- 保持期間または legal hold 設定
 
-**Use Cases**:
-- Financial records
-- Healthcare data (HIPAA)
-- Legal documents
-- Regulatory compliance
+**ユースケース**:
+- 金融記録
+- 医療データ（HIPAA）
+- 法的文書
+- 規制コンプライアンス
 
 **References:** S3 Object Lock, WORM Compliance
 </details>
 
 ---
 
-### Question 17
-An application needs to upload large files (100 GB+) to S3 with optimal performance. What should be used?
+### 問題 17
+アプリケーションが大容量ファイル（100 GB+）を S3 へ最適な性能でアップロードする必要があります。何を使うべきですか？
 
 A. Single PUT operation  
 B. S3 Multipart Upload  
@@ -650,42 +650,42 @@ C. S3 Transfer Acceleration
 D. AWS DataSync  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
+**解説:**
 - **S3 Multipart Upload**:
-  - Upload large objects in parts
-  - Parts uploaded in parallel (better throughput)
-  - Can pause/resume
-  - Recommended for files > 100 MB
-  - Required for files > 5 GB
+  - 大きなオブジェクトを分割アップロード
+  - パート並列アップロードでスループット向上
+  - 一時停止/再開が可能
+  - 100 MB 超で推奨
+  - 5 GB 超で必須
 
-**Multipart Upload Benefits**:
-- Improved throughput (parallel uploads)
-- Quick recovery from network issues
-- Pause and resume uploads
-- Upload before knowing final size
+**Multipart Upload の利点**:
+- スループット向上（並列アップロード）
+- ネットワーク問題からの復旧が容易
+- アップロードの一時停止と再開
+- 最終サイズ未確定でも開始可能
 
-**Best Practices**:
-- Use for files > 100 MB
-- Required for files > 5 GB
-- Upload parts in parallel
-- Configure lifecycle to abort incomplete uploads
+**ベストプラクティス**:
+- 100 MB 超で利用
+- 5 GB 超は必須
+- パートを並列アップロード
+- 未完了アップロード中断用の lifecycle を設定
 
 **Transfer Acceleration**:
-- Different feature (uses CloudFront edge locations)
-- Speeds up uploads via edge locations
-- Can combine with Multipart Upload
+- 別機能（CloudFront edge locations を使用）
+- エッジロケーション経由でアップロード高速化
+- Multipart Upload と併用可能
 
 **References:** S3 Multipart Upload, Large File Uploads
 </details>
 
 ---
 
-### Question 18
-A company wants to access S3 from EC2 instances without using internet gateway or NAT. What should be configured?
+### 問題 18
+企業は Internet Gateway や NAT を使わずに、EC2 インスタンスから S3 へアクセスしたいです。何を設定すべきですか？
 
 A. VPN Connection  
 B. AWS Direct Connect  
@@ -693,43 +693,43 @@ C. VPC Endpoint for S3 (Gateway Endpoint)
 D. VPC Peering  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: C**
 
-**Explanation:**
-- **VPC Endpoint for S3** (Gateway Endpoint):
-  - Private connection from VPC to S3
-  - No internet required
-  - No data transfer charges
-  - Traffic stays within AWS network
+**解説:**
+- **VPC Endpoint for S3**（Gateway Endpoint）:
+  - VPC から S3 へのプライベート接続
+  - インターネット不要
+  - データ転送料不要
+  - トラフィックは AWS ネットワーク内に留まる
 
-**VPC Endpoint Types**:
+**VPC Endpoint の種類**:
 
 | Type | Services | Cost | Implementation |
 |------|----------|------|----------------|
 | **Gateway** | S3, DynamoDB | Free | Route table entry |
 | **Interface** | Most AWS services | Hourly + data | ENI in subnet |
 
-**S3 Endpoint Benefits**:
-- Enhanced security (no internet exposure)
-- Better performance
-- No NAT Gateway costs
-- Control access via endpoint policies
+**S3 Endpoint の利点**:
+- セキュリティ向上（インターネット公開なし）
+- 性能向上
+- NAT Gateway コスト削減
+- endpoint policy でアクセス制御可能
 
-**Configuration**:
-1. Create Gateway Endpoint for S3
-2. Select VPC and route tables
-3. Configure endpoint policy (optional)
-4. S3 traffic automatically routed
+**設定手順**:
+1. S3 用 Gateway Endpoint を作成
+2. VPC とルートテーブルを選択
+3. endpoint policy を設定（任意）
+4. S3 トラフィックは自動ルーティング
 
 **References:** VPC Endpoints, S3 Gateway Endpoint, Private Connectivity
 </details>
 
 ---
 
-### Question 19
-A database backup is stored in S3. The company wants to ensure the backup can be restored quickly if needed. What feature should be enabled?
+### 問題 19
+データベースバックアップを S3 に保存しています。必要時に素早く復元できるようにしたいです。どの機能を有効化すべきですか？
 
 A. S3 Transfer Acceleration  
 B. S3 Versioning  
@@ -737,38 +737,38 @@ C. S3 Cross-Region Replication
 D. Enable S3 Retrieval directly  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **S3 Versioning** for backup protection:
-  - Immediate access to all versions
-  - Protect against accidental deletion/overwrite
-  - Quick recovery (millisecond retrieval)
-  - Keep multiple backup versions
+**解説:**
+- バックアップ保護には **S3 Versioning**:
+  - 全バージョンへ即時アクセス
+  - 誤削除/上書きから保護
+  - 高速復旧（ミリ秒取り出し）
+  - 複数バックアップバージョンを保持
 
-**Backup Best Practices**:
-1. Enable versioning
-2. Use lifecycle policies to transition old versions
-3. Enable Cross-Region Replication for DR
-4. Tag backup objects
-5. Test restore procedures
+**バックアップのベストプラクティス**:
+1. versioning を有効化
+2. 古いバージョンを lifecycle で遷移
+3. DR 用に Cross-Region Replication を有効化
+4. バックアップオブジェクトへタグ付け
+5. 復元手順をテスト
 
-**Additional Protection**:
-- **CRR**: Geographic redundancy
-- **Object Lock**: Immutable backups
-- **MFA Delete**: Prevent accidental deletion
+**追加保護**:
+- **CRR**: 地理冗長
+- **Object Lock**: 不変バックアップ
+- **MFA Delete**: 誤削除防止
 
-**Storage Class**: Use Standard or Standard-IA for quick restore
+**Storage Class**: 迅速復元には Standard または Standard-IA
 
 **References:** S3 for Backups, Versioning, Backup Strategies
 </details>
 
 ---
 
-### Question 20
-A company has data in S3 Standard storage. Objects accessed within 30 days should remain in Standard, but older objects should move to S3 Glacier. How can this be automated?
+### 問題 20
+企業には S3 Standard に保存されたデータがあります。30 日以内にアクセスされるオブジェクトは Standard に残し、それより古いオブジェクトは S3 Glacier に移動したいです。これを自動化するにはどうすればよいですか？
 
 A. S3 Intelligent-Tiering  
 B. S3 Lifecycle Policies  
@@ -776,17 +776,17 @@ C. AWS Lambda function
 D. Manual migration  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
 **Answer: B**
 
-**Explanation:**
-- **S3 Lifecycle Policies** automate transitions and expiration
-- Rule-based transitions between storage classes
-- Can filter by prefix or tags
-- No code required
+**解説:**
+- **S3 Lifecycle Policies** は遷移と期限切れを自動化
+- ストレージクラス間をルールベースで遷移
+- prefix や tags でフィルタ可能
+- コード不要
 
-**Lifecycle Policy Example**:
+**Lifecycle Policy 例**:
 ```json
 {
   "Rules": [
@@ -804,24 +804,24 @@ D. Manual migration
 }
 ```
 
-**Lifecycle Actions**:
-- **Transition**: Move to different storage class
-- **Expiration**: Delete objects
-- **NoncurrentVersionTransition**: Transition previous versions
-- **NoncurrentVersionExpiration**: Delete previous versions
-- **AbortIncompleteMultipartUpload**: Clean up incomplete uploads
+**Lifecycle アクション**:
+- **Transition**: 別ストレージクラスへ移動
+- **Expiration**: オブジェクト削除
+- **NoncurrentVersionTransition**: 過去バージョンを遷移
+- **NoncurrentVersionExpiration**: 過去バージョン削除
+- **AbortIncompleteMultipartUpload**: 未完了アップロードをクリーンアップ
 
-**Transition Rules**:
-- Standard → Standard-IA (30 days min)
-- Standard → Glacier (0 days min)
-- Can't transition backwards (Glacier → Standard)
+**遷移ルール**:
+- Standard → Standard-IA（最短 30 日）
+- Standard → Glacier（最短 0 日）
+- 逆方向遷移は不可（Glacier → Standard）
 
 **References:** S3 Lifecycle Policies, Storage Class Transitions
 </details>
 
 ---
 
-## Summary
+## まとめ
 
 **Total Questions**: 20  
 **Topics Covered**:
@@ -839,9 +839,9 @@ D. Manual migration
 - VPC Endpoints for S3
 - CloudFront with S3
 
-**Exam Tips**:
+**試験のコツ**:
 
-**S3 Storage Classes Decision Tree**:
+**S3 ストレージクラス決定ツリー**:
 1. **Frequent access** → S3 Standard
 2. **Infrequent access (immediate)** → Standard-IA or One Zone-IA
 3. **Archive (immediate access)** → Glacier Instant Retrieval
@@ -849,41 +849,40 @@ D. Manual migration
 5. **Archive (12+ hours)** → Glacier Deep Archive
 6. **Unknown pattern** → Intelligent-Tiering
 
-**EBS Volume Types**:
+**EBS ボリュームタイプ**:
 - **Databases (high IOPS)** → io2/io2 Block Express
 - **General purpose** → gp3
 - **Big data (throughput)** → st1
 - **Infrequent access** → sc1
 - **Temporary** → Instance Store
 
-**File Storage**:
+**ファイルストレージ**:
 - **Windows (SMB)** → FSx for Windows
 - **Linux (NFS), shared** → EFS
 - **HPC/ML** → FSx for Lustre
 - **Single instance** → EBS
 
-**S3 Features**:
-- **Versioning**: Protect from deletion, enable CRR
-- **Object Lock**: WORM compliance
-- **Lifecycle**: Automate transitions/expiration
-- **CRR**: Cross-region disaster recovery
-- **Event Notifications**: Trigger Lambda/SQS/SNS
+**S3 機能**:
+- **Versioning**: 削除保護、CRR 有効化要件
+- **Object Lock**: WORM コンプライアンス
+- **Lifecycle**: 遷移/期限切れの自動化
+- **CRR**: クロスリージョン災害対策
+- **Event Notifications**: Lambda/SQS/SNS トリガー
 
-**Cost Optimization**:
-- Use Intelligent-Tiering for unknown patterns
-- Lifecycle policies for known patterns
-- Archive tier for long-term retention
-- VPC Endpoint to avoid NAT costs
+**コスト最適化**:
+- パターン不明なら Intelligent-Tiering
+- パターン既知なら Lifecycle policies
+- 長期保持は Archive tier
+- NAT コスト回避には VPC Endpoint
 
-**Performance**:
-- CloudFront for global distribution
-- Multipart Upload for large files
-- Transfer Acceleration for distance
-- VPC Endpoint for private connectivity
+**パフォーマンス**:
+- グローバル配信には CloudFront
+- 大容量ファイルには Multipart Upload
+- 長距離アップロードには Transfer Acceleration
+- プライベート接続には VPC Endpoint
 
-**Next Steps**:
-- Memorize S3 storage class use cases and costs
-- Understand when to use each EBS volume type
-- Know file storage options (EFS vs FSx)
-- Practice lifecycle policy configurations
-
+**次のステップ**:
+- S3 ストレージクラスの用途とコストを暗記
+- 各 EBS ボリュームタイプの使い分けを理解
+- ファイルストレージの選択（EFS vs FSx）を整理
+- lifecycle policy 設定を実践
