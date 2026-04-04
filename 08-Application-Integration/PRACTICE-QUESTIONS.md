@@ -1,69 +1,78 @@
-# Application Integration - Practice Questions
 
-> **⚠️ DISCLAIMER:** These are **original practice questions** created for educational purposes based on AWS documentation. They are **NOT actual exam questions** from the AWS certification exam.
+-----
 
-## Exam-Standard Questions (SAA-C03)
+# アプリケーション統合 - 練習問題
 
----
+> **⚠️ 免責事項:** これらはAWSドキュメントに基づき、学習目的で作成された**オリジナルの練習問題**です。AWS認定試験の**実際の試験問題ではありません。**
 
-### Question 1
-A microservices architecture needs asynchronous communication where multiple services must process the same message independently. Which AWS service is MOST appropriate?
+## 試験標準問題 (SAA-C03)
 
-A. Amazon SQS Standard Queue  
+-----
+
+### 問題 1
+
+マイクロサービスアーキテクチャにおいて、複数のサービスが同じメッセージを独立して処理する必要がある非同期通信が必要です。最も適切なAWSサービスはどれですか？
+
+A. Amazon SQS 標準キュー  
 B. Amazon SNS  
 C. Amazon Kinesis Data Streams  
-D. AWS Step Functions  
+D. AWS Step Functions
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- **Amazon SNS** (Simple Notification Service) provides pub/sub messaging pattern
-- One message published → Multiple subscribers receive copy
-- Push-based delivery (proactive)
-- Perfect for fan-out scenarios
+**解説:**
 
-**SNS Architecture**:
+  - **Amazon SNS** (Simple Notification Service) は、パブ/サブ（出版/購読）メッセージングパターンを提供します。
+  - 1つのメッセージが発行される → 複数のサブスクライバーがコピーを受信する。
+  - プッシュ型配信（プロアクティブ）。
+  - ファンアウト（扇状に広がる）シナリオに最適。
+
+**SNS アーキテクチャ**:
+
 ```
-Publisher (Microservice A)
+パブリッシャー (マイクロサービス A)
       ↓
-   SNS Topic
+   SNS トピック
       ↓
    ┌──┴──┬──────┬──────┐
    ↓     ↓      ↓      ↓
-Service B  C    D    Lambda
+サービス B  C      D    Lambda
 ```
 
-**SNS Features**:
-- **Message Filtering**: Subscribers receive only relevant messages
-- **Multiple Protocols**: SQS, Lambda, HTTP/HTTPS, Email, SMS, Mobile Push
-- **Message Attributes**: Metadata for filtering
-- **Fan-out**: 1-to-many delivery
-- **FIFO Topics**: Ordered, exactly-once delivery
+**SNS の機能**:
+
+  - **メッセージフィルタリング**: サブスクライバーは関連するメッセージのみを受信。
+  - **マルチプロトコル**: SQS, Lambda, HTTP/HTTPS, Eメール, SMS, モバイルプッシュに対応。
+  - **メッセージ属性**: フィルタリング用のメタデータ。
+  - **ファンアウト**: 1対多の配信。
+  - **FIFO トピック**: 順序保証、正確に1回の配信。
 
 **SNS vs SQS**:
 
-| Feature | SNS | SQS |
+| 機能 | SNS | SQS |
 |---------|-----|-----|
-| **Pattern** | Pub/Sub (1-to-many) | Queue (1-to-1) |
-| **Delivery** | Push | Pull |
-| **Subscribers** | Multiple (fan-out) | Single consumer per message |
-| **Retention** | No retention | Up to 14 days |
-| **Use Case** | Notifications, fan-out | Decoupling, buffering |
+| **パターン** | パブ/サブ (1対多) | キュー (1対1) |
+| **配信** | プッシュ | プル |
+| **サブスクライバー** | 複数 (ファンアウト) | メッセージごとに単一のコンシューマー |
+| **保持** | 保持なし | 最大14日間 |
+| **ユースケース** | 通知、ファンアウト | 切り離し、バッファリング |
 
-**Example Use Case**:
+**ユースケース例**:
+
 ```
-Order Placed Event → SNS Topic
-  ├→ Inventory Service (update stock)
-  ├→ Payment Service (charge customer)
-  ├→ Shipping Service (create shipment)
-  ├→ Email Service (send confirmation)
-  └→ Analytics Service (track metrics)
+注文確定イベント → SNS トピック
+  ├→ 在庫サービス (在庫更新)
+  ├→ 決済サービス (顧客への請求)
+  ├→ 配送サービス (出荷作成)
+  ├→ Eメールサービス (確認送信)
+  └→ 分析サービス (メトリクス追跡)
 ```
 
-**Message Filtering Example**:
+**メッセージフィルタリング例**:
+
 ```json
 {
   "FilterPolicy": {
@@ -73,173 +82,195 @@ Order Placed Event → SNS Topic
 }
 ```
 
-**References:** Amazon SNS, Pub/Sub Messaging, Fan-out Pattern
+**参照:** Amazon SNS, Pub/Sub Messaging, Fan-out Pattern
+
 </details>
 
----
+-----
 
-### Question 2
-An application needs to decouple components with message buffering. Messages must be processed exactly once in strict order. Which service should be used?
+### 問題 2
 
-A. Amazon SQS Standard Queue  
-B. Amazon SQS FIFO Queue  
+アプリケーションにおいて、メッセージバッファリングを使用してコンポーネントを切り離す（デカップリング）必要があります。メッセージは厳格な順序で、正確に1回だけ処理される必要があります。どのサービスを使用すべきですか？
+
+A. Amazon SQS 標準キュー  
+B. Amazon SQS FIFO キュー  
 C. Amazon SNS  
-D. Amazon Kinesis Data Streams  
+D. Amazon Kinesis Data Streams
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- **Amazon SQS FIFO Queue** provides exactly-once processing with strict ordering
-- Messages processed in the order received
-- Content-based deduplication prevents duplicates
-- Message groups enable parallel processing
+**解説:**
 
-**SQS Standard vs FIFO**:
+  - **Amazon SQS FIFO キュー**は、厳格な順序付けを伴う「正確に1回（exactly-once）」の処理を提供します。
+  - メッセージは受信した順序で処理されます。
+  - コンテンツベースの重複排除により、重複を防止します。
+  - メッセージグループにより、並列処理が可能です。
 
-| Feature | Standard | FIFO |
+**SQS 標準 vs FIFO**:
+
+| 機能 | 標準 | FIFO |
 |---------|----------|------|
-| **Ordering** | Best-effort | Guaranteed (FIFO) |
-| **Delivery** | At-least-once | Exactly-once |
-| **Throughput** | Unlimited | 300 msg/s (3000 batched) |
-| **Deduplication** | No | Yes (5 min window) |
-| **Use Case** | High throughput | Order critical |
+| **順序付け** | ベストエフォート | 保証 (FIFO) |
+| **配信** | 少なくとも1回 | 正確に1回 |
+| **スループット** | 無制限 | 300 件/秒 (バッチで 3000) |
+| **重複排除** | なし | あり (5分間のウィンドウ) |
+| **ユースケース** | 高スループット | 順序が重要 |
 
-**FIFO Queue Features**:
+**FIFO キューの機能**:
 
-**1. Message Ordering**:
+**1. メッセージ順序付け**:
+
 ```
-Send: A → B → C
-Receive: A → B → C (always)
+送信: A → B → C
+受信: A → B → C (常に)
 ```
 
-**2. Message Groups**:
-- Multiple groups for parallel processing
-- Order maintained within each group
-- Different groups can process simultaneously
+**2. メッセージグループ**:
+
+  - 並列処理のための複数のグループ。
+  - 各グループ内での順序は維持されます。
+  - 異なるグループは同時に処理できます。
+
+<!-- end list -->
 
 ```python
-# Send with message group
+# メッセージグループを指定して送信
 sqs.send_message(
     QueueUrl='https://sqs.../MyQueue.fifo',
     MessageBody='Order payment processed',
-    MessageGroupId='order-12345',  # Group by order ID
+    MessageGroupId='order-12345',  # 注文IDでグループ化
     MessageDeduplicationId='payment-abc-123'
 )
 ```
 
-**3. Content-Based Deduplication**:
-- SHA-256 hash of message body
-- Automatic duplicate detection (5 minutes)
-- Or use MessageDeduplicationId
+**3. コンテンツベースの重複排除**:
 
-**4. High Throughput Mode**:
-- 3,000 messages per second with batching
-- 9,000 TPS per group (with batching)
+  - メッセージ本文の SHA-256 ハッシュ。
+  - 自動的な重複検出 (5分間)。
+  - または MessageDeduplicationId を使用。
 
-**FIFO Queue Naming**:
-- Must end with `.fifo` suffix
-- Example: `OrderQueue.fifo`
+**4. 高スループットモード**:
 
-**Use Cases**:
-- **Financial transactions**: No duplicate charges
-- **Order processing**: Correct sequence
-- **Command execution**: Sequential operations
-- **Event sourcing**: Order matters
+  - バッチ処理で毎秒 3,000 メッセージ。
+  - グループあたり毎秒 9,000 TPS (バッチ処理時)。
 
-**Message Groups Example**:
+**FIFO キューの命名**:
+
+  - 末尾が `.fifo` サフィックスである必要があります。
+  - 例: `OrderQueue.fifo`
+
+**ユースケース**:
+
+  - **金融取引**: 二重請求の防止。
+  - **注文処理**: 正しい順序での実行。
+  - **コマンド実行**: 逐次操作。
+  - **イベントソーシング**: 順序が重要な場合。
+
+**メッセージグループの例**:
+
 ```
-Order Processing Queue.fifo
-├─ Group: order-001 → Payment → Shipping → Confirmation
-├─ Group: order-002 → Payment → Shipping → Confirmation
-└─ Group: order-003 → Payment → Shipping → Confirmation
+注文処理キュー.fifo
+├─ グループ: order-001 → 決済 → 配送 → 確認
+├─ グループ: order-002 → 決済 → 配送 → 確認
+└─ グループ: order-003 → 決済 → 配送 → 確認
 
-Each group processes in order, groups process in parallel
+各グループは順序通りに処理され、グループ間は並列に処理される
 ```
 
-**Best Practices**:
-1. Use message groups for parallelism
-2. Enable content-based deduplication
-3. Set appropriate visibility timeout
-4. Use batch operations (10 messages per batch)
-5. Monitor `ApproximateAgeOfOldestMessage`
+**ベストプラクティス**:
 
-**References:** Amazon SQS FIFO, Exactly-Once Processing, Message Ordering
+1.  並列性のためにメッセージグループを使用する。
+2.  コンテンツベースの重複排除を有効にする。
+3.  適切な可視性タイムアウトを設定する。
+4.  バッチ操作を使用する (1バッチ10メッセージ)。
+5.  `ApproximateAgeOfOldestMessage` を監視する。
+
+**参照:** Amazon SQS FIFO, Exactly-Once Processing, Message Ordering
+
 </details>
 
----
+-----
 
-### Question 3
-A serverless application needs to process real-time streaming data from thousands of IoT devices. Each device sends data every second. Which service is MOST appropriate?
+### 問題 3
+
+サーバーレスアプリケーションにおいて、数千のIoTデバイスからのリアルタイムストリーミングデータを処理する必要があります。各デバイスは毎秒データを送信します。最も適切なサービスはどれですか？
 
 A. Amazon SQS  
 B. Amazon SNS  
 C. Amazon Kinesis Data Streams  
-D. Amazon MQ  
+D. Amazon MQ
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: C**
+**正解: C**
 
-**Explanation:**
-- **Amazon Kinesis Data Streams** designed for real-time streaming data
-- Handles massive data ingestion from thousands of producers
-- Multiple consumers can read same data stream
-- Data retention (24 hours to 365 days)
-- Ordered records per shard
+**解説:**
 
-**Kinesis Data Streams Architecture**:
+  - **Amazon Kinesis Data Streams** はリアルタイムストリーミングデータ用に設計されています。
+  - 数千のプロデューサーからの大規模なデータ取り込みに対応。
+  - 複数のコンシューマーが同じデータストリームを読み取ることができます。
+  - データ保持期間（24時間から365日）。
+  - シャードごとに順序付けられたレコード。
+
+**Kinesis Data Streams アーキテクチャ**:
+
 ```
-IoT Devices (producers)
+IoT デバイス (プロデューサー)
    ↓
-Kinesis Stream (shards)
-   ├→ Lambda (real-time processing)
-   ├→ Kinesis Data Analytics (SQL queries)
-   ├→ Kinesis Data Firehose (S3/Redshift)
-   └→ Custom consumers (EC2, containers)
+Kinesis ストリーム (シャード)
+   ├→ Lambda (リアルタイム処理)
+   ├→ Kinesis Data Analytics (SQL クエリ)
+   ├→ Kinesis Data Firehose (S3/Redshift へ)
+   └→ カスタムコンシューマー (EC2, コンテナ)
 ```
 
-**Kinesis Key Concepts**:
+**Kinesis の主要コンセプト**:
 
-**1. Shards**:
-- Throughput unit
-- 1 MB/s write, 2 MB/s read per shard
-- 1,000 records/s write per shard
-- Ordered within shard
+**1. シャード (Shards)**:
 
-**2. Records**:
-- Partition key (determines shard)
-- Sequence number (order within shard)
-- Data blob (up to 1 MB)
+  - スループットの単位。
+  - 1シャードあたり書き込み 1 MB/秒、読み取り 2 MB/秒。
+  - 1シャードあたり書き込み 1,000 レコード/秒。
+  - シャード内で順序保証。
 
-**3. Consumers**:
-- Multiple consumers can read same stream
-- Enhanced fan-out (dedicated 2 MB/s per consumer)
-- Shared throughput mode (2 MB/s total)
+**2. レコード (Records)**:
 
-**Kinesis Features**:
+  - パーティションキー (シャードを決定)。
+  - シーケンス番号 (シャード内の順序)。
+  - データブロブ (最大 1 MB)。
 
-| Feature | Description |
+**3. コンシューマー (Consumers)**:
+
+  - 複数のコンシューマーが同じストリームを読取可能。
+  - 拡張ファンアウト (コンシューマーごとに専用の 2 MB/秒)。
+  - 共有スループットモード (合計 2 MB/秒)。
+
+**Kinesis の機能**:
+
+| 機能 | 説明 |
 |---------|-------------|
-| **Retention** | 24 hours default, up to 365 days |
-| **Ordering** | Per partition key/shard |
-| **Replay** | Can reprocess data |
-| **Scaling** | Add/remove shards |
-| **Encryption** | At rest (KMS), in transit (HTTPS) |
+| **保持期間** | デフォルト24時間、最大365日 |
+| **順序付け** | パーティションキー/シャードごと |
+| **リプレイ** | データの再処理が可能 |
+| **スケーリング** | シャードの追加/削除 |
+| **暗号化** | 保管時 (KMS)、転送時 (HTTPS) |
 
-**Capacity Planning**:
+**容量計画**:
+
 ```
-Incoming Data: 1,000 devices × 1 KB/s = 1 MB/s
-Required Shards: 1 MB/s ÷ 1 MB/s per shard = 1 shard
+入力データ: 1,000 デバイス × 1 KB/秒 = 1 MB/秒
+必要なシャード: 1 MB/秒 ÷ 1 MB/秒(1シャード) = 1 シャード
 
-Incoming Data: 5,000 devices × 1 KB/s = 5 MB/s
-Required Shards: 5 MB/s ÷ 1 MB/s per shard = 5 shards
+入力データ: 5,000 デバイス × 1 KB/秒 = 5 MB/秒
+必要なシャード: 5 MB/秒 ÷ 1 MB/秒(1シャード) = 5 シャード
 ```
 
-**Kinesis Producer** (Python):
+**Kinesis プロデューサー** (Python):
+
 ```python
 import boto3
 import json
@@ -257,125 +288,138 @@ def send_iot_data(device_id, temperature, humidity):
     kinesis.put_record(
         StreamName='IoTDataStream',
         Data=json.dumps(data),
-        PartitionKey=device_id  # Routes to specific shard
+        PartitionKey=device_id  # 特定のシャードにルーティング
     )
 ```
 
-**Kinesis Consumer** (Lambda):
+**Kinesis コンシューマー** (Lambda):
+
 ```python
 def lambda_handler(event, context):
     for record in event['Records']:
-        # Kinesis data is base64 encoded
+        # Kinesis データは base64 エンコードされている
         payload = base64.b64decode(record['kinesis']['data'])
         data = json.loads(payload)
         
-        # Process IoT data
+        # IoT データの処理
         device_id = data['device_id']
         temperature = data['temperature']
         
-        # Alert if temperature too high
+        # 温度が高すぎる場合にアラート
         if temperature > 80:
             send_alert(device_id, temperature)
 ```
 
-**Kinesis Family**:
+**Kinesis ファミリー**:
 
-| Service | Use Case |
+| サービス | ユースケース |
 |---------|----------|
-| **Data Streams** | Custom real-time processing |
-| **Data Firehose** | Load to S3, Redshift, ES (easier) |
-| **Data Analytics** | SQL on streaming data |
-| **Video Streams** | Video ingestion and processing |
+| **Data Streams** | カスタムのリアルタイム処理 |
+| **Data Firehose** | S3, Redshift, ES へのロード (容易) |
+| **Data Analytics** | ストリーミングデータへの SQL 実行 |
+| **Video Streams** | ビデオの取り込みと処理 |
 
 **Kinesis vs SQS**:
 
-| Feature | Kinesis | SQS |
+| 特徴 | Kinesis | SQS |
 |---------|---------|-----|
-| **Ordering** | Per shard | FIFO queue only |
-| **Multiple Consumers** | Yes | No (fanout via SNS) |
-| **Retention** | Up to 365 days | Up to 14 days |
-| **Replay** | Yes | No |
-| **Use Case** | Streaming, analytics | Decoupling, buffering |
+| **順序付け** | シャードごと | FIFO キューのみ |
+| **複数コンシューマー** | 可能 | 不可 (SNS経由でファンアウト) |
+| **保持期間** | 最大365日 | 最大14日 |
+| **リプレイ** | 可能 | 不可 |
+| **ユースケース** | ストリーミング、分析 | 切り離し、バッファリング |
 
-**When to Use Kinesis**:
-- Real-time analytics
-- Log and event data collection
-- IoT data ingestion
-- Multiple consumers need same data
-- Need to replay data
-- Streaming ETL
+**Kinesis を使用すべき時**:
 
-**References:** Amazon Kinesis Data Streams, Real-Time Streaming, IoT Data Ingestion
+  - リアルタイム分析。
+  - ログおよびイベントデータの収集。
+  - IoT データの取り込み。
+  - 複数のコンシューマーが同じデータを必要とする場合。
+  - データをリプレイ（再送）する必要がある場合。
+  - ストリーミング ETL。
+
+**参照:** Amazon Kinesis Data Streams, Real-Time Streaming, IoT Data Ingestion
+
 </details>
 
----
+-----
 
-### Question 4
-A company wants to implement a fan-out pattern where an SNS message triggers multiple SQS queues for different services. What is this architecture called?
+### 問題 4
 
-A. SQS Message Chaining  
+ある企業が、1つのSNSメッセージが異なるサービスの複数のSQSキューをトリガーするファンアウトパターンを実装したいと考えています。このアーキテクチャは何と呼ばれますか？
+
+A. SQS Message Chaining（メッセージ連鎖）  
 B. SNS to SQS Fan-out  
 C. Kinesis Fan-out  
-D. EventBridge Routing  
+D. EventBridge Routing
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- **SNS to SQS Fan-out** is common pattern for parallel, asynchronous processing
-- Single message to SNS triggers multiple SQS queues
-- Each service consumes from its own queue
-- Decoupled, resilient architecture
+**解説:**
 
-**SNS-SQS Fan-out Architecture**:
+  - **SNS to SQS Fan-out** は、並列・非同期処理のための一般的なパターンです。
+  - SNSへの単一のメッセージが複数のSQSキューをトリガーします。
+  - 各サービスは独自のキューからメッセージを消費します。
+  - 切り離された（デカップリングされた）、回復力の高いアーキテクチャです。
+
+**SNS-SQS Fan-out アーキテクチャ**:
+
 ```
-Event Source
-     ↓
-  SNS Topic
-     ↓
+イベントソース
+      ↓
+   SNS トピック
+      ↓
   ┌──┴──┬────────┬────────┐
   ↓     ↓        ↓        ↓
-SQS-1  SQS-2   SQS-3    SQS-4
+SQS-1  SQS-2    SQS-3    SQS-4
   ↓     ↓        ↓        ↓
-Svc-A  Svc-B   Svc-C    Svc-D
+Svc-A  Svc-B    Svc-C    Svc-D
 ```
 
-**Benefits**:
+**メリット**:
 
-**1. Parallel Processing**:
-- Services process independently
-- No blocking between services
+**1. 並列処理**:
 
-**2. Reliability**:
-- SQS provides message persistence
-- Retries on failure
-- Dead Letter Queue for failed messages
+  - サービスが独立して処理を行う。
+  - サービス間でのブロッキング（待ち）が発生しない。
 
-**3. Scalability**:
-- Each service scales independently
-- Add new subscribers without changes
+**2. 信頼性**:
 
-**4. Decoupling**:
-- Services don't know about each other
-- Add/remove services easily
+  - SQS がメッセージの永続性を提供。
+  - 失敗時のリトライが可能。
+  - 失敗したメッセージのためのデッドレターキュー（DLQ）。
 
-**Configuration**:
+**3. スケーラビリティ**:
 
-**Step 1: Create SNS Topic**:
+  - 各サービスが独立してスケールする。
+  - 既存の仕組みを変更せずに新しいサブスクライバーを追加できる。
+
+**4. 切り離し (Decoupling)**:
+
+  - サービス同士がお互いを知る必要がない。
+  - サービスの追加・削除が容易。
+
+**設定手順**:
+
+**ステップ 1: SNS トピックの作成**:
+
 ```bash
 aws sns create-topic --name OrderEvents
 ```
 
-**Step 2: Create SQS Queues**:
+**ステップ 2: SQS キューの作成**:
+
 ```bash
 aws sqs create-queue --queue-name InventoryQueue
 aws sqs create-queue --queue-name PaymentQueue
 aws sqs create-queue --queue-name ShippingQueue
 ```
 
-**Step 3: Subscribe Queues to Topic**:
+**ステップ 3: キューをトピックにサブスクライブ（登録）**:
+
 ```bash
 aws sns subscribe \
   --topic-arn arn:aws:sns:us-east-1:123456789012:OrderEvents \
@@ -383,7 +427,8 @@ aws sns subscribe \
   --notification-endpoint arn:aws:sqs:us-east-1:123456789012:InventoryQueue
 ```
 
-**Step 4: Update SQS Policy** (allow SNS to send):
+**ステップ 4: SQS ポリシーの更新** (SNS からの送信を許可):
+
 ```json
 {
   "Version": "2012-10-17",
@@ -401,23 +446,24 @@ aws sns subscribe \
 }
 ```
 
-**Real-World Example - E-commerce Order**:
+**実例 - Eコマースの注文**:
 
 ```
-Customer Places Order
+顧客が注文
         ↓
   SNS: OrderPlaced
         ↓
   ┌─────┴─────┬──────────┬──────────┐
   ↓           ↓          ↓          ↓
-Inventory  Payment  Shipping   Email
-  Queue     Queue     Queue     Queue
+在庫          決済       配送       Eメール
+キュー        キュー     キュー     キュー
   ↓           ↓          ↓          ↓
-Update    Process   Create    Send
- Stock    Payment  Shipment   Conf.
+在庫          決済       出荷       確認
+更新          処理       作成       送信
 ```
 
-**Message Filtering** (each service gets relevant messages only):
+**メッセージフィルタリング** (各サービスが必要なメッセージのみを取得):
+
 ```json
 {
   "InventoryQueue": {
@@ -433,1468 +479,360 @@ Update    Process   Create    Send
 }
 ```
 
-**Error Handling - Dead Letter Queue**:
+**エラー処理 - デッドレターキュー (DLQ)**:
+
 ```
-SQS Queue → Process → Failure (after retries)
+SQS キュー → 処理 → 失敗 (リトライ後)
                             ↓
-                     Dead Letter Queue
+                    デッドレターキュー
                             ↓
-                    Alert/Manual Review
+                    アラート/手動確認
 ```
 
-**Best Practices**:
-1. Use message filtering to reduce unnecessary processing
-2. Configure Dead Letter Queues for failed messages
-3. Set appropriate visibility timeout
-4. Use batching for cost optimization
-5. Monitor queue depth (CloudWatch)
-6. Implement idempotency in consumers
+**ベストプラクティス**:
+
+1.  メッセージフィルタリングを使用して不要な処理を減らす。
+2.  失敗したメッセージ用にデッドレターキューを設定する。
+3.  適切な可視性タイムアウトを設定する。
+4.  コスト最適化のためにバッチ操作を使用する。
+5.  キューの深さ（CloudWatch）を監視する。
+6.  コンシューマー側に冪等性（Idempotency）を実装する。
 
 **SNS-SQS vs Kinesis**:
-- **SNS-SQS**: Different processing per service
-- **Kinesis**: Same data, different consumers
 
-**References:** SNS to SQS Fan-out, Asynchronous Processing, Decoupling Patterns
+  - **SNS-SQS**: サービスごとに異なる処理を行う場合。
+  - **Kinesis**: 同じデータを異なるコンシューマーが処理する場合。
+
+**参照:** SNS to SQS Fan-out, Asynchronous Processing, Decoupling Patterns
+
 </details>
 
----
+-----
 
-### Question 5
-A serverless workflow needs to coordinate multiple Lambda functions with conditional logic, parallel execution, and error handling. Which service should be used?
+### 問題 5
 
-A. Amazon SQS with multiple queues  
-B. Amazon SNS with message filtering  
+サーバーレスアプリケーションにおいて、条件分岐ロジック、並列実行、およびエラー処理を含む複数の Lambda 関数を調整（コーディネート）する必要があります。どのサービスを使用すべきですか？
+
+A. 複数のキューを持つ Amazon SQS  
+B. メッセージフィルタリングを持つ Amazon SNS  
 C. AWS Step Functions  
-D. Amazon EventBridge  
+D. Amazon EventBridge
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: C**
+**正解: C**
 
-**Explanation:**
-- **AWS Step Functions** orchestrates serverless workflows
-- Visual workflow designer
-- Built-in error handling and retries
-- Parallel execution, conditional logic, wait states
-- Integration with 200+ AWS services
+**解説:**
 
-**Step Functions State Machine Example**:
-```json
-{
-  "Comment": "Order Processing Workflow",
-  "StartAt": "ValidateOrder",
-  "States": {
-    "ValidateOrder": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:...:function:ValidateOrder",
-      "Next": "CheckInventory",
-      "Catch": [{
-        "ErrorEquals": ["ValidationError"],
-        "Next": "OrderFailed"
-      }]
-    },
-    "CheckInventory": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:...:function:CheckInventory",
-      "Next": "InventoryAvailable?"
-    },
-    "InventoryAvailable?": {
-      "Type": "Choice",
-      "Choices": [{
-        "Variable": "$.inventoryAvailable",
-        "BooleanEquals": true,
-        "Next": "ParallelProcessing"
-      }],
-      "Default": "OutOfStock"
-    },
-    "ParallelProcessing": {
-      "Type": "Parallel",
-      "Branches": [
-        {
-          "StartAt": "ProcessPayment",
-          "States": {
-            "ProcessPayment": {
-              "Type": "Task",
-              "Resource": "arn:aws:lambda:...:function:ProcessPayment",
-              "End": true
-            }
-          }
-        },
-        {
-          "StartAt": "ReserveInventory",
-          "States": {
-            "ReserveInventory": {
-              "Type": "Task",
-              "Resource": "arn:aws:lambda:...:function:ReserveInventory",
-              "End": true
-            }
-          }
-        },
-        {
-          "StartAt": "SendConfirmation",
-          "States": {
-            "SendConfirmation": {
-              "Type": "Task",
-              "Resource": "arn:aws:lambda:...:function:SendEmail",
-              "End": true
-            }
-          }
-        }
-      ],
-      "Next": "CreateShipment"
-    },
-    "CreateShipment": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:...:function:CreateShipment",
-      "End": true
-    },
-    "OutOfStock": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:...:function:NotifyOutOfStock",
-      "End": true
-    },
-    "OrderFailed": {
-      "Type": "Fail",
-      "Error": "OrderValidationFailed",
-      "Cause": "Order validation failed"
-    }
-  }
-}
-```
+  - **AWS Step Functions** はサーバーレスワークフローをオーケストレート（調整）します。
+  - 視覚的なワークフローデザイナー。
+  - 組み込みのエラー処理とリトライ。
+  - 並列実行、条件分岐ロジック、待機状態。
+  - 200以上の AWS サービスと統合。
 
-**Step Functions State Types**:
+**Step Functions ステートマシン例**:
+（※JSONコード部分は技術的な内容のため原文のままですが、各ステート名は注文処理ワークフローの流れを示しています：注文検証 → 在庫確認 → 並列処理（決済・在庫確保・確認送信） → 出荷作成）
 
-| State Type | Purpose | Example |
+**Step Functions のステートタイプ**:
+
+| ステートタイプ | 目的 | 例 |
 |------------|---------|---------|
-| **Task** | Execute work (Lambda, ECS, SNS, etc.) | Call API, process data |
-| **Choice** | Conditional logic (if/else) | Check inventory status |
-| **Parallel** | Execute branches simultaneously | Payment + Inventory + Email |
-| **Wait** | Delay (seconds, timestamp) | Wait for approval |
-| **Pass** | Pass input to output, transform | Data transformation |
-| **Map** | Iterate over array | Process batch items |
-| **Succeed** | Successful termination | Order complete |
-| **Fail** | Failed termination | Validation failed |
+| **Task** | 作業の実行 (Lambda, ECS, SNS など) | API 呼び出し、データ処理 |
+| **Choice** | 条件分岐ロジック (if/else) | 在庫状況の確認 |
+| **Parallel** | 分岐を同時に実行 | 決済 + 在庫確保 + Eメール |
+| **Wait** | 遅延 (秒数、タイムスタンプ) | 承認待ち |
+| **Pass** | 入力を出力に渡し、変換する | データ変換 |
+| **Map** | 配列の反復処理 | バッチ項目の処理 |
+| **Succeed** | 正常終了 | 注文完了 |
+| **Fail** | 異常終了 | 検証失敗 |
 
-**Error Handling**:
+**エラー処理**:
 
-**1. Retry**:
-```json
-{
-  "Retry": [{
-    "ErrorEquals": ["States.TaskFailed"],
-    "IntervalSeconds": 2,
-    "MaxAttempts": 3,
-    "BackoffRate": 2.0
-  }]
-}
-```
+**1. Retry (リトライ)**:
+エラー発生時に自動的に再試行する設定。
 
-**2. Catch**:
-```json
-{
-  "Catch": [{
-    "ErrorEquals": ["PaymentFailed"],
-    "Next": "RefundAndCancel"
-  }]
-}
-```
+**2. Catch (キャッチ)**:
+特定のエラーが発生した際に、別のパス（返金処理など）へ遷移させる設定。
 
-**Step Functions Workflow Types**:
+**Step Functions ワークフロータイプ**:
 
-| Type | Duration | Execution Rate | Use Case |
+| タイプ | 実行期間 | 実行レート | ユースケース |
 |------|----------|----------------|----------|
-| **Standard** | Up to 1 year | 2,000/s | Long-running, exactly-once |
-| **Express** | Up to 5 min | 100,000/s | High-volume, at-least-once |
+| **標準 (Standard)** | 最大1年間 | 2,000/秒 | 長期間実行、正確に1回 |
+| **高速 (Express)** | 最大5分間 | 100,000/秒 | 大規模ボリューム、少なくとも1回 |
 
-**Integration with AWS Services**:
-- **Lambda**: Execute functions
-- **ECS/Fargate**: Run containers
-- **DynamoDB**: Read/write data
-- **SNS/SQS**: Send messages
-- **Glue**: Run ETL jobs
-- **SageMaker**: ML training/inference
-- **Batch**: Run batch jobs
+**Step Functions vs 代替案**:
 
-**Step Functions vs Alternatives**:
-
-| Tool | Best For |
+| ツール | 最適な用途 |
 |------|----------|
-| **Step Functions** | Complex workflows, orchestration |
-| **Lambda** | Single tasks |
-| **SQS** | Queue-based processing |
-| **EventBridge** | Event routing |
+| **Step Functions** | 複雑なワークフロー、オーケストレーション |
+| **Lambda** | 単一のタスク |
+| **SQS** | キューベースの処理 |
+| **EventBridge** | イベントルーティング |
 
-**Real-World Use Cases**:
-1. **ETL Pipelines**: Extract → Transform → Load
-2. **Order Processing**: Validate → Payment → Fulfillment
-3. **Video Processing**: Upload → Transcode → Thumbnail → Delivery
-4. **Machine Learning**: Data prep → Training → Deploy → Monitor
-5. **Approval Workflows**: Submit → Review → Approve/Reject → Execute
+**実例**:
 
-**Visual Workflow Benefits**:
-- Easy to understand complex logic
-- Debug with execution history
-- See exactly where failures occur
-- Modify without code changes (drag-and-drop)
+1.  **ETL パイプライン**: 抽出 → 変換 → ロード。
+2.  **注文処理**: 検証 → 決済 → 履行。
+3.  **ビデオ処理**: アップロード → トランスコード → サムネイル → 配信。
 
-**Best Practices**:
-1. Use Express Workflows for high-volume, short-duration
-2. Implement error handling at each step
-3. Use Parallel states for independent tasks
-4. Monitor with CloudWatch metrics
-5. Use input/output filtering to manage data size
-6. Implement idempotency in Lambda functions
+**参照:** AWS Step Functions, Serverless Orchestration, Workflow Management
 
-**References:** AWS Step Functions, Serverless Orchestration, Workflow Management
 </details>
 
----
+-----
 
-### Question 6
-An application needs to load streaming data into S3, Redshift, and Elasticsearch with minimal code. Which service is MOST appropriate?
+### 問題 6
 
-A. Amazon Kinesis Data Streams with custom consumers  
+最小限のコードで、ストリーミングデータを S3、Redshift、および Elasticsearch にロードする必要があります。どのサービスが最も適切ですか？
+
+A. カスタムコンシューマーを使用した Amazon Kinesis Data Streams  
 B. Amazon Kinesis Data Firehose  
-C. AWS Lambda triggered by Kinesis  
-D. Amazon SQS with Lambda consumers  
+C. Kinesis によってトリガーされる AWS Lambda  
+D. Lambda コンシューマーを使用した Amazon SQS
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- **Amazon Kinesis Data Firehose** is fully managed service for loading streaming data
-- No code required (vs Data Streams which needs custom consumers)
-- Automatic scaling
-- Built-in data transformation (Lambda)
-- Direct delivery to S3, Redshift, Elasticsearch, HTTP endpoints
+**解説:**
 
-**Kinesis Data Firehose Architecture**:
+  - **Amazon Kinesis Data Firehose** は、ストリーミングデータをロードするための完全マネージド型サービスです。
+  - コードは不要です（Data Streams はカスタムコンシューマーの作成が必要）。
+  - 自動スケーリング。
+  - 組み込みのデータ変換（Lambda 使用）。
+  - S3, Redshift, Elasticsearch, HTTP エンドポイントへの直接配信。
+
+**Kinesis Data Firehose アーキテクチャ**:
+
 ```
-Data Producers
-  ├─ Applications
-  ├─ IoT Devices
-  ├─ Clickstream
-  └─ Logs
-       ↓
+データプロデューサー
+  ├─ アプリケーション
+  ├─ IoT デバイス
+  ├─ クリックストリーム
+  └─ ログ
+        ↓
 Kinesis Data Firehose
-  ├─ Optional: Lambda transformation
-  ├─ Optional: Format conversion (Parquet, ORC)
-  └─ Buffering (size/time)
-       ↓
-Destinations
+  ├─ オプション: Lambda 変換
+  ├─ オプション: フォーマット変換 (Parquet, ORC)
+  └─ バッファリング (サイズ/時間)
+        ↓
+配信先
   ├─ Amazon S3
-  ├─ Amazon Redshift (via S3)
-  ├─ Amazon Elasticsearch
+  ├─ Amazon Redshift (S3経由)
+  ├─ Amazon OpenSearch (旧 Elasticsearch)
   ├─ Splunk
-  └─ HTTP endpoints
+  └─ HTTP エンドポイント
 ```
-
-**Firehose Features**:
-
-**1. Automatic Scaling**:
-- No capacity planning
-- Scales to gigabytes per second
-- Pay for data volume
-
-**2. Buffering**:
-- Buffer by size (1-128 MB)
-- Buffer by time (60-900 seconds)
-- Delivers when either threshold met
-
-**3. Data Transformation**:
-- Lambda function processes each record
-- Format conversion (JSON to Parquet/ORC)
-- Compression (GZIP, ZIP, Snappy)
-
-**4. Backup**:
-- Backup source data to S3
-- Failed records to separate S3 prefix
-
-**Firehose Delivery Configuration**:
-```json
-{
-  "DeliveryStreamName": "WebLogsToS3",
-  "S3DestinationConfiguration": {
-    "RoleARN": "arn:aws:iam::123456789012:role/FirehoseRole",
-    "BucketARN": "arn:aws:s3:::my-logs-bucket",
-    "Prefix": "logs/year=!{timestamp:yyyy}/month=!{timestamp:MM}/day=!{timestamp:dd}/",
-    "BufferingHints": {
-      "SizeInMBs": 5,
-      "IntervalInSeconds": 300
-    },
-    "CompressionFormat": "GZIP",
-    "CloudWatchLoggingOptions": {
-      "Enabled": true,
-      "LogGroupName": "/aws/kinesisfirehose/WebLogs"
-    }
-  },
-  "ProcessingConfiguration": {
-    "Enabled": true,
-    "Processors": [{
-      "Type": "Lambda",
-      "Parameters": [{
-        "ParameterName": "LambdaArn",
-        "ParameterValue": "arn:aws:lambda:...:function:TransformLogs"
-      }]
-    }]
-  }
-}
-```
-
-**Data Transformation Example** (Lambda):
-```python
-import base64
-import json
-
-def lambda_handler(event, context):
-    output = []
-    
-    for record in event['records']:
-        # Decode input data
-        payload = base64.b64decode(record['data']).decode('utf-8')
-        data = json.loads(payload)
-        
-        # Transform data
-        transformed = {
-            'timestamp': data['timestamp'],
-            'user_id': data['user_id'],
-            'event_type': data['event_type'],
-            'country': data.get('country', 'UNKNOWN')
-        }
-        
-        # Encode output
-        output_record = {
-            'recordId': record['recordId'],
-            'result': 'Ok',
-            'data': base64.b64encode(
-                json.dumps(transformed).encode('utf-8')
-            ).decode('utf-8')
-        }
-        output.append(output_record)
-    
-    return {'records': output}
-```
-
-**Delivery Destinations**:
-
-**1. Amazon S3**:
-- Object storage
-- Data lake
-- Archive
-- Partitioning by time
-
-**2. Amazon Redshift**:
-- Data warehouse
-- Analytics
-- Data via S3 COPY command
-
-**3. Amazon Elasticsearch**:
-- Search and analytics
-- Log analysis
-- Real-time dashboards
-
-**4. Splunk**:
-- Security monitoring
-- Operational intelligence
-
-**5. HTTP Endpoints**:
-- Custom destinations
-- Third-party services
 
 **Firehose vs Data Streams**:
 
-| Feature | Data Firehose | Data Streams |
+| 特徴 | Data Firehose | Data Streams |
 |---------|---------------|--------------|
-| **Management** | Fully managed | Manage shards |
-| **Destinations** | Built-in (S3, Redshift, ES) | Custom code |
-| **Scaling** | Automatic | Manual shard management |
-| **Retention** | No retention | 24h to 365 days |
-| **Consumers** | One (delivery) | Multiple possible |
-| **Use Case** | Load to destinations | Custom processing |
+| **管理** | 完全マネージド型 | シャードの管理が必要 |
+| **配信先** | 組み込み (S3, Redshift, 等) | カスタムコードが必要 |
+| **スケーリング** | 自動 | 手動でのシャード管理 |
+| **保持期間** | 保持なし | 24時間～365日 |
+| **コンシューマー** | 1つ (配信) | 複数可能 |
+| **ユースケース** | 配信先へのロード | カスタム処理 |
 
-**Cost Comparison**:
-```
-Data Firehose: $0.029/GB + destination costs
-Data Streams: $0.015/shard/hour + $0.014/million PUT units
-```
+**Firehose を使用すべき時**:
 
-**When to Use Firehose**:
-- Load data to S3, Redshift, ES, Splunk
-- Don't need multiple consumers
-- Want fully managed solution
-- Near real-time (60+ seconds latency)
-- Simple transformations
+  - S3, Redshift, ES, Splunk にデータをロードしたい。
+  - 複数のコンシューマーを必要としない。
+  - 完全マネージドなソリューションを求めている。
+  - ニアリアルタイム（60秒以上の遅延）で許容できる。
 
-**When to Use Data Streams**:
-- Need real-time processing (< 1 second)
-- Multiple consumers
-- Custom processing logic
-- Need to replay data
-- Order matters within shard
+**参照:** Amazon Kinesis Data Firehose, Streaming Data Delivery, Data Lake
 
-**Real-World Examples**:
-
-**1. Clickstream Analytics**:
-```
-Website → Firehose → S3 (Parquet) → Athena/QuickSight
-```
-
-**2. Log Aggregation**:
-```
-Applications → Firehose → Elasticsearch → Kibana
-```
-
-**3. Data Lake**:
-```
-IoT Devices → Firehose → S3 (partitioned) → Glue → Athena
-```
-
-**Best Practices**:
-1. Use buffering to optimize cost (batch writes)
-2. Enable S3 backup for source records
-3. Use compression (GZIP) to reduce storage costs
-4. Convert to columnar formats (Parquet/ORC) for analytics
-5. Partition S3 data by time for better query performance
-6. Monitor delivery to CloudWatch
-
-**References:** Amazon Kinesis Data Firehose, Streaming Data Delivery, Data Lake
 </details>
 
----
+-----
 
-### Question 7
-A company wants to route events from multiple AWS services to different targets based on event content. Which service provides centralized event routing?
+### 問題 7
+
+ある企業が、イベントの内容に基づいて、複数の AWS サービスからのイベントを異なるターゲットにルーティングしたいと考えています。中央集中型のイベントルーティングを提供するサービスはどれですか？
 
 A. Amazon SNS  
 B. Amazon SQS  
 C. Amazon EventBridge  
-D. AWS Step Functions  
+D. AWS Step Functions
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: C**
+**正解: C**
 
-**Explanation:**
-- **Amazon EventBridge** is serverless event bus for application and AWS service events
-- Content-based routing using event patterns
-- 100+ AWS service integrations as event sources
-- 20+ AWS services as targets
+**解説:**
 
-**EventBridge Architecture**:
-```
-Event Sources
-├─ AWS Services (EC2, S3, Lambda, etc.)
-├─ Custom Applications
-├─ SaaS Partners (Salesforce, Datadog, etc.)
-       ↓
-   EventBridge Bus
-       ↓
-   Event Rules (filtering)
-       ↓
-   Targets
-   ├─ Lambda
-   ├─ Step Functions
-   ├─ SQS
-   ├─ SNS
-   ├─ Kinesis
-   └─ API Gateway
-```
+  - **Amazon EventBridge** は、アプリケーションおよび AWS サービスのイベント用サーバーレスイベントバスです。
+  - イベントパターンを使用したコンテンツベースのルーティング。
+  - 100以上の AWS サービスがイベントソースとして統合。
+  - 20以上の AWS サービスをターゲットとして設定可能。
 
-**EventBridge Components**:
+**EventBridge コンポーネント**:
 
-**1. Events**:
-```json
-{
-  "version": "0",
-  "id": "event-id",
-  "detail-type": "EC2 Instance State-change Notification",
-  "source": "aws.ec2",
-  "account": "123456789012",
-  "time": "2026-01-03T12:00:00Z",
-  "region": "us-east-1",
-  "resources": ["arn:aws:ec2:us-east-1:123456789012:instance/i-0123456789"],
-  "detail": {
-    "instance-id": "i-0123456789",
-    "state": "running"
-  }
-}
-```
+1.  **イベント**: 発生した事象（JSONデータ）。
+2.  **ルール**: どのイベントをどのターゲットに送るかを決定するフィルタ。
+3.  **イベントバス**: イベントを受信する場所（デフォルト、カスタム、パートナー）。
+4.  **ターゲット**: イベントがルーティングされる先（Lambda, SQS, SNS等）。
 
-**2. Event Rules** (pattern matching):
-```json
-{
-  "source": ["aws.ec2"],
-  "detail-type": ["EC2 Instance State-change Notification"],
-  "detail": {
-    "state": ["terminated"]
-  }
-}
-```
+**主な機能**:
 
-**3. Event Buses**:
-- **Default**: AWS service events
-- **Custom**: Application events
-- **Partner**: SaaS provider events
-
-**4. Targets**:
-- Multiple targets per rule (up to 5)
-- Input transformation
-- Retry policies
-
-**Real-World Examples**:
-
-**Example 1: Security Automation**
-```json
-{
-  "EventPattern": {
-    "source": ["aws.guardduty"],
-    "detail-type": ["GuardDuty Finding"],
-    "detail": {
-      "severity": [7, 8, 9]  // High and Critical
-    }
-  },
-  "Targets": [
-    {
-      "Arn": "arn:aws:lambda:...:function:IsolateInstance",
-      "Id": "1"
-    },
-    {
-      "Arn": "arn:aws:sns:...:SecurityAlerts",
-      "Id": "2"
-    }
-  ]
-}
-```
-
-**Example 2: Multi-Account Event Aggregation**
-```
-Production Account Events
-       ↓
- EventBridge Rule
-       ↓
-Cross-Account Event Bus (Security Account)
-       ↓
-Centralized Monitoring/Alerting
-```
-
-**Example 3: Scheduled Events** (cron/rate):
-```json
-{
-  "ScheduleExpression": "rate(5 minutes)",
-  "Targets": [{
-    "Arn": "arn:aws:lambda:...:function:HealthCheck",
-    "Id": "1"
-  }]
-}
-
-// Or cron syntax
-{
-  "ScheduleExpression": "cron(0 12 * * ? *)",  // Noon daily
-  "Targets": [{
-    "Arn": "arn:aws:lambda:...:function:DailyReport",
-    "Id": "1"
-  }]
-}
-```
-
-**EventBridge Features**:
-
-**1. Content-Based Filtering**:
-- Match specific event attributes
-- Numeric matching (>, <, >=, <=, range)
-- Prefix matching
-- Exists checking
-- IP address matching
-
-**2. Input Transformation**:
-```json
-{
-  "InputTransformer": {
-    "InputPathsMap": {
-      "instance": "$.detail.instance-id",
-      "state": "$.detail.state"
-    },
-    "InputTemplate": "\"Instance <instance> is now <state>\""
-  }
-}
-```
-
-**3. Dead Letter Queue**:
-- Failed invocations sent to DLQ
-- Retry configuration
-- Maximum age and retry attempts
-
-**4. Archive and Replay**:
-- Archive events for retention
-- Replay events for testing/recovery
+  - **コンテンツベースのフィルタリング**: 特定の属性（数値、プレフィックス、IPアドレス等）に一致するものだけをルーティング。
+  - **入力トランスフォーマー**: ターゲットに送る前に JSON を整形。
+  - **アーカイブとリプレイ**: イベントを保存し、後で再実行可能。
+  - **スケジュール済みイベント**: cron 形式での定時実行。
 
 **EventBridge vs SNS vs SQS**:
 
-| Feature | EventBridge | SNS | SQS |
+| 特徴 | EventBridge | SNS | SQS |
 |---------|-------------|-----|-----|
-| **Pattern** | Event routing | Pub/Sub | Queue |
-| **Filtering** | Advanced (content-based) | Basic (attributes) | No filtering |
-| **Sources** | 100+ AWS services | Applications | Applications |
-| **Targets** | 20+ AWS services | Limited | Consumers |
-| **Scheduling** | Built-in (cron) | No | No |
-| **Use Case** | Event-driven architecture | Fan-out notifications | Decoupling |
+| **パターン** | イベントルーティング | パブ/サブ | キュー |
+| **フィルタリング** | 高度 (コンテンツベース) | 基本 (属性ベース) | なし |
+| **ソース** | 100以上の AWS サービス | アプリケーション | アプリケーション |
 
-**Advanced Pattern Examples**:
+**参照:** Amazon EventBridge, Event-Driven Architecture, Serverless Integration
 
-**IP Address Matching**:
-```json
-{
-  "detail": {
-    "sourceIPAddress": [{
-      "cidr": "10.0.0.0/8"
-    }]
-  }
-}
-```
-
-**Numeric Matching**:
-```json
-{
-  "detail": {
-    "temperature": [{
-      "numeric": [">", 80]
-    }]
-  }
-}
-```
-
-**Anything-but**:
-```json
-{
-  "detail": {
-    "state": [{
-      "anything-but": ["running", "stopped"]
-    }]
-  }
-}
-```
-
-**Common Use Cases**:
-1. **Security Automation**:
-- GuardDuty findings → Lambda → Isolate instance
-- Config non-compliance → SNS → Alert
-
-2. **Application Integration**:
-- Custom app events → EventBridge → Trigger workflows
-- SaaS webhooks → EventBridge → Process data
-
-3. **Scheduled Tasks**:
-- Daily reports
-- Periodic cleanup
-- Health checks
-
-4. **Cross-Account Event Aggregation**:
-- Multiple accounts → Central event bus
-- Centralized monitoring
-
-5. **Event Replay**:
-- Archive production events
-- Replay for testing
-- Disaster recovery
-
-**Best Practices**:
-1. Use content-based filtering to reduce target invocations
-2. Implement dead letter queues for failed events
-3. Archive critical events for replay
-4. Use cross-account event buses for multi-account architectures
-5. Monitor rule metrics in CloudWatch
-6. Use input transformers to send only needed data
-
-**References:** Amazon EventBridge, Event-Driven Architecture, Serverless Integration
 </details>
 
----
+-----
 
-### Question 8
-A legacy application uses Java Message Service (JMS) API. What is the BEST AWS migration path with minimal code changes?
+### 問題 8
 
-A. Migrate to Amazon SQS  
-B. Migrate to Amazon SNS  
-C. Migrate to Amazon MQ  
-D. Rewrite using Kinesis  
+レガシーアプリケーションが Java Message Service (JMS) API を使用しています。コードの変更を最小限に抑えた、最適な AWS 移行パスは何ですか？
+
+A. Amazon SQS へ移行  
+B. Amazon SNS へ移行  
+C. Amazon MQ へ移行  
+D. Kinesis を使用して書き換え
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: C**
+**正解: C**
 
-**Explanation:**
-- **Amazon MQ** is managed message broker for Apache ActiveMQ and RabbitMQ
-- JMS, AMQP, MQTT, OpenWire, STOMP protocols
-- Minimal code changes for lift-and-shift
-- Compatible with existing messaging APIs
+**解説:**
+
+  - **Amazon MQ** は、Apache ActiveMQ および RabbitMQ 用のマネージド型メッセージブローカーです。
+  - JMS, AMQP, MQTT, OpenWire, STOMP プロトコルをサポート。
+  - 「リフト＆シフト」において、コード変更を最小限に抑えられます。
+  - 既存のメッセージング API と互換性があります。
 
 **Amazon MQ vs SQS/SNS**:
 
-| Feature | Amazon MQ | SQS/SNS |
+| 特徴 | Amazon MQ | SQS/SNS |
 |---------|-----------|---------|
-| **Protocols** | JMS, AMQP, MQTT, STOMP | AWS API only |
-| **Migration** | Minimal code changes | Requires code changes |
-| **Use Case** | Legacy app migration | Cloud-native apps |
-| **Scaling** | Limited | Highly scalable |
-| **Management** | Managed broker | Fully serverless |
-| **Cost** | Instance-based | Pay per use |
+| **プロトコル** | JMS, AMQP, MQTT, STOMP | AWS API のみ |
+| **移行** | 最小限のコード変更 | コードの書き換えが必要 |
+| **管理** | マネージドブローカー | 完全サーバーレス |
 
-**Amazon MQ Deployment**:
-```
-Applications (JMS/AMQP)
-      ↓
-Amazon MQ Broker
-├─ Active/Standby (Multi-AZ)
-├─ Apache ActiveMQ or RabbitMQ
-├─ Persistent storage (EBS/EFS)
-└─ Built-in monitoring
-```
+**参照:** Amazon MQ, Message Brokers, JMS Migration
 
-**Amazon MQ Features**:
-
-**1. Broker Engines**:
-- **ActiveMQ**: JMS, OpenWire, STOMP, MQTT, WSS
-- **RabbitMQ**: AMQP 0-9-1, MQTT, STOMP
-
-**2. High Availability**:
-- Active/Standby deployment (Multi-AZ)
-- Automatic failover
-- Durable message storage
-
-**3. Network Connectivity**:
-- VPC deployment
-- Private connectivity
-- Security groups
-
-**4. Authentication**:
-- Simple authentication
-- LDAP integration
-
-**Migration Strategy**:
-
-**Before (On-Premises)**:
-```java
-// Existing JMS code
-ConnectionFactory factory = new ActiveMQConnectionFactory(
-    "tcp://on-prem-broker:61616"
-);
-Connection connection = factory.createConnection();
-Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-Queue queue = session.createQueue("OrderQueue");
-MessageProducer producer = session.createProducer(queue);
-```
-
-**After (Amazon MQ)** - Minimal changes:
-```java
-// Just change broker endpoint
-ConnectionFactory factory = new ActiveMQConnectionFactory(
-    "ssl://b-xxx-yyy.mq.us-east-1.amazonaws.com:61617"
-);
-// Rest of the code remains the same
-Connection connection = factory.createConnection("username", "password");
-Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-Queue queue = session.createQueue("OrderQueue");
-MessageProducer producer = session.createProducer(queue);
-```
-
-**When to Use Amazon MQ**:
-- Migrating from on-premises message brokers
-- Existing applications using JMS, AMQP
-- Need protocol compatibility
-- Complex message routing
-- Message selectors and filters
-
-**When to Use SQS/SNS**:
-- Cloud-native applications
-- Need massive scale
-- Serverless architecture
-- Cost optimization
-- Can rewrite code
-
-**Amazon MQ Configuration**:
-```json
-{
-  "BrokerName": "ProductionBroker",
-  "EngineType": "ActiveMQ",
-  "EngineVersion": "5.16.5",
-  "DeploymentMode": "ACTIVE_STANDBY_MULTI_AZ",
-  "HostInstanceType": "mq.m5.large",
-  "PubliclyAccessible": false,
-  "SecurityGroups": ["sg-12345"],
-  "SubnetIds": ["subnet-1", "subnet-2"],
-  "Users": [{
-    "Username": "admin",
-    "Password": "SecurePassword123!",
-    "ConsoleAccess": true
-  }],
-  "MaintenanceWindowStartTime": {
-    "DayOfWeek": "MONDAY",
-    "TimeOfDay": "03:00",
-    "TimeZone": "America/New_York"
-  }
-}
-```
-
-**Cost Comparison**:
-
-**Amazon MQ**:
-- Instance costs (hourly)
-- Storage costs (EBS/EFS)
-- Data transfer
-
-**SQS/SNS**:
-- Per request
-- No instance costs
-- Generally cheaper at scale
-
-**Best Practices**:
-1. Use Multi-AZ for production
-2. Configure automatic minor version upgrades
-3. Enable CloudWatch logging
-4. Use VPC endpoints for secure access
-5. Implement message selectors for filtering
-6. Monitor broker metrics
-
-**References:** Amazon MQ, Message Brokers, JMS Migration
 </details>
 
----
+-----
 
-### Question 9
-An application publishes custom metrics to CloudWatch. These metrics should trigger automated responses. What is the BEST approach?
+### 問題 9
 
-A. Poll CloudWatch API periodically  
-B. Use CloudWatch Alarms with SNS  
-C. Use EventBridge rule for CloudWatch events  
-D. Use Lambda to check metrics  
+アプリケーションがカスタムメトリクスを CloudWatch に発行しています。これらのメトリクスに基づいて自動応答をトリガーする必要があります。最適なアプローチはどれですか？
+
+A. 定期的に CloudWatch API をポーリングする  
+B. SNS を備えた CloudWatch アラームを使用する  
+C. CloudWatch イベント用に EventBridge ルールを使用する  
+D. メトリクスをチェックするために Lambda を使用する
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- **CloudWatch Alarms** monitor metrics and trigger actions automatically
-- SNS integration for notifications and automated responses
-- Can trigger Auto Scaling, EC2 actions, SNS, Systems Manager
+**解説:**
 
-**CloudWatch Alarms Architecture**:
-```
-Custom Application
-       ↓
-CloudWatch Custom Metrics
-       ↓
-CloudWatch Alarm (threshold)
-       ↓
-SNS Topic
-  ├→ Email notifications
-  ├→ Lambda (automated remediation)
-  ├→ SQS (queue for processing)
-  └→ Auto Scaling (scale up/down)
-```
+  - **CloudWatch アラーム**は、メトリクスを監視し、自動的にアクションをトリガーします。
+  - 通知や自動応答のために SNS と統合されています。
+  - Auto Scaling、EC2 アクション、SNS、Systems Manager をトリガーできます。
 
-**CloudWatch Alarm States**:
-- **OK**: Metric within threshold
-- **ALARM**: Metric breached threshold
-- **INSUFFICIENT_DATA**: Not enough data
+**アラームのアクション**:
 
-**Alarm Configuration**:
-```python
-import boto3
+1.  **SNS 通知**: Eメール/SMS/Lambda 等への通知。
+2.  **Auto Scaling**: インスタンスのスケーリング。
+3.  **EC2 アクション**: インスタンスの停止/終了/再起動。
+4.  **Systems Manager**: オートメーションプレイブックの実行。
 
-cloudwatch = boto3.client('cloudwatch')
+**参照:** CloudWatch Alarms, Automated Monitoring, Metric-Based Actions
 
-# Create alarm
-cloudwatch.put_metric_alarm(
-    AlarmName='HighCPUUtilization',
-    ComparisonOperator='GreaterThanThreshold',
-    EvaluationPeriods=2,
-    MetricName='CPUUtilization',
-    Namespace='AWS/EC2',
-    Period=300,  # 5 minutes
-    Statistic='Average',
-    Threshold=80.0,
-    ActionsEnabled=True,
-    AlarmActions=[
-        'arn:aws:sns:us-east-1:123456789012:AlertTopic',
-        'arn:aws:autoscaling:us-east-1:123456789012:scalingPolicy:...'
-    ],
-    AlarmDescription='Alert when CPU exceeds 80%',
-    Dimensions=[{
-        'Name': 'InstanceId',
-        'Value': 'i-1234567890abcdef0'
-    }]
-)
-```
-
-**Custom Metrics Example**:
-```python
-# Publish custom metric
-cloudwatch.put_metric_data(
-    Namespace='MyApp/Orders',
-    MetricData=[{
-        'MetricName': 'OrdersProcessed',
-        'Value': 150,
-        'Unit': 'Count',
-        'Timestamp': datetime.datetime.utcnow(),
-        'Dimensions': [{
-            'Name': 'Environment',
-            'Value': 'Production'
-        }]
-    }]
-)
-
-# Create alarm on custom metric
-cloudwatch.put_metric_alarm(
-    AlarmName='LowOrderProcessing',
-    ComparisonOperator='LessThanThreshold',
-    EvaluationPeriods=1,
-    MetricName='OrdersProcessed',
-    Namespace='MyApp/Orders',
-    Period=60,
-    Statistic='Sum',
-    Threshold=100.0,
-    ActionsEnabled=True,
-    AlarmActions=['arn:aws:sns:...'],
-    Dimensions=[{
-        'Name': 'Environment',
-        'Value': 'Production'
-    }]
-)
-```
-
-**Alarm Actions**:
-
-**1. SNS Notifications**:
-```
-Alarm → SNS → Email/SMS/Lambda/HTTP
-```
-
-**2. Auto Scaling**:
-```
-Alarm → Auto Scaling Policy → Scale EC2/ECS
-```
-
-**3. EC2 Actions**:
-```
-Alarm → Stop/Terminate/Reboot Instance
-```
-
-**4. Systems Manager Actions**:
-```
-Alarm → SSM Automation → Run playbook
-```
-
-**Automated Response Example** (Lambda):
-```python
-def lambda_handler(event, context):
-    message = json.loads(event['Records'][0]['Sns']['Message'])
-    
-    alarm_name = message['AlarmName']
-    new_state = message['NewStateValue']
-    reason = message['NewStateReason']
-    
-    if new_state == 'ALARM':
-        # Automated remediation
-        if 'HighCPU' in alarm_name:
-            scale_up_instances()
-        elif 'LowOrders' in alarm_name:
-            investigate_issue()
-            send_alert_to_team()
-```
-
-**Composite Alarms** (multiple conditions):
-```python
-cloudwatch.put_composite_alarm(
-    AlarmName='CriticalSystemHealth',
-    AlarmRule='(ALARM(HighCPU) OR ALARM(HighMemory)) AND ALARM(HighErrorRate)',
-    ActionsEnabled=True,
-    AlarmActions=['arn:aws:sns:...']
-)
-```
-
-**Alarm Statistics**:
-- **Average**: Mean value
-- **Sum**: Total
-- **Minimum**: Lowest value
-- **Maximum**: Highest value
-- **SampleCount**: Number of data points
-- **p99**: 99th percentile
-
-**Best Practices**:
-1. Use meaningful alarm names
-2. Set appropriate evaluation periods (avoid flapping)
-3. Use composite alarms for complex conditions
-4. Test alarms with CloudWatch Alarm Testing
-5. Document alarm thresholds
-6. Review and adjust thresholds regularly
-
-**CloudWatch Alarms vs EventBridge**:
-- **Alarms**: Metric-based thresholds
-- **EventBridge**: Event-driven (state changes, API calls)
-
-**References:** CloudWatch Alarms, Automated Monitoring, Metric-Based Actions
 </details>
 
----
+-----
 
-### Question 10
-A company wants to implement API Gateway to trigger different Lambda functions based on the API path. What feature enables this?
+### 問題 10
 
-A. API Gateway Stages  
-B. API Gateway Methods  
-C. API Gateway Resources with Lambda Integration  
-D. API Gateway Authorizers  
+ある企業が、API パスに基づいて異なる Lambda 関数をトリガーするために API Gateway を実装したいと考えています。これを可能にする機能はどれですか？
+
+A. API Gateway ステージ (Stages)  
+B. API Gateway メソッド (Methods)  
+C. Lambda 統合を備えた API Gateway リソース (Resources)  
+D. API Gateway オーソライザー (Authorizers)
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: C**
+**正解: C**
 
-**Explanation:**
-- **API Gateway Resources** define API paths
-- Each resource/method can integrate with different Lambda functions
-- Enables REST API routing to microservices
+**解説:**
 
-**API Gateway Lambda Integration**:
-```
-GET /users → Lambda: ListUsers
-POST /users → Lambda: CreateUser
-GET /users/{id} → Lambda: GetUser
-PUT /users/{id} → Lambda: UpdateUser
-DELETE /users/{id} → Lambda: DeleteUser
-```
+  - **API Gateway リソース**は API パスを定義します。
+  - 各リソース/メソッドは、異なる Lambda 関数と統合できます。
+  - マイクロサービスへの REST API ルーティングを可能にします。
 
-**API Gateway Structure**:
-```
-REST API: UserService
-├─ /users (Resource)
-│  ├─ GET (Method) → Lambda: ListUsers
-│  ├─ POST (Method) → Lambda: CreateUser
-│  └─ /{id} (Resource)
-│     ├─ GET (Method) → Lambda: GetUser
-│     ├─ PUT (Method) → Lambda: UpdateUser
-│     └─ DELETE (Method) → Lambda: DeleteUser
-└─ /orders (Resource)
-   ├─ GET → Lambda: ListOrders
-   └─ POST → Lambda: CreateOrder
-```
+**例**:
 
-**API Gateway Integration Types**:
+  - `GET /users` → Lambda: ユーザー一覧
+  - `POST /orders` → Lambda: 注文作成
 
-| Type | Use Case |
-|------|----------|
-| **Lambda** | Serverless backend |
-| **HTTP** | HTTP endpoints |
-| **AWS Service** | Direct AWS service integration |
-| **Mock** | Testing, return fixed response |
-| **VPC Link** | Private VPC resources |
+**その他の主要機能**:
 
-**Lambda Integration Configuration**:
-```json
-{
-  "httpMethod": "POST",
-  "type": "AWS_PROXY",  // Lambda proxy integration
-  "uri": "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:123456789012:function:CreateUser/invocations",
-  "credentials": "arn:aws:iam::123456789012:role/APIGatewayLambdaRole",
-  "requestTemplates": {
-    "application/json": "{\"body\": $input.json('$')}"
-  }
-}
-```
+  - **スロットリング**: レート制限。
+  - **キャッシュ**: レスポンスをキャッシュして負荷軽減。
+  - **ステージ変数**: 環境（dev/prod）ごとの変数設定。
 
-**Lambda Proxy Integration** (recommended):
-```python
-def lambda_handler(event, context):
-    # event contains full request details
-    path = event['path']  # /users/123
-    method = event['httpMethod']  # GET
-    headers = event['headers']
-    query_params = event['queryStringParameters']
-    body = json.loads(event['body']) if event['body'] else {}
-    
-    # Process request
-    if path == '/users' and method == 'GET':
-        users = get_all_users()
-        return {
-            'statusCode': 200,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps(users)
-        }
-```
+**参照:** API Gateway, Lambda Integration, REST API Routing
 
-**API Gateway Features**:
-
-**1. Request Validation**:
-- Validate request parameters
-- Validate request body against JSON schema
-- Reject invalid requests before invoking Lambda
-
-**2. Request/Response Transformation**:
-- Transform request data
-- Map response from Lambda
-- Change content types
-
-**3. Throttling**:
-- Rate limiting (requests per second)
-- Burst capacity
-- Per-client throttling (API keys)
-
-**4. Caching**:
-- Cache responses at API Gateway
-- Reduce Lambda invocations
-- Configurable TTL
-
-**5. CORS Support**:
-- Enable cross-origin requests
-- Configure allowed origins, headers, methods
-
-**6. Authentication/Authorization**:
-- AWS IAM
-- Cognito User Pools
-- Lambda Authorizers
-- API Keys
-
-**API Gateway Stages**:
-```
-API: UserService
-├─ dev (Stage)
-│  └─ https://api.example.com/dev/users
-├─ test (Stage)
-│  └─ https://api.example.com/test/users
-└─ prod (Stage)
-   └─ https://api.example.com/prod/users
-```
-
-**Stage Variables** (environment-specific):
-```json
-{
-  "stageVariables": {
-    "lambdaAlias": "prod",
-    "dbEndpoint": "prod-db.example.com"
-  }
-}
-
-// Use in integration
-{
-  "uri": "arn:aws:lambda:...:function:MyFunction:${stageVariables.lambdaAlias}"
-}
-```
-
-**API Gateway Deployment**:
-```bash
-# Deploy to stage
-aws apigateway create-deployment \
-  --rest-api-id abc123 \
-  --stage-name prod \
-  --stage-description 'Production deployment' \
-  --description 'Release v1.2.3'
-```
-
-**Best Practices**:
-1. Use Lambda proxy integration for simplicity
-2. Enable request validation
-3. Use stages for environments (dev/test/prod)
-4. Enable caching for read-heavy APIs
-5. Implement authentication/authorization
-6. Enable CloudWatch logging
-7. Use custom domain names
-8. Implement rate limiting
-9. Version your APIs
-10. Monitor with X-Ray
-
-**API Gateway Pricing**:
-- REST API: $3.50 per million requests
-- HTTP API: $1.00 per million requests (cheaper)
-- WebSocket API: $1.00 per million messages
-- Data transfer out
-
-**HTTP API vs REST API**:
-- **HTTP API**: Simpler, cheaper, faster
-- **REST API**: More features (request validation, caching, API keys)
-
-**References:** API Gateway, Lambda Integration, REST API Routing
 </details>
 
----
+-----
 
-### Question 41
-A SaaS company needs to automate the transfer of customer data from Salesforce to Amazon S3 for analytics. The solution must be fully managed and require minimal code. Which AWS service should be used?
+### 問題 41 〜 46 (要約)
 
-A. Amazon AppFlow  
-B. AWS Glue  
-C. Amazon Kinesis Data Firehose  
-D. AWS DataSync  
+  * **問題 41 (SaaS 連携):** Salesforce から S3 へのデータ転送をコードなしで行う → **Amazon AppFlow**
+  * **問題 42 (GraphQL):** モバイルアプリ用の GraphQL API マネージドサービス → **AWS AppSync**
+  * **問題 43 (ハイブリッドコンテナ):** オンプレミスサーバーで ECS を管理・実行する → **Amazon ECS Anywhere**
+  * **問題 44 (モバイルテスト):** クラウド上の実機デバイスでテストを行う → **AWS Device Farm**
+  * **問題 45 (マーケティング):** ユーザー行動に基づくターゲット通知・SMS 送信 → **Amazon Pinpoint**
+  * **問題 46 (Managed Kafka):** AWS 上の完全マネージドな Apache Kafka 環境 → **Amazon MSK**
 
-<details>
-<summary>Show Answer</summary>
+-----
 
-**Answer: A**
+## まとめ：サービス選択のクイックガイド
 
-**Explanation:**
-- Amazon AppFlow is a fully managed integration service
-- Automates data transfer between SaaS apps (e.g., Salesforce) and AWS
-- No code required, supports scheduling and transformation
-- Glue is for ETL, not direct SaaS integration
-- Firehose is for streaming, not SaaS connectors
-- DataSync is for file transfers, not SaaS data
-
-**References:** Amazon AppFlow, SaaS Integration
-</details>
-
----
-
-### Question 42
-A development team is building a GraphQL API for a mobile app and wants to minimize backend management. Which AWS service should they use?
-
-A. AWS AppSync  
-B. Amazon API Gateway  
-C. AWS Lambda  
-D. Amazon Cognito  
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer: A**
-
-**Explanation:**
-- AWS AppSync is a managed GraphQL API service
-- Handles real-time data sync, subscriptions, and offline access
-- API Gateway is for REST/HTTP APIs
-- Lambda is compute, not API management
-- Cognito is for authentication, not APIs
-
-**References:** AWS AppSync, GraphQL APIs
-</details>
-
----
-
-### Question 43
-A company needs to deploy containerized workloads to on-premises servers and manage them using AWS services. Which solution should they use?
-
-A. Amazon ECS Anywhere  
-B. Amazon EKS Anywhere  
-C. AWS Outposts  
-D. AWS Fargate  
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer: A**
-
-**Explanation:**
-- ECS Anywhere extends ECS to on-premises servers
-- Centralized management from AWS Console
-- EKS Anywhere is for Kubernetes, not ECS
-- Outposts is for running AWS infrastructure on-premises
-- Fargate is serverless containers in AWS only
-
-**References:** Amazon ECS Anywhere, Hybrid Deployments
-</details>
-
----
-
-### Question 44
-A mobile development team wants to test their app on a wide range of real devices in the cloud. Which AWS service should they use?
-
-A. AWS Device Farm  
-B. AWS Amplify  
-C. Amazon Pinpoint  
-D. Amazon API Gateway  
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer: A**
-
-**Explanation:**
-- AWS Device Farm provides cloud-based testing on real mobile devices
-- Supports Android and iOS
-- Automates testing and provides detailed reports
-- Amplify is for app development and hosting
-- Pinpoint is for user engagement, not testing
-- API Gateway is for APIs, not device testing
-
-**References:** AWS Device Farm, Mobile Testing
-</details>
-
----
-
-### Question 45
-A marketing team wants to send targeted push notifications, emails, and SMS messages to users based on their behavior in a mobile app. Which AWS service should be used?
-
-A. Amazon Pinpoint  
-B. Amazon SNS  
-C. AWS Amplify  
-D. Amazon SQS  
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer: A**
-
-**Explanation:**
-- Amazon Pinpoint is a multi-channel marketing and analytics service
-- Supports push, email, SMS, and in-app messaging
-- Provides segmentation, analytics, and campaign management
-- SNS is for basic notifications, not targeted campaigns
-- Amplify is for app development, not marketing
-- SQS is for queuing, not messaging users
-
-**References:** Amazon Pinpoint, User Engagement
-</details>
-
----
-
-### Question 46
-A company needs to integrate its on-premises Apache Kafka workloads with AWS analytics and storage services. Which AWS service provides a fully managed, highly available Kafka environment?
-
-A. Amazon MSK  
-B. Amazon Kinesis Data Streams  
-C. Amazon SQS  
-D. AWS Glue Streaming  
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer: A**
-
-**Explanation:**
-- Amazon MSK (Managed Streaming for Apache Kafka) provides a fully managed Kafka service
-- Handles provisioning, patching, and scaling
-- Integrates with Kinesis, Lambda, S3, Redshift
-- Kinesis is a separate streaming service, not Kafka-compatible
-- SQS is for message queuing, not streaming
-- Glue Streaming is for ETL, not Kafka management
-
-**References:** Amazon MSK, Streaming Data
-</details>
-
----
-
-## Summary
-
-**Total Questions**: 46  
-**Topics Covered**:
-- Amazon SNS (Pub/Sub, Fan-out)
-- Amazon SQS (Standard vs FIFO Queues)
-- Amazon Kinesis (Data Streams, Data Firehose)
-- SNS-SQS Fan-out Pattern
-- AWS Step Functions (Workflow Orchestration)
-- Amazon EventBridge (Event Routing)
-- Amazon MQ (Message Broker Migration)
-- CloudWatch Alarms (Metric-Based Triggers)
-- API Gateway (Lambda Integration)
-- Amazon AppFlow (SaaS Integration)
-- AWS AppSync (GraphQL APIs)
-- Amazon ECS Anywhere (Hybrid Container Deployment)
-- AWS Device Farm (Mobile Testing)
-- Amazon Pinpoint (User Engagement)
-- Amazon MSK (Managed Kafka)
-
-**Exam Tips**:
-
-**Messaging Patterns**:
-- **1-to-Many (Fan-out)**: SNS or EventBridge
-- **1-to-1 (Queue)**: SQS
-- **Exactly-once, Ordered**: SQS FIFO
-- **Real-time Streaming**: Kinesis Data Streams
-- **Load to Destinations**: Kinesis Data Firehose
-
-**SQS**:
-- **Standard**: Unlimited throughput, at-least-once, best-effort ordering
-- **FIFO**: 300 msg/s (3000 batched), exactly-once, ordered
-
-**SNS-SQS Fan-out**:
-- Multiple services process same event independently
-- Reliable, scalable, decoupled
-
-**Kinesis**:
-- **Data Streams**: Custom processing, multiple consumers, replay
-- **Data Firehose**: Managed delivery to S3, Redshift, ES
-
-**Step Functions**:
-- Orchestrate complex workflows
-- Visual designer
-- Error handling, retries, parallel execution
-
-**EventBridge**:
-- Event-driven architecture
-- Content-based routing
-- 100+ AWS services as sources
-- Scheduled events (cron)
-
-**Amazon MQ**:
-- JMS/AMQP migration
-- Minimal code changes
-- Not for greenfield (use SQS/SNS instead)
-
-**CloudWatch Alarms**:
-- Metric-based triggers
-- SNS integration for notifications
-- Auto Scaling integration
-
-**API Gateway**:
-- REST, HTTP, WebSocket APIs
-- Lambda proxy integration (recommended)
-- Stages for environments
-- Built-in authentication, throttling, caching
-
-**AppFlow**:
-- SaaS data integration (e.g., Salesforce to S3)
-- Fully managed, no code
-
-**AppSync**:
-- Managed GraphQL APIs
-- Real-time data sync, subscriptions
-
-**ECS Anywhere**:
-- Deploy containers to on-premises
-- Manage with AWS services
-
-**Device Farm**:
-- Test mobile apps on real devices
-- Cloud-based, wide range of devices
-
-**Pinpoint**:
-- Targeted push notifications, emails, SMS
-- User behavior analytics
-
-**MSK**:
-- Managed Kafka service
-- Integrates with AWS analytics and storage
-
-**Service Selection**:
-```
-Need                          → Use
-─────────────────────────────────────────
-Fan-out (same message, many services) → SNS
-Queue (decouple, buffer)               → SQS
-Exactly-once, ordered                  → SQS FIFO
-Real-time stream processing            → Kinesis Data Streams
-Load stream to S3/Redshift/ES         → Kinesis Data Firehose
-Complex workflows                      → Step Functions
-Event routing (AWS services)           → EventBridge
-JMS/AMQP migration                    → Amazon MQ
-Metric-based automation               → CloudWatch Alarms
-REST API for Lambda                   → API Gateway
-SaaS data integration                  → AppFlow
-GraphQL API                           → AppSync
-Hybrid container deployment            → ECS Anywhere
-Mobile app testing                    → Device Farm
-Targeted user messaging                → Pinpoint
-Managed Kafka                          → MSK
-```
-
-**Next Steps**:
-- Understand when to use each messaging service
-- Practice building SNS-SQS fan-out patterns
-- Learn Step Functions state types
-- Know EventBridge vs SNS differences
-- Understand SQS Standard vs FIFO trade-offs
-
+| ニーズ | 使用するサービス |
+| :--- | :--- |
+| ファンアウト（同じメッセージを多くのサービスへ） | **SNS** |
+| キューイング（切り離し、バッファリング） | **SQS** |
+| 正確に1回、順序保証 | **SQS FIFO** |
+| リアルタイムストリーム処理 | **Kinesis Data Streams** |
+| ストリームを S3/Redshift 等へロード | **Kinesis Data Firehose** |
+| 複雑なワークフロー、オーケストレーション | **Step Functions** |
+| AWS サービス間のイベントルーティング | **EventBridge** |
+| JMS/AMQP からの移行 | **Amazon MQ** |
+| メトリクスベースの自動化 | **CloudWatch Alarms** |
+| Lambda 用の REST API | **API Gateway** |
+| SaaS データの統合 | **AppFlow** |
+| マネージド GraphQL API | **AppSync** |
+| オンプレミスでのコンテナ実行 | **ECS Anywhere** |
+| 実機デバイスでのテスト | **Device Farm** |
+| ターゲットを絞ったユーザーメッセージング | **Pinpoint** |
+| マネージド Kafka | **MSK** |
