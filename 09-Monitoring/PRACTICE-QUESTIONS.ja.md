@@ -1,547 +1,546 @@
-# Monitoring & Management - Practice Questions
+# Monitoring & Management - 練習問題
 
-> **⚠️ DISCLAIMER:** These are **original practice questions** created for educational purposes based on AWS documentation. They are **NOT actual exam questions** from the AWS certification exam.
+> **⚠️ 免責事項:** これらは AWS ドキュメントを基に教育目的で作成された**オリジナルの練習問題**です。AWS 認定試験の**実際の試験問題ではありません**。
 
-## Exam-Standard Questions (SAA-C03)
+## 試験レベルの問題 (SAA-C03)
 
----
+***
 
-### Question 1
-A company wants to monitor the memory utilization of its EC2 instances and trigger an alarm when memory usage exceeds 80%. Which combination of actions should the solutions architect take?
+### 問題 1
+ある企業が EC2 インスタンスのメモリ使用率を監視し、メモリ使用率が 80% を超えた際にアラームをトリガーしたいと考えています。ソリューションアーキテクトが取るべき組み合わせは次のうちどれですか？
 
-A. Enable detailed monitoring on EC2 instances and create a CloudWatch alarm on the default memory metric  
-B. Install the CloudWatch Agent on EC2 instances, configure it to send memory metrics, and create a CloudWatch alarm  
-C. Use AWS Systems Manager Session Manager to view memory metrics and manually create alerts  
-D. Enable CloudTrail logging and use CloudWatch Logs Insights to query memory usage  
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer: B**
-
-**Explanation:**
-- EC2 instances do NOT send memory metrics by default
-- The CloudWatch Agent must be installed to collect memory metrics
-- Once the agent sends metrics to CloudWatch, you can create alarms
-- Option A is incorrect because memory is not a default metric
-- Option C doesn't provide automated alerting
-- Option D is for auditing API calls, not performance metrics
-
-**References:** CloudWatch Agent, EC2 Monitoring, Custom Metrics
-</details>
-
----
-
-### Question 2
-A security team needs to identify which IAM user terminated a critical EC2 instance last week. Which AWS service should they use?
-
-A. Amazon CloudWatch Logs  
-B. AWS Config  
-C. AWS CloudTrail  
-D. AWS Systems Manager  
+A. EC2 インスタンスの詳細モニタリングを有効にし、デフォルトのメモリメトリクスに CloudWatch アラームを作成する
+B. EC2 インスタンスに CloudWatch Agent をインストールし、メモリメトリクスを送信するよう設定して、CloudWatch アラームを作成する
+C. AWS Systems Manager Session Manager を使用してメモリメトリクスを確認し、手動でアラートを作成する
+D. CloudTrail ログを有効にし、CloudWatch Logs Insights を使用してメモリ使用率をクエリする
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: C**
+**答え: B**
 
-**Explanation:**
-- CloudTrail records API calls including WHO made them
-- It tracks management events like TerminateInstances
-- CloudTrail logs include user identity, timestamp, and action
-- Option A (CloudWatch Logs) monitors application logs, not API calls
-- Option B (Config) tracks resource configuration, not who made changes
-- Option D (Systems Manager) is for operational management
+**解説:**
+- EC2 インスタンスはデフォルトではメモリメトリクスを送信しない
+- メモリメトリクスを収集するには CloudWatch Agent のインストールが必要
+- エージェントが CloudWatch にメトリクスを送信した後、アラームを作成できる
+- A はメモリがデフォルトメトリクスでないため不正解
+- C は自動アラートを提供しない
+- D は API 呼び出しの監査用であり、パフォーマンスメトリクス用ではない
 
-**References:** CloudTrail, API Call Auditing, Governance
+**参考:** CloudWatch Agent、EC2 モニタリング、カスタムメトリクス
 </details>
 
----
+***
 
-### Question 3
-A company needs to ensure all S3 buckets have versioning enabled and receive automatic notifications when this requirement is violated. Which AWS service should be used?
+### 問題 2
+セキュリティチームが、先週重要な EC2 インスタンスを終了した IAM ユーザーを特定する必要があります。使用すべき AWS サービスはどれですか？
 
-A. AWS CloudTrail with CloudWatch Logs  
-B. Amazon CloudWatch with custom metrics  
-C. AWS Config with AWS Managed Rules  
-D. AWS Systems Manager State Manager  
+A. Amazon CloudWatch Logs
+B. AWS Config
+C. AWS CloudTrail
+D. AWS Systems Manager
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: C**
+**答え: C**
 
-**Explanation:**
-- AWS Config evaluates resource configurations against rules
-- Managed rule `s3-bucket-versioning-enabled` checks versioning
-- Config can send SNS notifications when non-compliant
-- CloudTrail tracks who made changes but doesn't evaluate compliance
-- CloudWatch monitors performance metrics, not configuration compliance
-- Systems Manager State Manager is for EC2 instance configuration
+**解説:**
+- CloudTrail は誰が実行したかを含む API 呼び出しを記録する
+- TerminateInstances などの管理イベントを追跡する
+- CloudTrail ログにはユーザー ID、タイムスタンプ、アクションが含まれる
+- A (CloudWatch Logs) はアプリケーションログを監視するもので API 呼び出しではない
+- B (Config) はリソース構成を追跡するもので誰が変更したかではない
+- D (Systems Manager) は運用管理用
 
-**References:** AWS Config, Config Rules, Compliance Auditing
+**参考:** CloudTrail、API 呼び出し監査、ガバナンス
 </details>
 
----
+***
 
-### Question 4
-A solutions architect needs to access EC2 instances for troubleshooting without opening port 22 or managing SSH keys. Which AWS service provides this capability?
+### 問題 3
+ある企業が全ての S3 バケットでバージョニングが有効になっていることを確保し、この要件に違反した際に自動通知を受け取りたいと考えています。使用すべき AWS サービスはどれですか？
 
-A. AWS CloudShell  
-B. AWS Systems Manager Session Manager  
-C. Amazon EC2 Instance Connect  
-D. AWS Direct Connect  
+A. AWS CloudTrail と CloudWatch Logs
+B. カスタムメトリクスを使用した Amazon CloudWatch
+C. AWS マネージドルールを使用した AWS Config
+D. AWS Systems Manager State Manager
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: C**
 
-**Explanation:**
-- Session Manager provides secure shell access without SSH keys or open ports
-- Uses IAM permissions for access control
-- Session logs can be sent to S3 or CloudWatch Logs
-- EC2 Instance Connect still requires port 22 to be open
-- CloudShell is for running AWS CLI commands, not accessing instances
-- Direct Connect is for network connectivity
+**解説:**
+- AWS Config はルールに照らしてリソース構成を評価する
+- マネージドルール `s3-bucket-versioning-enabled` がバージョニングを確認する
+- Config は非準拠時に SNS 通知を送信できる
+- CloudTrail は誰が変更したかを追跡するが、コンプライアンスを評価しない
+- CloudWatch はパフォーマンスメトリクスを監視するもので、構成コンプライアンスではない
+- Systems Manager State Manager は EC2 インスタンスの構成管理用
 
-**References:** Systems Manager Session Manager, Secure Access
+**参考:** AWS Config、Config ルール、コンプライアンス監査
 </details>
 
----
+***
 
-### Question 5
-A company wants to automatically patch all EC2 instances in their fleet during a scheduled maintenance window. Which AWS service should they use?
+### 問題 4
+ソリューションアーキテクトが、ポート 22 を開放したり SSH キーを管理したりせずに EC2 インスタンスにアクセスしてトラブルシューティングを行う必要があります。この機能を提供する AWS サービスはどれですか？
 
-A. AWS CloudFormation with custom scripts  
-B. AWS Systems Manager Patch Manager  
-C. Amazon EventBridge with Lambda  
-D. AWS Config with remediation actions  
+A. AWS CloudShell
+B. AWS Systems Manager Session Manager
+C. Amazon EC2 Instance Connect
+D. AWS Direct Connect
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- Patch Manager automates OS and application patching
-- Maintenance windows define when to patch
-- Patch baselines specify which patches to install
-- CloudFormation is for infrastructure as code, not patching
-- EventBridge could trigger patching but isn't purpose-built
-- Config evaluates compliance but doesn't patch
+**解説:**
+- Session Manager は SSH キーやオープンポートなしでセキュアなシェルアクセスを提供する
+- アクセス制御に IAM 権限を使用する
+- セッションログを S3 または CloudWatch Logs に送信できる
+- EC2 Instance Connect はポート 22 の開放が必要
+- CloudShell は AWS CLI コマンドの実行用で、インスタンスへのアクセス用ではない
+- Direct Connect はネットワーク接続用
 
-**References:** Systems Manager Patch Manager, Maintenance Windows
+**参考:** Systems Manager Session Manager、セキュアアクセス
 </details>
 
----
+***
 
-### Question 6
-An application writes log data to CloudWatch Logs. The operations team needs to be alerted when the word "ERROR" appears more than 10 times in 5 minutes. How should this be configured?
+### 問題 5
+ある企業が、スケジュールされたメンテナンスウィンドウ中にフリート内の全ての EC2 インスタンスを自動的にパッチ適用したいと考えています。使用すべき AWS サービスはどれですか？
 
-A. Use CloudWatch Logs Insights to query for errors and manually check  
-B. Create a metric filter to count "ERROR" occurrences, then create an alarm on that metric  
-C. Export logs to S3 and use Athena to query for errors  
-D. Use CloudTrail to track error events and create SNS notifications  
+A. カスタムスクリプトを使用した AWS CloudFormation
+B. AWS Systems Manager Patch Manager
+C. Lambda を使用した Amazon EventBridge
+D. 修復アクションを使用した AWS Config
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- Metric filters extract metrics from log data
-- Filter pattern can count occurrences of "ERROR"
-- CloudWatch alarm can trigger on the custom metric
-- This provides automated, real-time alerting
-- Option A requires manual intervention
-- Option C adds unnecessary complexity and isn't real-time
-- CloudTrail is for API calls, not application logs
+**解説:**
+- Patch Manager は OS およびアプリケーションのパッチ適用を自動化する
+- メンテナンスウィンドウでパッチ適用のタイミングを定義する
+- パッチベースラインでインストールするパッチを指定する
+- CloudFormation はインフラのコード化用であり、パッチ適用用ではない
+- EventBridge はパッチ適用をトリガーできるが、専用サービスではない
+- Config はコンプライアンスを評価するがパッチ適用は行わない
 
-**References:** CloudWatch Logs, Metric Filters, CloudWatch Alarms
+**参考:** Systems Manager Patch Manager、メンテナンスウィンドウ
 </details>
 
----
+***
 
-### Question 7
-A company needs to track all configuration changes to security groups across multiple AWS accounts and regions. What is the MOST efficient solution?
+### 問題 6
+あるアプリケーションが CloudWatch Logs にログデータを書き込んでいます。運用チームは「ERROR」という単語が 5 分間に 10 回以上出現した際にアラートを受け取る必要があります。どのように設定すべきですか？
 
-A. Enable CloudTrail in each account and region  
-B. Create Lambda functions to monitor security group changes  
-C. Use AWS Config with a Config Aggregator  
-D. Use CloudWatch Events in each region  
+A. CloudWatch Logs Insights を使用してエラーをクエリし、手動で確認する
+B. 「ERROR」の出現回数をカウントするメトリクスフィルターを作成し、そのメトリクスにアラームを作成する
+C. ログを S3 にエクスポートし、Athena を使用してエラーをクエリする
+D. CloudTrail を使用してエラーイベントを追跡し、SNS 通知を作成する
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: C**
+**答え: B**
 
-**Explanation:**
-- AWS Config records resource configuration changes
-- Config Aggregator provides centralized view across accounts and regions
-- Tracks configuration history and relationships
-- CloudTrail tracks who made changes but doesn't aggregate configurations
-- Lambda would require custom development and maintenance
-- CloudWatch Events could detect changes but doesn't provide historical tracking
+**解説:**
+- メトリクスフィルターはログデータからメトリクスを抽出する
+- フィルターパターンで「ERROR」の出現回数をカウントできる
+- CloudWatch アラームがカスタムメトリクスでトリガーできる
+- これにより自動化されたリアルタイムのアラートが実現する
+- A は手動介入が必要
+- C は不必要な複雑さを加えており、リアルタイムではない
+- CloudTrail は API 呼び出し用であり、アプリケーションログ用ではない
 
-**References:** AWS Config, Config Aggregator, Multi-Account Management
+**参考:** CloudWatch Logs、メトリクスフィルター、CloudWatch アラーム
 </details>
 
----
+***
 
-### Question 8
-A solutions architect needs to run a script on all EC2 instances fleet-wide without SSH access. The script should install security updates. Which service provides this capability?
+### 問題 7
+ある企業が複数の AWS アカウントおよびリージョンにまたがるセキュリティグループへの全ての構成変更を追跡する必要があります。最も効率的なソリューションはどれですか？
 
-A. AWS Systems Manager Run Command  
-B. AWS Lambda with EC2 API  
-C. Amazon CloudWatch Events  
-D. AWS Config Remediation  
+A. 各アカウントおよびリージョンで CloudTrail を有効にする
+B. セキュリティグループの変更を監視する Lambda 関数を作成する
+C. Config Aggregator を使用した AWS Config を利用する
+D. 各リージョンで CloudWatch Events を使用する
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: A**
+**答え: C**
 
-**Explanation:**
-- Run Command executes commands on managed instances remotely
-- No SSH required, uses IAM permissions
-- Provides rate control and error handling
-- Command history recorded in CloudTrail
-- Lambda could invoke Run Command but isn't the direct solution
-- CloudWatch Events can trigger Run Command but isn't the execution service
-- Config Remediation uses SSM Automation Documents
+**解説:**
+- AWS Config はリソースの構成変更を記録する
+- Config Aggregator はアカウントおよびリージョンをまたいだ一元化されたビューを提供する
+- 構成履歴と関連性を追跡する
+- CloudTrail は誰が変更したかを追跡するが、構成を集約しない
+- Lambda はカスタム開発と保守が必要
+- CloudWatch Events は変更を検出できるが、履歴追跡は提供しない
 
-**References:** Systems Manager Run Command, Fleet Management
+**参考:** AWS Config、Config Aggregator、マルチアカウント管理
 </details>
 
----
+***
 
-### Question 9
-An organization wants to detect unusual API activity, such as a sudden spike in EC2 instance creation. Which CloudTrail feature should be enabled?
+### 問題 8
+ソリューションアーキテクトが SSH アクセスなしでフリート全体の全 EC2 インスタンスにスクリプトを実行する必要があります。スクリプトはセキュリティアップデートをインストールするものです。この機能を提供するサービスはどれですか？
 
-A. CloudTrail Data Events  
-B. CloudTrail Management Events  
-C. CloudTrail Insights Events  
-D. CloudTrail Multi-Region Trails  
+A. AWS Systems Manager Run Command
+B. EC2 API を使用した AWS Lambda
+C. Amazon CloudWatch Events
+D. AWS Config Remediation
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: C**
+**答え: A**
 
-**Explanation:**
-- CloudTrail Insights uses machine learning to detect unusual activity
-- Identifies anomalies like spikes in resource provisioning or IAM actions
-- Management Events track API calls but don't detect anomalies
-- Data Events track high-volume operations (S3 objects, Lambda invocations)
-- Multi-Region Trails collect logs but don't analyze patterns
+**解説:**
+- Run Command はマネージドインスタンスにリモートでコマンドを実行する
+- SSH 不要で、IAM 権限を使用する
+- レート制御とエラー処理を提供する
+- コマンド履歴が CloudTrail に記録される
+- Lambda は Run Command を呼び出せるが、直接的なソリューションではない
+- CloudWatch Events は Run Command をトリガーできるが、実行サービスではない
+- Config Remediation は SSM オートメーションドキュメントを使用する
 
-**References:** CloudTrail Insights, Anomaly Detection
+**参考:** Systems Manager Run Command、フリート管理
 </details>
 
----
+***
 
-### Question 10
-A company needs to store CloudWatch Logs for 10 years to meet compliance requirements. What is the MOST cost-effective approach?
+### 問題 9
+ある組織が、EC2 インスタンス作成の急増など異常な API アクティビティを検出したいと考えています。有効にすべき CloudTrail の機能はどれですか？
 
-A. Keep logs in CloudWatch Logs with 10-year retention  
-B. Export logs to S3, then transition to S3 Glacier Deep Archive  
-C. Export logs to S3, then use S3 Intelligent-Tiering  
-D. Stream logs to Kinesis Data Firehose and store in Redshift  
+A. CloudTrail データイベント
+B. CloudTrail 管理イベント
+C. CloudTrail Insights イベント
+D. CloudTrail マルチリージョントレイル
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: C**
 
-**Explanation:**
-- CloudWatch Logs retention is expensive for long-term storage
-- Export to S3 for cost-effective long-term storage
-- S3 Glacier Deep Archive is cheapest for archival ($0.00099 per GB/month)
-- S3 Intelligent-Tiering is more expensive than Glacier Deep Archive
-- Redshift is for analytics, not cost-effective archival
+**解説:**
+- CloudTrail Insights は機械学習を使用して異常なアクティビティを検出する
+- リソースプロビジョニングや IAM アクションの急増などの異常を特定する
+- 管理イベントは API 呼び出しを追跡するが、異常を検出しない
+- データイベントは大量のオペレーション (S3 オブジェクト、Lambda 呼び出し) を追跡する
+- マルチリージョントレイルはログを収集するがパターンを分析しない
 
-**References:** CloudWatch Logs Export, S3 Glacier Deep Archive, Cost Optimization
+**参考:** CloudTrail Insights、異常検出
 </details>
 
----
+***
 
-### Question 11
-A development team needs to query application logs to troubleshoot issues. The logs are stored in CloudWatch Logs. Which feature should they use for ad-hoc log analysis?
+### 問題 10
+ある企業がコンプライアンス要件を満たすために CloudWatch Logs を 10 年間保存する必要があります。最もコスト効率の高いアプローチはどれですか？
 
-A. CloudWatch Metrics  
-B. CloudWatch Logs Insights  
-C. CloudWatch Dashboards  
-D. CloudWatch Alarms  
+A. CloudWatch Logs に 10 年間の保持期間を設定してログを保存する
+B. ログを S3 にエクスポートし、S3 Glacier Deep Archive に移行する
+C. ログを S3 にエクスポートし、S3 Intelligent-Tiering を使用する
+D. ログを Kinesis Data Firehose にストリーミングし、Redshift に保存する
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- CloudWatch Logs Insights provides interactive log analytics
-- Purpose-built query language for searching and analyzing logs
-- Can find errors, count events, calculate percentiles
-- Metrics are for numerical performance data
-- Dashboards visualize but don't query
-- Alarms trigger on thresholds
+**解説:**
+- CloudWatch Logs の長期保存はコストが高い
+- コスト効率の高い長期保存のために S3 にエクスポートする
+- S3 Glacier Deep Archive はアーカイブに最も安価 (GB あたり月 $0.00099)
+- S3 Intelligent-Tiering は Glacier Deep Archive より高価
+- Redshift は分析用であり、コスト効率の高いアーカイブには不向き
 
-**References:** CloudWatch Logs Insights, Log Analytics
+**参考:** CloudWatch Logs エクスポート、S3 Glacier Deep Archive、コスト最適化
 </details>
 
----
+***
 
-### Question 12
-A company wants to automatically remediate non-compliant resources. For example, when an S3 bucket is created without encryption, it should be automatically encrypted. Which solution accomplishes this?
+### 問題 11
+開発チームが問題のトラブルシューティングのためにアプリケーションログをクエリする必要があります。ログは CloudWatch Logs に保存されています。アドホックなログ分析に使用すべき機能はどれですか？
 
-A. AWS Config Rules with automatic remediation using SSM Automation Documents  
-B. CloudWatch Events with Lambda functions  
-C. AWS CloudTrail with SNS notifications  
-D. Systems Manager State Manager  
+A. CloudWatch メトリクス
+B. CloudWatch Logs Insights
+C. CloudWatch ダッシュボード
+D. CloudWatch アラーム
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: A**
+**答え: B**
 
-**Explanation:**
-- Config Rules evaluate compliance
-- Automatic remediation uses SSM Automation Documents
-- Can trigger remediation when resources become non-compliant
-- CloudWatch Events could work but Config is purpose-built for compliance
-- CloudTrail only tracks changes, doesn't remediate
-- State Manager maintains EC2 configuration, not S3
+**解説:**
+- CloudWatch Logs Insights はインタラクティブなログ分析を提供する
+- ログの検索と分析のための専用クエリ言語がある
+- エラーの検索、イベントのカウント、パーセンタイルの計算が可能
+- メトリクスは数値パフォーマンスデータ用
+- ダッシュボードは可視化するがクエリは行わない
+- アラームはしきい値でトリガーされる
 
-**References:** AWS Config, Auto Remediation, SSM Automation
+**参考:** CloudWatch Logs Insights、ログ分析
 </details>
 
----
+***
 
-### Question 13
-A solutions architect needs to store sensitive configuration data like database passwords that can be accessed by EC2 instances and Lambda functions. The solution must support encryption and version history. Which service should be used?
+### 問題 12
+ある企業が非準拠リソースを自動的に修復したいと考えています。例えば、暗号化なしで S3 バケットが作成された場合に自動的に暗号化されるようにしたいと考えています。この要件を実現するソリューションはどれですか？
 
-A. AWS Secrets Manager  
-B. AWS Systems Manager Parameter Store  
-C. Amazon S3 with versioning  
-D. AWS Config  
+A. SSM オートメーションドキュメントを使用した自動修復を備えた AWS Config ルール
+B. Lambda 関数を使用した CloudWatch Events
+C. SNS 通知を使用した AWS CloudTrail
+D. Systems Manager State Manager
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: A**
 
-**Explanation:**
-- Parameter Store securely stores configuration data and secrets
-- Supports encryption with KMS
-- Maintains version history
-- Integrates with EC2, Lambda, CloudFormation
-- Secrets Manager is also valid but more expensive (includes auto-rotation)
-- For exam context, Parameter Store is part of Systems Manager
-- S3 isn't designed for configuration management
-- Config is for compliance tracking
+**解説:**
+- Config ルールはコンプライアンスを評価する
+- 自動修復は SSM オートメーションドキュメントを使用する
+- リソースが非準拠になった際に修復をトリガーできる
+- CloudWatch Events も機能するが、Config はコンプライアンス専用に構築されている
+- CloudTrail は変更を追跡するだけで修復しない
+- State Manager は EC2 設定を維持するもので S3 ではない
 
-**References:** Systems Manager Parameter Store, Secrets Management
+**参考:** AWS Config、自動修復、SSM オートメーション
 </details>
 
----
+***
 
-### Question 14
-A company has a multi-region application and needs to create a unified dashboard showing CloudWatch metrics from all regions. Is this possible?
+### 問題 13
+ソリューションアーキテクトが、EC2 インスタンスおよび Lambda 関数からアクセスできるデータベースパスワードなどの機密設定データを保存する必要があります。ソリューションは暗号化とバージョン履歴をサポートする必要があります。使用すべきサービスはどれですか？
 
-A. No, CloudWatch dashboards are region-specific only  
-B. Yes, CloudWatch dashboards support cross-region metrics  
-C. Yes, but only with CloudWatch Logs, not metrics  
-D. Yes, but requires CloudWatch Events to aggregate data  
+A. AWS Secrets Manager
+B. AWS Systems Manager Parameter Store
+C. バージョニングを有効にした Amazon S3
+D. AWS Config
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- CloudWatch dashboards support cross-region and cross-account views
-- Can add graphs from multiple regions to single dashboard
-- Global view of distributed applications
-- No additional aggregation service required
+**解説:**
+- Parameter Store は設定データとシークレットを安全に保存する
+- KMS による暗号化をサポートする
+- バージョン履歴を維持する
+- EC2、Lambda、CloudFormation と統合されている
+- Secrets Manager も有効だが高価 (自動ローテーションを含む)
+- 試験の文脈では、Parameter Store は Systems Manager の一部
+- S3 は構成管理用に設計されていない
+- Config はコンプライアンス追跡用
 
-**References:** CloudWatch Dashboards, Cross-Region Monitoring
+**参考:** Systems Manager Parameter Store、シークレット管理
 </details>
 
----
+***
 
-### Question 15
-An operations team needs to collect metadata about all EC2 instances including installed applications, OS details, and network configuration. Which Systems Manager feature should they use?
+### 問題 14
+ある企業がマルチリージョンアプリケーションを持っており、全リージョンの CloudWatch メトリクスを表示する統合ダッシュボードを作成する必要があります。これは可能ですか？
 
-A. Systems Manager Session Manager  
-B. Systems Manager Inventory  
-C. Systems Manager Patch Manager  
-D. Systems Manager Run Command  
+A. いいえ、CloudWatch ダッシュボードはリージョン固有のみ
+B. はい、CloudWatch ダッシュボードはクロスリージョンメトリクスをサポートする
+C. はい、ただし CloudWatch Logs のみで、メトリクスではない
+D. はい、ただしデータを集約するために CloudWatch Events が必要
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- Systems Manager Inventory collects metadata from managed instances
-- Gathers information about OS, applications, network config
-- Can query and visualize with Inventory dashboard
-- Session Manager is for shell access
-- Patch Manager is for patching
-- Run Command executes commands
+**解説:**
+- CloudWatch ダッシュボードはクロスリージョンおよびクロスアカウントのビューをサポートする
+- 複数のリージョンのグラフを単一のダッシュボードに追加できる
+- 分散アプリケーションのグローバルビューが可能
+- 追加の集約サービスは不要
 
-**References:** Systems Manager Inventory, Metadata Collection
+**参考:** CloudWatch ダッシュボード、クロスリージョンモニタリング
 </details>
 
----
+***
 
-### Question 16
-A company needs to ensure CloudTrail logs haven't been tampered with for compliance audits. Which feature should be enabled?
+### 問題 15
+運用チームが、インストール済みアプリケーション、OS の詳細、ネットワーク構成など、全 EC2 インスタンスに関するメタデータを収集する必要があります。使用すべき Systems Manager の機能はどれですか？
 
-A. CloudTrail Multi-Region Trails  
-B. CloudTrail Log File Integrity Validation  
-C. CloudTrail Insights  
-D. CloudTrail Data Events  
+A. Systems Manager Session Manager
+B. Systems Manager Inventory
+C. Systems Manager Patch Manager
+D. Systems Manager Run Command
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- Log File Integrity Validation uses digital signatures
-- Ensures logs haven't been modified after delivery
-- Required for compliance and forensic investigations
-- Multi-Region Trails enable logging across regions
-- Insights detect unusual activity
-- Data Events track resource operations
+**解説:**
+- Systems Manager Inventory はマネージドインスタンスからメタデータを収集する
+- OS、アプリケーション、ネットワーク構成に関する情報を収集する
+- Inventory ダッシュボードでクエリおよび可視化できる
+- Session Manager はシェルアクセス用
+- Patch Manager はパッチ適用用
+- Run Command はコマンドの実行用
 
-**References:** CloudTrail, Log Integrity, Compliance
+**参考:** Systems Manager Inventory、メタデータ収集
 </details>
 
----
+***
 
-### Question 17
-A solutions architect needs to process CloudWatch Logs in real-time and send filtered data to an analytics application. Which solution should be used?
+### 問題 16
+ある企業がコンプライアンス監査のために CloudTrail ログが改ざんされていないことを確保する必要があります。有効にすべき機能はどれですか？
 
-A. Export logs to S3 and use Athena  
-B. Use CloudWatch Logs Subscriptions with Kinesis Data Streams  
-C. Use CloudWatch Logs Insights with scheduled queries  
-D. Export logs to S3 and use Lambda  
+A. CloudTrail マルチリージョントレイル
+B. CloudTrail ログファイル整合性検証
+C. CloudTrail Insights
+D. CloudTrail データイベント
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: B**
 
-**Explanation:**
-- CloudWatch Logs Subscriptions enable real-time processing
-- Can send to Kinesis Data Streams for real-time analytics
-- Also supports Kinesis Data Firehose and Lambda
-- S3 export is not real-time (batch process)
-- Logs Insights is for ad-hoc queries, not streaming
+**解説:**
+- ログファイル整合性検証はデジタル署名を使用する
+- 配信後にログが変更されていないことを確認する
+- コンプライアンスおよびフォレンジック調査に必要
+- マルチリージョントレイルはリージョンをまたいでログを有効化する
+- Insights は異常なアクティビティを検出する
+- データイベントはリソースオペレーションを追跡する
 
-**References:** CloudWatch Logs Subscriptions, Real-Time Processing
+**参考:** CloudTrail、ログ整合性、コンプライアンス
 </details>
 
----
+***
 
-### Question 18
-A company wants to track when a specific IAM policy was attached to a role and view the complete configuration history. Which service provides this capability?
+### 問題 17
+ソリューションアーキテクトが CloudWatch Logs をリアルタイムで処理し、フィルタリングされたデータを分析アプリケーションに送信する必要があります。使用すべきソリューションはどれですか？
 
-A. AWS CloudTrail only  
-B. AWS Config only  
-C. Both CloudTrail and Config  
-D. IAM Access Analyzer  
+A. ログを S3 にエクスポートし、Athena を使用する
+B. Kinesis Data Streams を使用した CloudWatch Logs サブスクリプションを利用する
+C. スケジュールされたクエリを使用した CloudWatch Logs Insights を利用する
+D. ログを S3 にエクスポートし、Lambda を使用する
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: C**
+**答え: B**
 
-**Explanation:**
-- CloudTrail shows WHO attached the policy and WHEN (API call details)
-- Config shows configuration history and timeline of changes
-- Both services complement each other for complete visibility
-- CloudTrail: "Who did what, when"
-- Config: "What does it look like now and over time"
-- IAM Access Analyzer analyzes resource policies for external access
+**解説:**
+- CloudWatch Logs サブスクリプションはリアルタイム処理を可能にする
+- リアルタイム分析のために Kinesis Data Streams に送信できる
+- Kinesis Data Firehose および Lambda もサポートしている
+- S3 エクスポートはリアルタイムではない (バッチ処理)
+- Logs Insights はアドホッククエリ用であり、ストリーミング用ではない
 
-**References:** CloudTrail vs Config, Configuration History
+**参考:** CloudWatch Logs サブスクリプション、リアルタイム処理
 </details>
 
----
+***
 
-### Question 19
-An application needs to maintain a desired state on EC2 instances, ensuring specific software is always installed and running. Which Systems Manager feature should be used?
+### 問題 18
+ある企業が特定の IAM ポリシーがいつロールにアタッチされたかを追跡し、完全な構成履歴を表示したいと考えています。この機能を提供するサービスはどれですか？
 
-A. Systems Manager Run Command  
-B. Systems Manager State Manager  
-C. Systems Manager Automation  
-D. Systems Manager Patch Manager  
+A. AWS CloudTrail のみ
+B. AWS Config のみ
+C. CloudTrail と Config の両方
+D. IAM Access Analyzer
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: B**
+**答え: C**
 
-**Explanation:**
-- State Manager maintains desired state configuration
-- Creates associations between documents and instances
-- Continuously enforces configuration
-- Run Command executes one-time commands
-- Automation runs workflows
-- Patch Manager handles patching
+**解説:**
+- CloudTrail は誰がポリシーをアタッチしたか、いつ行ったかを示す (API 呼び出しの詳細)
+- Config は構成履歴と変更のタイムラインを示す
+- 両サービスは完全な可視性のために補完し合う
+- CloudTrail: 「誰が何をいつしたか」
+- Config: 「現在および過去にわたってどのような状態か」
+- IAM Access Analyzer は外部アクセスのためのリソースポリシーを分析する
 
-**References:** Systems Manager State Manager, Configuration Management
+**参考:** CloudTrail と Config の比較、構成履歴
 </details>
 
----
+***
 
-### Question 20
-A company needs to query 5 years of CloudTrail logs to investigate security incidents. What is the MOST efficient solution?
+### 問題 19
+あるアプリケーションが EC2 インスタンスの望ましい状態を維持し、特定のソフトウェアが常にインストールおよび実行されていることを確保する必要があります。使用すべき Systems Manager の機能はどれですか？
 
-A. Download all logs from S3 and use local tools  
-B. Use Amazon Athena to query CloudTrail logs in S3  
-C. Use CloudTrail Lake to query logs with SQL  
-D. Import logs into Elasticsearch  
+A. Systems Manager Run Command
+B. Systems Manager State Manager
+C. Systems Manager Automation
+D. Systems Manager Patch Manager
 
 <details>
-<summary>Show Answer</summary>
+<summary>答えを見る</summary>
 
-**Answer: C**
+**答え: B**
 
-**Explanation:**
-- CloudTrail Lake is purpose-built for querying CloudTrail logs
-- Uses SQL to query events
-- Can retain events for up to 7 years
-- Aggregates logs from multiple accounts/regions
-- Athena could work but CloudTrail Lake is optimized for this use case
-- Option A is inefficient and not scalable
-- Elasticsearch adds unnecessary complexity
+**解説:**
+- State Manager は望ましい状態の構成を維持する
+- ドキュメントとインスタンスの間のアソシエーションを作成する
+- 継続的に構成を適用し続ける
+- Run Command は一回限りのコマンドを実行する
+- Automation はワークフローを実行する
+- Patch Manager はパッチ適用を処理する
 
-**References:** CloudTrail Lake, Log Query and Analysis
+**参考:** Systems Manager State Manager、構成管理
 </details>
 
----
+***
 
-## Summary
+### 問題 20
+ある企業がセキュリティインシデントを調査するために 5 年分の CloudTrail ログをクエリする必要があります。最も効率的なソリューションはどれですか？
 
-### Key Concepts Tested:
-1. **CloudWatch**: Metrics, Logs, Alarms, Dashboards, Agent
-2. **CloudTrail**: API auditing, Who/What/When, Log integrity
-3. **AWS Config**: Configuration tracking, Compliance rules, Remediation
-4. **Systems Manager**: Session Manager, Patch Manager, Run Command, State Manager, Parameter Store, Inventory
-5. **Service Comparisons**: CloudTrail vs Config vs CloudWatch
+A. S3 から全ログをダウンロードし、ローカルツールを使用する
+B. Amazon Athena を使用して S3 の CloudTrail ログをクエリする
+C. SQL を使用して CloudTrail Lake でログをクエリする
+D. ログを Elasticsearch にインポートする
 
-### Exam Tips:
-- ✅ EC2 memory metrics require CloudWatch Agent
-- ✅ CloudTrail for "who made changes"
-- ✅ Config for "what does it look like"
-- ✅ Session Manager eliminates need for SSH keys and open ports
-- ✅ Metric filters create metrics from log data
-- ✅ Config Aggregator for multi-account/region compliance
-- ✅ CloudTrail Insights detects unusual API activity
-- ✅ Parameter Store for configuration and secrets management
+<details>
+<summary>答えを見る</summary>
 
+**答え: C**
+
+**解説:**
+- CloudTrail Lake は CloudTrail ログのクエリのために専用に構築されている
+- SQL を使用してイベントをクエリする
+- 最大 7 年間イベントを保持できる
+- 複数のアカウントおよびリージョンからログを集約する
+- Athena も機能するが、CloudTrail Lake はこのユースケースに最適化されている
+- A は非効率でスケーラブルではない
+- Elasticsearch は不必要な複雑さを加える
+
+**参考:** CloudTrail Lake、ログクエリと分析
+</details>
+
+***
+
+## まとめ
+
+### テストされる主要概念:
+1. **CloudWatch**: メトリクス、ログ、アラーム、ダッシュボード、エージェント
+2. **CloudTrail**: API 監査、誰が/何を/いつ、ログ整合性
+3. **AWS Config**: 構成追跡、コンプライアンスルール、修復
+4. **Systems Manager**: Session Manager、Patch Manager、Run Command、State Manager、Parameter Store、Inventory
+5. **サービス比較**: CloudTrail vs Config vs CloudWatch
+
+### 試験のヒント:
+- ✅ EC2 のメモリメトリクスには CloudWatch Agent が必要
+- ✅ 「誰が変更したか」には CloudTrail
+- ✅ 「どのような状態か」には Config
+- ✅ Session Manager は SSH キーとオープンポートの必要性を排除する
+- ✅ メトリクスフィルターはログデータからメトリクスを作成する
+- ✅ Config Aggregator はマルチアカウント/リージョンのコンプライアンス用
+- ✅ CloudTrail Insights は異常な API アクティビティを検出する
+- ✅ Parameter Store は設定とシークレット管理用
