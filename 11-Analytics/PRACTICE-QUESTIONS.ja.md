@@ -1,675 +1,578 @@
-# Analytics Services - Practice Questions
+# 分析サービス - 練習問題
 
-> **⚠️ DISCLAIMER:** These are **original practice questions** created for educational purposes based on AWS documentation. They are **NOT actual exam questions** from the AWS certification exam.
+> **⚠️ 免責事項:** これらはAWS公式ドキュメントをもとに学習目的で作成した**オリジナル問題**です。AWS認定試験の実問題ではありません。
 
-## Exam-Standard Questions (SAA-C03)
+## 試験レベル問題（SAA-C03）
 
 ---
 
-### Question 1
-A company stores application logs in Amazon S3 in CSV format. A data analyst needs to run ad-hoc SQL queries on this data without setting up infrastructure. Which AWS service should be used?
+### 問題 1
+企業はアプリケーションログをCSV形式でAmazon S3に保存しています。データアナリストは、インフラを構築せずにこのデータへアドホックにSQLクエリを実行したいと考えています。どのAWSサービスを使うべきですか？
 
-A. Amazon EMR  
-B. Amazon Athena  
-C. Amazon Redshift  
-D. AWS Glue  
+A. Amazon EMR
+B. Amazon Athena
+C. Amazon Redshift
+D. AWS Glue
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Athena is serverless and queries S3 data using SQL
-- No infrastructure to manage
-- Pay per query (per TB scanned)
-- Perfect for ad-hoc querying
-- EMR requires cluster management
-- Redshift requires data warehouse setup
-- Glue is for ETL, not querying
+**解説:**
+- Athenaはサーバーレスで、S3データにSQLクエリを実行できる
+- インフラ管理が不要
+- クエリ課金（TBスキャン単位）
+- アドホック分析に最適
+- EMRはクラスター管理が必要
+- RedshiftはDWH構築が必要
+- GlueはETL向け
 
-**References:** Amazon Athena, Serverless Analytics
+**参照:** Amazon Athena, Serverless Analytics
 </details>
 
 ---
 
-### Question 2
-A solutions architect wants to reduce the cost of Athena queries on a large dataset stored in S3. The data is currently in CSV format and queries scan the entire dataset. What should be done to optimize costs?
+### 問題 2
+ソリューションアーキテクトは、S3上の大規模データセットに対するAthenaクエリのコストを下げたいと考えています。現在データはCSV形式で、クエリはデータセット全体をスキャンしています。コスト最適化のために何をすべきですか？
 
-A. Increase the Athena query timeout  
-B. Convert data to Parquet format and partition by commonly queried fields  
-C. Move data to Amazon Redshift  
-D. Enable S3 versioning  
+A. Athenaのクエリタイムアウトを延長する
+B. データをParquet形式へ変換し、よく使う条件でパーティション化する
+C. データをAmazon Redshiftへ移行する
+D. S3バージョニングを有効化する
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Athena charges per TB scanned ($5/TB)
-- Parquet is columnar format, reduces data scanned by 30-90%
-- Partitioning limits data scanned to relevant partitions
-- Both optimizations significantly reduce costs
-- Increasing timeout doesn't reduce scanned data
-- Redshift adds infrastructure costs
-- S3 versioning doesn't affect query performance
+**解説:**
+- AthenaはTBスキャン課金（$5/TB）
+- Parquetは列指向で、スキャン量を30〜90%削減可能
+- パーティション化で必要なデータのみスキャン
+- この2つの最適化で大幅なコスト削減
+- タイムアウト変更ではスキャン量は減らない
+- Redshiftは別途インフラコストが増える
+- S3バージョニングはクエリ性能に無関係
 
-**References:** Athena Performance Optimization, Columnar Formats
+**参照:** Athena Performance Optimization, Columnar Formats
 </details>
 
 ---
 
-### Question 3
-A real-time analytics application needs to ingest clickstream data from a website, process it with custom business logic, and store results in DynamoDB. Which AWS service should be used for data ingestion?
+### 問題 3
+リアルタイム分析アプリケーションで、Webサイトのクリックストリームデータを取り込み、独自ロジックで処理し、結果をDynamoDBへ保存する必要があります。データ取り込みに使うべきサービスはどれですか？
 
-A. Amazon Kinesis Data Streams  
-B. Amazon Kinesis Data Firehose  
-C. Amazon SQS  
-D. AWS DataSync  
+A. Amazon Kinesis Data Streams
+B. Amazon Kinesis Data Firehose
+C. Amazon SQS
+D. AWS DataSync
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: A**
+**正解: A**
 
-**Explanation:**
-- Kinesis Data Streams is for real-time streaming with custom processing
-- Supports custom consumers (Lambda, EC2, KCL)
-- Real-time processing capability
-- Firehose is for loading data to destinations (S3, Redshift, etc.)
-- SQS is for message queuing, not streaming analytics
-- DataSync is for file transfers
+**解説:**
+- Kinesis Data Streamsはリアルタイムストリーミング＋カスタム処理向け
+- Lambda/EC2/KCLなどのカスタムコンシューマーに対応
+- Firehoseは送信先へのロード用途（S3/Redshift等）
+- SQSはキューであり、ストリーミング分析向けではない
+- DataSyncはファイル転送サービス
 
-**References:** Kinesis Data Streams, Real-Time Processing
+**参照:** Kinesis Data Streams, Real-Time Processing
 </details>
 
 ---
 
-### Question 4
-A company wants to load streaming IoT sensor data into Amazon S3 for analysis with minimal operational overhead. The data should be delivered every 5 minutes and compressed. Which service is MOST appropriate?
+### 問題 4
+企業は、ストリーミングされるIoTセンサーデータを運用負荷を最小化してAmazon S3に取り込み、分析したいと考えています。データは5分ごとに配信され、圧縮される必要があります。最も適切なサービスはどれですか？
 
-A. Amazon Kinesis Data Streams with Lambda  
-B. Amazon Kinesis Data Firehose  
-C. Amazon SQS with Lambda  
-D. AWS IoT Core with custom application  
+A. Amazon Kinesis Data Streams with Lambda
+B. Amazon Kinesis Data Firehose
+C. Amazon SQS with Lambda
+D. AWS IoT Core with custom application
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Kinesis Data Firehose is fully managed, no infrastructure
-- Automatically loads to S3
-- Built-in compression (GZIP, Snappy)
-- Buffer interval supports 60-900 seconds (5 minutes = 300 seconds)
-- Minimal operational overhead
-- Data Streams requires consumer application
-- SQS adds unnecessary complexity
-- Custom application requires maintenance
+**解説:**
+- Firehoseはフルマネージドでインフラ不要
+- S3へ自動配信
+- GZIP/Snappy等の圧縮を内蔵
+- バッファ間隔60〜900秒（5分=300秒に対応）
+- Data Streamsは別途コンシューマー実装が必要
+- SQSは不必要な複雑化
+- カスタム実装は保守負荷が高い
 
-**References:** Kinesis Data Firehose, Serverless Data Loading
+**参照:** Kinesis Data Firehose, Serverless Data Loading
 </details>
 
 ---
 
-### Question 5
-An Athena query is scanning 10 TB of data but only needs records from the last month. The S3 bucket structure is organized by year, month, and day. How can query performance and cost be improved?
+### 問題 5
+Athenaクエリが10TBをスキャンしていますが、必要なのは直近1か月のレコードのみです。S3バケットは年・月・日で整理されています。性能とコストを改善するにはどうすべきですか？
 
-A. Use S3 Select to filter data  
-B. Create a partitioned table in Athena and query specific partitions  
-C. Enable S3 Intelligent-Tiering  
-D. Use Athena workgroups  
+A. S3 Selectでデータを絞り込む
+B. Athenaでパーティションテーブルを作成し、対象パーティションのみをクエリする
+C. S3 Intelligent-Tieringを有効化する
+D. Athenaワークグループを使う
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Partitioning allows queries to scan only relevant data
-- WHERE clause with partition keys limits scan to specific partitions
-- Dramatically reduces data scanned and costs
-- Example: WHERE year='2024' AND month='01'
-- S3 Select reduces transfer but doesn't work with Athena
-- Intelligent-Tiering is for storage costs
-- Workgroups organize queries but don't optimize scans
+**解説:**
+- パーティション化で必要データのみスキャン可能
+- partition keyをWHEREで指定するとスキャン量を削減
+- 大幅なコスト/性能改善
+- S3 SelectはAthena最適化にはならない
+- Intelligent-Tieringは保存コスト最適化
+- ワークグループは整理/制御向けでスキャン最適化ではない
 
-**References:** Athena Partitioning, Query Optimization
+**参照:** Athena Partitioning, Query Optimization
 </details>
 
 ---
 
-### Question 6
-A company needs to process streaming data in real-time using SQL queries and send alerts when certain thresholds are exceeded. Which service should be used?
+### 問題 6
+企業はストリーミングデータをリアルタイムでSQL分析し、しきい値超過時にアラート送信したいと考えています。どのサービスを使うべきですか？
 
-A. Amazon Athena  
-B. Amazon Kinesis Data Analytics  
-C. Amazon Kinesis Data Firehose  
-D. AWS Glue  
+A. Amazon Athena
+B. Amazon Kinesis Data Analytics
+C. Amazon Kinesis Data Firehose
+D. AWS Glue
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Kinesis Data Analytics processes streaming data with SQL
-- Real-time analytics on streaming data
-- Can send results to Lambda for alerts
-- Athena queries static data in S3
-- Firehose loads data but doesn't analyze
-- Glue is for ETL jobs
+**解説:**
+- Kinesis Data Analyticsはストリームに対するSQL分析が可能
+- リアルタイム分析用途に最適
+- 結果をLambdaに連携してアラート可能
+- Athenaは静的データ分析
+- Firehoseは配信が主目的
+- GlueはETLジョブ向け
 
-**References:** Kinesis Data Analytics, Stream Processing
+**参照:** Kinesis Data Analytics, Stream Processing
 </details>
 
 ---
 
-### Question 7
-A data engineering team needs to run Apache Spark jobs to process large datasets. They want a managed service that handles infrastructure provisioning. Which service should they use?
+### 問題 7
+データエンジニアリングチームはApache Sparkジョブで大規模データ処理を行いたいと考えています。インフラ構築をマネージド化したい場合、どのサービスを使うべきですか？
 
-A. Amazon Athena  
-B. Amazon EMR  
-C. AWS Glue  
-D. Amazon Kinesis  
+A. Amazon Athena
+B. Amazon EMR
+C. AWS Glue
+D. Amazon Kinesis
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- EMR (Elastic MapReduce) is managed big data platform
-- Supports Apache Spark, Hadoop, Hive, etc.
-- Handles cluster provisioning and scaling
-- Optimized for large-scale data processing
-- Athena is for SQL queries, not Spark
-- Glue supports Spark but EMR provides more control
-- Kinesis is for streaming, not batch processing
+**解説:**
+- EMRはマネージドなビッグデータ基盤
+- Spark/Hadoop/Hive等をサポート
+- クラスター構築とスケーリングを管理
+- 大規模分散処理に最適
+- AthenaはSQLクエリ向け
+- GlueもSpark対応だがEMRの方が制御性が高い
+- Kinesisはストリーミング向け
 
-**References:** Amazon EMR, Big Data Processing
+**参照:** Amazon EMR, Big Data Processing
 </details>
 
 ---
 
-### Question 8
-A company has streaming data in Kinesis Data Streams and wants to load it into Amazon Redshift for analytics. What is the MOST operationally efficient solution?
+### 問題 8
+企業はKinesis Data StreamsのストリーミングデータをAmazon Redshiftへ取り込みたいと考えています。運用効率が最も高い方法はどれですか？
 
-A. Use Lambda to read from Kinesis and write to Redshift  
-B. Use Kinesis Data Firehose to load data into Redshift  
-C. Use EC2 instances with custom scripts  
-D. Use EMR to process and load data  
+A. LambdaでKinesisから読み取りRedshiftに書き込む
+B. Kinesis Data FirehoseでRedshiftへ配信する
+C. EC2でカスタムスクリプトを実行する
+D. EMRで処理してロードする
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Firehose can read from Data Streams and load to Redshift
-- Fully managed, no code required
-- Automatically scales
-- Loads via S3 (COPY command)
-- Lambda requires custom code and error handling
-- EC2 and EMR add operational overhead
+**解説:**
+- FirehoseはData StreamsからRedshiftへ配信可能
+- フルマネージドで実装負荷が低い
+- 自動スケーリング
+- S3経由でCOPYロード
+- Lambda/EC2/EMRは運用負荷が高い
 
-**References:** Kinesis Data Firehose, Redshift Integration
+**参照:** Kinesis Data Firehose, Redshift Integration
 </details>
 
 ---
 
-### Question 9
-An organization uses AWS Glue Crawlers to discover schemas for data in S3. The crawler should run automatically whenever new data arrives. How can this be configured?
+### 問題 9
+組織はAWS Glue CrawlerでS3データのスキーマ検出を行っています。新規データ到着時にCrawlerを自動実行したい場合、どう構成すべきですか？
 
-A. Manually run the crawler daily  
-B. Use EventBridge to trigger the crawler on S3 PutObject events  
-C. Use AWS Config to detect changes  
-D. Crawlers cannot be triggered automatically  
+A. 毎日手動実行する
+B. EventBridgeでS3 PutObjectイベントをトリガーにCrawlerを起動する
+C. AWS Configで変更を検出する
+D. Crawlerは自動トリガーできない
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- EventBridge (formerly CloudWatch Events) can trigger on S3 events
-- S3 PutObject events can invoke Glue Crawler
-- Automated schema discovery when new data arrives
-- Manual running isn't automatic
-- Config tracks configuration, doesn't trigger workflows
-- Glue supports multiple trigger types
+**解説:**
+- EventBridge（旧CloudWatch Events）でS3イベント連携可能
+- PutObjectイベントでCrawler実行
+- 新規データ到着時の自動スキーマ検出を実現
+- Configは設定監査向け
 
-**References:** AWS Glue, EventBridge Integration
+**参照:** AWS Glue, EventBridge Integration
 </details>
 
 ---
 
-### Question 10
-A Kinesis Data Stream has 4 shards. Producers are writing 5,000 records per second. What is the likely issue and solution?
+### 問題 10
+Kinesis Data Streamに4シャードあります。プロデューサーは毎秒5,000レコードを書き込んでいます。考えられる問題と解決策は？
 
-A. Shards are over capacity; add more shards  
-B. Retention period is too short; increase it  
-C. No issue, this is within limits  
-D. Use Kinesis Data Firehose instead  
+A. シャード容量超過。シャード数を増やす
+B. 保持期間が短すぎる。延長する
+C. 問題なし。制限内
+D. Kinesis Data Firehoseへ切り替える
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: A**
+**正解: A**
 
-**Explanation:**
-- Each shard supports 1,000 records/sec write capacity
-- 4 shards = 4,000 records/sec capacity
-- 5,000 records/sec exceeds capacity
-- Need at least 5 shards (or use on-demand mode)
-- Will receive ProvisionedThroughputExceededException
-- Retention doesn't affect write capacity
-- Firehose is for different use cases
+**解説:**
+- 1シャードあたり書き込みは1,000レコード/秒
+- 4シャード = 4,000レコード/秒
+- 5,000レコード/秒は超過
+- 最低5シャード（またはオンデマンド）へ拡張が必要
+- ProvisionedThroughputExceededExceptionが発生しうる
+- 保持期間は書き込み容量に影響しない
 
-**Calculation:** 4 shards × 1,000 records/sec = 4,000 records/sec < 5,000 needed
+**計算:** 4 shards × 1,000 records/sec = 4,000 records/sec < 5,000 needed
 
-**References:** Kinesis Data Streams, Shard Capacity
+**参照:** Kinesis Data Streams, Shard Capacity
 </details>
 
 ---
 
-### Question 11
-A company wants to visualize data from multiple sources including S3, RDS, and Redshift. They need interactive dashboards for business users. Which AWS service should be used?
+### 問題 11
+企業はS3、RDS、Redshiftなど複数ソースのデータを可視化し、業務ユーザー向けに対話型ダッシュボードを提供したいと考えています。どのAWSサービスを使うべきですか？
 
-A. Amazon Athena  
-B. Amazon QuickSight  
-C. Amazon CloudWatch  
-D. Amazon Kinesis Data Analytics  
+A. Amazon Athena
+B. Amazon QuickSight
+C. Amazon CloudWatch
+D. Amazon Kinesis Data Analytics
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- QuickSight is business intelligence and visualization service
-- Connects to multiple data sources (S3, RDS, Redshift, etc.)
-- Creates interactive dashboards
-- SPICE engine for fast analytics
-- Athena queries data but doesn't visualize
-- CloudWatch monitors infrastructure
-- Kinesis analyzes streaming data
+**解説:**
+- QuickSightはBI/可視化サービス
+- S3、RDS、Redshiftなど多様なデータソース接続
+- 対話型ダッシュボードを作成可能
+- SPICEで高速分析
 
-**References:** Amazon QuickSight, Business Intelligence
+**参照:** Amazon QuickSight, Business Intelligence
 </details>
 
 ---
 
-### Question 12
-A solutions architect needs to ensure data in Kinesis Data Streams is retained for 7 days for reprocessing. What should be configured?
+### 問題 12
+ソリューションアーキテクトは、Kinesis Data Streamsのデータを再処理のために7日間保持したいと考えています。何を設定すべきですか？
 
-A. Set retention period to 168 hours (7 days)  
-B. Use Kinesis Data Firehose with 7-day buffer  
-C. Enable extended data retention in S3  
-D. Kinesis cannot retain data beyond 24 hours  
+A. 保持期間を168時間（7日）に設定する
+B. Kinesis Data Firehoseで7日バッファを設定する
+C. S3で拡張保持を有効化する
+D. Kinesisは24時間以上保持できない
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: A**
+**正解: A**
 
-**Explanation:**
-- Kinesis Data Streams supports retention from 24 hours to 365 days
-- Default is 24 hours
-- Extended retention has additional cost
-- 7 days = 168 hours
-- Firehose doesn't have 7-day buffer option
-- S3 is separate storage, not Kinesis retention
-- Extended retention is a supported feature
+**解説:**
+- Kinesis Data Streamsは24時間〜365日で保持可能
+- 既定は24時間
+- 延長保持は追加料金あり
+- 7日=168時間
 
-**References:** Kinesis Data Streams, Data Retention
+**参照:** Kinesis Data Streams, Data Retention
 </details>
 
 ---
 
-### Question 13
-An ETL pipeline needs to transform data from multiple sources, catalog the metadata, and run the jobs on a schedule. Which AWS service provides this functionality?
+### 問題 13
+ETLパイプラインで複数ソースのデータ変換、メタデータ管理、定期実行が必要です。これらを提供するサービスはどれですか？
 
-A. Amazon EMR  
-B. AWS Glue  
-C. AWS Data Pipeline  
-D. Amazon Athena  
+A. Amazon EMR
+B. AWS Glue
+C. AWS Data Pipeline
+D. Amazon Athena
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- AWS Glue is fully managed ETL service
-- Glue Data Catalog stores metadata
-- Glue Crawlers discover schemas
-- Glue Jobs perform transformations
-- Supports scheduling
-- EMR requires more management
-- Data Pipeline is older service
-- Athena queries, doesn't transform
+**解説:**
+- GlueはフルマネージドETL
+- Glue Data Catalogでメタデータ管理
+- Glue Crawlersでスキーマ検出
+- Glue Jobsで変換処理
+- スケジュール実行に対応
 
-**References:** AWS Glue, ETL Pipeline
+**参照:** AWS Glue, ETL Pipeline
 </details>
 
 ---
 
-### Question 14
-A company collects application logs in CloudWatch Logs and wants to analyze them using SQL queries. What is the MOST cost-effective solution?
+### 問題 14
+企業はCloudWatch Logsにアプリログを収集しています。これをSQLで分析したい場合、最もコスト効率の良い方法はどれですか？
 
-A. Keep logs in CloudWatch and use Logs Insights  
-B. Export logs to S3 and query with Athena  
-C. Stream logs to Kinesis and use Data Analytics  
-D. Load logs into Redshift  
+A. CloudWatchに保持しLogs Insightsを使う
+B. S3へエクスポートしてAthenaでクエリする
+C. Kinesisへ流してData Analyticsを使う
+D. Redshiftへロードする
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- CloudWatch Logs storage is expensive for long-term retention
-- Export to S3 significantly reduces storage costs
-- Athena queries S3 data with SQL ($5/TB scanned)
-- Most cost-effective for infrequent analysis
-- Logs Insights is good for recent logs
-- Kinesis adds streaming costs
-- Redshift requires cluster costs
+**解説:**
+- 長期保管はCloudWatch LogsよりS3が安い
+- S3 + AthenaでSQL分析可能（$5/TBスキャン）
+- 低頻度分析では特に費用対効果が高い
+- Logs Insightsは直近調査向け
 
-**References:** CloudWatch Logs Export, Athena Cost Optimization
+**参照:** CloudWatch Logs Export, Athena Cost Optimization
 </details>
 
 ---
 
-### Question 15
-A Kinesis Data Firehose delivery stream should transform incoming JSON data using a Lambda function before storing in S3. How is this configured?
+### 問題 15
+Kinesis Data Firehose配信ストリームで、受信JSONをLambdaで変換してからS3に保存したい。どう設定しますか？
 
-A. Firehose doesn't support transformations  
-B. Enable data transformation and specify the Lambda function ARN  
-C. Use Kinesis Data Analytics for transformation  
-D. Transform data before sending to Firehose  
+A. Firehoseは変換に対応していない
+B. データ変換を有効化し、LambdaのARNを指定する
+C. Kinesis Data Analyticsで変換する
+D. Firehose送信前に必ず変換する
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Kinesis Data Firehose supports Lambda transformation
-- Configure transformation in delivery stream settings
-- Firehose invokes Lambda for each batch
-- Lambda can modify, filter, or enrich data
-- Built-in feature, no separate service needed
-- Transforming before Firehose is possible but not optimal
+**解説:**
+- FirehoseはLambda変換をネイティブサポート
+- 配信設定で変換Lambdaを指定
+- バッチごとにLambdaを呼び出し可能
+- 追加サービスなしで実装できる
 
-**References:** Kinesis Data Firehose, Data Transformation
+**参照:** Kinesis Data Firehose, Data Transformation
 </details>
 
 ---
 
-### Question 16
-An analytics application queries data in S3 using Athena. The queries are running slowly despite optimizations. The data is already in Parquet format and partitioned. What else can improve performance?
+### 問題 16
+AthenaでS3データを分析しています。Parquet化・パーティション化済みなのにクエリが遅い場合、さらに有効な改善策はどれですか？
 
-A. Optimize file sizes to 128 MB - 1 GB per file  
-B. Switch to CSV format  
-C. Disable partitioning  
-D. Use smaller file sizes (1-10 MB)  
+A. ファイルサイズを128MB〜1GB程度に最適化する
+B. CSV形式へ戻す
+C. パーティションを無効化する
+D. 1〜10MBの小さいファイルに分割する
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: A**
+**正解: A**
 
-**Explanation:**
-- Too many small files causes performance issues
-- Optimal file size is 128 MB - 1 GB
-- Athena opens each file, many small files = overhead
-- Combine small files into larger ones
-- CSV is less efficient than Parquet
-- Partitioning improves performance
-- Very small files slow down queries
+**解説:**
+- 小さすぎるファイルが多いとオーバーヘッドが増える
+- 128MB〜1GBが一般的な推奨サイズ
+- Parquet継続＋適正ファイルサイズが有効
 
-**References:** Athena Performance, File Size Optimization
+**参照:** Athena Performance, File Size Optimization
 </details>
 
 ---
 
-### Question 17
-A company uses Athena with a Glue Data Catalog. They want to ensure different teams can only query their own datasets. How should access be controlled?
+### 問題 17
+AthenaとGlue Data Catalogを利用しています。チームごとに自分のデータセットのみクエリ可能にしたい場合、どのようにアクセス制御すべきですか？
 
-A. Use S3 bucket policies  
-B. Use IAM policies with Glue Catalog permissions  
-C. Create separate AWS accounts  
-D. Use Athena workgroups only  
+A. S3バケットポリシーのみを使う
+B. Glue Catalog権限を含むIAMポリシーで制御する
+C. チームごとにAWSアカウントを分ける
+D. Athenaワークグループのみを使う
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- IAM policies control access to Glue Catalog databases and tables
-- Fine-grained permissions per team
-- Can combine with S3 bucket policies
-- Separate accounts is overly complex
-- Workgroups organize queries but don't enforce data access
-- Glue Catalog permissions are the primary control
+**解説:**
+- Glue CatalogのDB/テーブル権限をIAMで細かく制御可能
+- 必要に応じてS3ポリシーと併用
+- ワークグループは整理・コスト制御向け
 
-**References:** Athena Security, Glue Catalog Permissions
+**参照:** Athena Security, Glue Catalog Permissions
 </details>
 
 ---
 
-### Question 18
-A real-time application needs guaranteed ordering of events for each user. Events should be processed in the order they arrive per user. Which Kinesis feature ensures this?
+### 問題 18
+リアルタイムアプリで、ユーザーごとのイベント順序保証が必要です。ユーザー単位で到着順に処理するには、Kinesisのどの機能を使いますか？
 
-A. Use the same shard for all records  
-B. Use the user ID as the partition key  
-C. Enable Kinesis enhanced fan-out  
-D. Use multiple shards with round-robin distribution  
+A. すべてのレコードを同一シャードへ送る
+B. ユーザーIDをパーティションキーに使う
+C. Enhanced fan-outを有効化する
+D. 複数シャードへラウンドロビン送信する
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Partition key determines which shard receives the record
-- Same partition key always goes to the same shard
-- Records in a shard are ordered by sequence number
-- Using user ID ensures all user events go to same shard (ordered)
-- One shard doesn't scale
-- Enhanced fan-out is for parallel consumers
-- Round-robin breaks ordering
+**解説:**
+- パーティションキーが送信先シャードを決める
+- 同一キーは同一シャードに送られる
+- シャード内はシーケンス番号で順序保証
+- ユーザーIDをキーにすればユーザー単位で順序が保てる
 
-**References:** Kinesis Data Streams, Ordering Guarantees
+**参照:** Kinesis Data Streams, Ordering Guarantees
 </details>
 
 ---
 
-### Question 19
-A company needs to load VPC Flow Logs into Amazon S3 for analysis with Athena. The solution should be fully managed with minimal setup. What should be configured?
+### 問題 19
+企業はVPC Flow LogsをAmazon S3に取り込み、Athenaで分析したいと考えています。最小構成でフルマネージドにするには何を設定すべきですか？
 
-A. Use Kinesis Data Streams with Lambda  
-B. Use Kinesis Data Firehose as the Flow Logs destination  
-C. Use CloudWatch Logs with manual export  
-D. Use custom EC2 instances to collect logs  
+A. Kinesis Data Streams + Lambdaを使う
+B. Flow Logsの送信先にKinesis Data Firehoseを設定する
+C. CloudWatch Logsから手動エクスポートする
+D. EC2でカスタム収集する
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- VPC Flow Logs can deliver directly to Kinesis Data Firehose
-- Firehose automatically loads to S3
-- Fully managed, no code required
-- Can compress and partition data
-- Manual export isn't automated
-- Data Streams requires consumer application
-- EC2 instances add operational overhead
+**解説:**
+- VPC Flow LogsはFirehoseへ直接配信可能
+- FirehoseがS3へ自動配信
+- フルマネージドでコード不要
+- 圧縮やパーティション設定も可能
 
-**References:** VPC Flow Logs, Kinesis Data Firehose
+**参照:** VPC Flow Logs, Kinesis Data Firehose
 </details>
 
 ---
 
-### Question 20
-An Athena workgroup is configured with a data usage control of 1 TB per day. A user's query would scan 1.5 TB of data. What happens?
+### 問題 20
+Athenaワークグループで「1日あたり1TB」のデータ使用制限を設定しています。ユーザーのクエリが1.5TBをスキャンする場合、どうなりますか？
 
-A. The query runs and scans 1.5 TB  
-B. The query is rejected  
-C. The query runs but only scans 1 TB  
-D. The user receives a warning but query proceeds  
+A. クエリは実行され1.5TBをスキャンする
+B. クエリは拒否される
+C. クエリは実行され1TBだけスキャンする
+D. 警告のみ表示され実行は継続する
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: B**
+**正解: B**
 
-**Explanation:**
-- Workgroup data usage controls enforce limits
-- Queries exceeding the limit are rejected
-- Prevents cost overruns
-- User must optimize query or request limit increase
-- Query doesn't partially execute
-- Hard enforcement, not just a warning
+**解説:**
+- ワークグループの使用量制限は強制適用される
+- 制限超過クエリは拒否
+- コスト超過防止に有効
 
-**References:** Athena Workgroups, Cost Controls
+**参照:** Athena Workgroups, Cost Controls
 </details>
 
 ---
 
-### Question 21
-A financial services company needs to securely share curated, third-party financial datasets with its data analysts on AWS. The solution must support subscription-based access and automate dataset updates. Which AWS service should be used?
+### 問題 21
+金融系企業が、外部の金融データセットを社内アナリストへ安全に共有したいと考えています。サブスクリプション形式で提供され、データ更新が自動反映される必要があります。どのAWSサービスが適切ですか？
 
-A. AWS Data Exchange  
-B. Amazon S3  
-C. AWS Glue Data Catalog  
-D. Amazon Redshift Data Sharing  
+A. AWS Data Exchange
+B. Amazon S3
+C. AWS Glue Data Catalog
+D. Amazon Redshift Data Sharing
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: A**
+**正解: A**
 
-**Explanation:**
-- AWS Data Exchange enables secure, subscription-based access to third-party datasets
-- Automates dataset updates and notifications
-- Integrates with S3, Redshift, and Lake Formation
-- S3 is storage, not a data marketplace
-- Glue Data Catalog is for metadata, not data sharing
-- Redshift Data Sharing is for sharing data between Redshift clusters
+**解説:**
+- AWS Data Exchangeは外部データの安全なサブスク配布に対応
+- データ更新通知・自動更新に対応
+- S3/Redshift/Lake Formationとも連携可能
 
-**References:** AWS Data Exchange, Data Sharing
+**参照:** AWS Data Exchange, Data Sharing
 </details>
 
 ---
 
-### Question 22
-A healthcare company wants to build a secure data lake on AWS to store and analyze sensitive patient data. They need fine-grained access control, data cataloging, and integration with analytics services. Which service should be used to manage permissions and data cataloging?
+### 問題 22
+医療系企業が機微な患者データを保存・分析するため、AWSでセキュアなデータレイクを構築したいと考えています。行/列レベル権限、データカタログ、分析サービス連携が必要です。権限管理とデータカタログ統合に最も適したサービスはどれですか？
 
-A. AWS Lake Formation  
-B. Amazon S3  
-C. AWS Glue  
-D. Amazon Athena  
+A. AWS Lake Formation
+B. Amazon S3
+C. AWS Glue
+D. Amazon Athena
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: A**
+**正解: A**
 
-**Explanation:**
-- Lake Formation provides fine-grained access control for data lakes
-- Manages permissions at table, column, and row level
-- Integrates with Glue Data Catalog and analytics services (Athena, Redshift, EMR)
-- S3 is storage, not access management
-- Glue is for ETL and cataloging, but Lake Formation extends Glue with security
-- Athena is for querying, not access management
+**解説:**
+- Lake Formationはデータレイク向けのきめ細かいアクセス制御を提供
+- テーブル/列/行レベルで権限設定可能
+- Glue Data CatalogやAthena/Redshift/EMRと統合
+- S3は保存基盤であり権限統制の中核ではない
 
-**References:** AWS Lake Formation, Data Lake Security
+**参照:** AWS Lake Formation, Data Lake Security
 </details>
 
 ---
 
-### Question 23
-A media company needs to search, visualize, and analyze large volumes of log and event data in near real-time. Which AWS service is best suited for this use case?
+### 問題 23
+メディア企業が大量のログ/イベントデータをほぼリアルタイムで検索・可視化・分析したいと考えています。最適なAWSサービスはどれですか？
 
-A. Amazon OpenSearch Service  
-B. Amazon Athena  
-C. Amazon Redshift  
-D. AWS Glue  
-
-<details>
-<summary>Show Answer</summary>
-
-**Answer: A**
-
-**Explanation:**
-- OpenSearch Service (formerly Elasticsearch) is designed for log analytics, search, and visualization
-- Provides near real-time indexing and querying
-- Integrates with Kibana for dashboards
-- Athena is for ad-hoc SQL queries, not real-time search
-- Redshift is for data warehousing
-- Glue is for ETL, not search/visualization
-
-**References:** Amazon OpenSearch Service, Log Analytics
-</details>
-
----
-
-### Question 24
-A data engineering team needs to ingest streaming data from Apache Kafka into AWS for analytics and storage. Which AWS service provides a fully managed, highly available Kafka environment?
-
-A. Amazon MSK  
-B. Amazon Kinesis Data Streams  
-C. Amazon SQS  
-D. AWS Glue Streaming  
+A. Amazon OpenSearch Service
+B. Amazon Athena
+C. Amazon Redshift
+D. AWS Glue
 
 <details>
-<summary>Show Answer</summary>
+<summary>回答を表示</summary>
 
-**Answer: A**
+**正解: A**
 
-**Explanation:**
-- Amazon MSK (Managed Streaming for Apache Kafka) provides a fully managed Kafka service
-- Handles provisioning, patching, and scaling
-- Integrates with Kinesis, Lambda, S3, Redshift
-- Kinesis is a separate streaming service, not Kafka-compatible
-- SQS is for message queuing, not streaming
-- Glue Streaming is for ETL, not Kafka management
+**解説:**
+- OpenSearchはログ分析、検索、可視化向け
+- 近リアルタイムのインデックス/クエリに適する
+- ダッシュボード（Kibana/OpenSearch Dashboards）と連携
+- AthenaはアドホックSQL向け
+- RedshiftはDWH用途
+- GlueはETL用途
 
-**References:** Amazon MSK, Streaming Data
+**参照:** Amazon OpenSearch Service, Log Analytics
 </details>
-
----
-
-## Summary
-
-### Key Concepts Tested:
-1. **Amazon Athena**: Serverless SQL queries on S3, performance optimization, partitioning
-2. **Kinesis Data Streams**: Real-time streaming, shard capacity, ordering, retention
-3. **Kinesis Data Firehose**: Managed data loading, transformations, destinations
-4. **Kinesis Data Analytics**: Real-time SQL analytics on streams
-5. **Amazon EMR**: Managed big data processing, Spark/Hadoop
-6. **AWS Glue**: ETL, Data Catalog, Crawlers
-7. **Amazon QuickSight**: Business intelligence and visualization
-8. **AWS Data Exchange**: Secure data sharing, subscription-based access
-9. **AWS Lake Formation**: Data lake security, access control, data cataloging
-10. **Amazon OpenSearch Service**: Log analytics, search, and visualization
-11. **Amazon MSK**: Managed Apache Kafka service
-
-### Exam Tips:
-- ✅ Athena charges $5 per TB scanned - optimize with Parquet and partitions
-- ✅ Each Kinesis shard: 1 MB/s or 1,000 records/s write, 2 MB/s read
-- ✅ Use Firehose for simple loading to S3/Redshift/OpenSearch
-- ✅ Use Data Streams for custom processing with ordering guarantees
-- ✅ Partition key determines shard (same key = same shard = ordering)
-- ✅ Glue Crawlers automatically discover schemas
-- ✅ EMR for Apache Spark/Hadoop workloads
-- ✅ QuickSight for dashboards and BI
-- ✅ Parquet/ORC formats reduce costs 30-90% vs CSV/JSON
-

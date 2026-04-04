@@ -1,419 +1,419 @@
-# ⚡ Fast Learning - Analytics Services
+# ⚡ Fast Learning - 分析サービス
 
-> **Time to Complete**: 45-60 minutes | **Exam Weight**: ~8-12%
+> **完了時間**: 45〜60分 | **試験配点**: 約8〜12%
 
-## 🎯 Must-Know Concepts (5 Minutes)
+## 🎯 必須コンセプト（5分）
 
-### Analytics Service Selector (AREKGLQ)
+### 分析サービス選択（AREKGLQ）
 ```
-QUERY S3 DATA? → Athena (serverless SQL)
-DATA WAREHOUSE? → Redshift (petabyte-scale)
-ETL? → Glue (serverless ETL)
-ELASTICSEARCH? → OpenSearch (search & analytics)
-BIG DATA? → EMR (Hadoop, Spark)
-REAL-TIME? → Kinesis (streaming analytics)
-LAKE? → Lake Formation (data lake)
-QUICK VIZ? → QuickSight (BI dashboards)
+S3データをクエリ？ → Athena（サーバーレスSQL）
+データウェアハウス？ → Redshift（ペタバイト級）
+ETL？ → Glue（サーバーレスETL）
+Elasticsearch系？ → OpenSearch（検索・分析）
+ビッグデータ？ → EMR（Hadoop, Spark）
+リアルタイム？ → Kinesis（ストリーミング分析）
+データレイク？ → Lake Formation（データレイク）
+可視化を素早く？ → QuickSight（BIダッシュボード）
 ```
 
-**Memory Aid**: "Athena Asks, Redshift Reduces, EMR Executes, Kinesis Keeps streaming, Glue Glues, Lake Lakes, QuickSight Shows"
+**暗記フレーズ**: 「Athenaで聞く、Redshiftで集約、EMRで実行、Kinesisで流す、Glueでつなぐ、Lakeで守る、QuickSightで見せる」
 
-## 📊 Quick Reference Tables
+## 📊 クイック比較表
 
-### Analytics Services Matrix
-| Service | Type | Use Case | Query Language | Serverless |
-|---------|------|----------|----------------|------------|
-| **Athena** | Interactive query | Ad-hoc SQL on S3 | SQL | ✅ |
-| **Redshift** | Data warehouse | OLAP, BI | SQL | ❌ |
-| **EMR** | Big data framework | Hadoop/Spark jobs | Various | ❌ |
-| **Glue** | ETL | Data transformation | Python/Scala | ✅ |
-| **OpenSearch** | Search engine | Search, log analytics | Query DSL | ❌ |
-| **QuickSight** | BI tool | Dashboards, visualizations | N/A | ✅ |
+### 分析サービス早見表
+| サービス | 種別 | 主な用途 | クエリ言語 | サーバーレス |
+|---------|------|----------|-----------|-------------|
+| **Athena** | 対話型クエリ | S3へのアドホックSQL | SQL | ✅ |
+| **Redshift** | DWH | OLAP/BI | SQL | ❌ |
+| **EMR** | ビッグデータ基盤 | Hadoop/Spark処理 | 各種 | ❌ |
+| **Glue** | ETL | データ変換 | Python/Scala | ✅ |
+| **OpenSearch** | 検索エンジン | 検索/ログ分析 | Query DSL | ❌ |
+| **QuickSight** | BIツール | ダッシュボード可視化 | N/A | ✅ |
 
 ### Redshift vs Athena vs RDS
-| Feature | Redshift | Athena | RDS |
-|---------|----------|--------|-----|
-| **Purpose** | Data warehouse (OLAP) | Query S3 | Transactional (OLTP) |
-| **Performance** | Very fast | Fast | Fast |
-| **Scale** | Petabytes | Exabytes | Terabytes |
-| **Cost** | $$$ (provisioned) | $ (pay per query) | $$ |
-| **Loading** | Load data first | Query in place | N/A |
-| **Query** | SQL | SQL | SQL |
+| 項目 | Redshift | Athena | RDS |
+|------|----------|--------|-----|
+| **目的** | データウェアハウス（OLAP） | S3クエリ | トランザクション（OLTP） |
+| **性能** | 非常に高速 | 高速 | 高速 |
+| **スケール** | ペタバイト | エクサバイト | テラバイト |
+| **コスト** | $$$（プロビジョンド） | $（クエリ課金） | $$ |
+| **事前ロード** | 必要 | 不要（その場クエリ） | N/A |
+| **クエリ** | SQL | SQL | SQL |
 
-## 🔥 Exam Hot Topics
+## 🔥 試験頻出トピック
 
 ### 1. Amazon Athena
 ```
-WHAT: Serverless SQL queries on S3
-PRICING: $5 per TB scanned
-FORMAT: Parquet, ORC, JSON, CSV, Avro
+概要: S3に対するサーバーレスSQL
+料金: スキャンしたTBあたり$5
+形式: Parquet, ORC, JSON, CSV, Avro
 
-KEY FEATURES:
-├── No infrastructure
-├── Pay per query (TB scanned)
-├── Integrates with Glue Data Catalog
-├── JDBC/ODBC drivers
-├── Supports partitioning
-└── Can query VPC Flow Logs, CloudTrail, ALB logs
+主要機能:
+├── インフラ管理不要
+├── クエリごとの従量課金（TBスキャン）
+├── Glue Data Catalog連携
+├── JDBC/ODBCドライバ対応
+├── パーティション対応
+└── VPC Flow Logs, CloudTrail, ALBログを直接分析可能
 
-OPTIMIZATION:
-├── Use columnar formats (Parquet, ORC) - 90% cheaper
-├── Compress data (GZIP, Snappy)
-├── Partition data (by date, region, etc.)
-├── Use larger files (> 128 MB)
-└── Limit columns selected (not SELECT *)
+最適化:
+├── 列指向形式（Parquet/ORC）を使う（最大90%安く）
+├── 圧縮（GZIP, Snappy）
+├── パーティション（日時/リージョン等）
+├── 1ファイルを大きめに（128MB超）
+└── 必要列のみ取得（SELECT *を避ける）
 
-COMMON PATTERN:
+代表パターン:
 S3 → Glue Crawler → Glue Catalog → Athena → QuickSight
 ```
 
-**Exam Tip**: Athena charges by TB scanned, so compression & columnar format = huge savings
+**試験のコツ**: Athenaはスキャン量課金。圧縮＋列指向で大幅節約。
 
 ### 2. Amazon Redshift
 ```
-ARCHITECTURE:
-├── Leader Node (query planning, aggregation)
-└── Compute Nodes (query execution, data storage)
+アーキテクチャ:
+├── Leader Node（クエリ計画/集約）
+└── Compute Nodes（実行/保存）
 
-NODE TYPES:
-├── Dense Compute (dc2): Compute-intensive
-└── Dense Storage (ds2): Storage-heavy
+ノードタイプ:
+├── Dense Compute（dc2）: 計算重視
+└── Dense Storage（ds2）: 容量重視
 
-KEY FEATURES:
-├── Columnar storage (OLAP optimized)
-├── Massively Parallel Processing (MPP)
-├── Automatic compression
-├── Snapshot to S3 (incremental)
+主要機能:
+├── 列指向ストレージ（OLAP向け）
+├── MPP（超並列処理）
+├── 自動圧縮
+├── S3へのスナップショット（増分）
 ├── Enhanced VPC Routing
-├── Redshift Spectrum (query S3)
-└── Concurrency Scaling (auto)
+├── Redshift Spectrum（S3を直接クエリ）
+└── Concurrency Scaling（自動拡張）
 
-REDSHIFT SPECTRUM:
-├── Query S3 directly without loading
-├── Use existing Redshift cluster
-├── Scales independently
-└── Charged by TB scanned
+Redshift Spectrum:
+├── ロードなしでS3を直接クエリ
+├── 既存Redshiftクラスターを利用
+├── 独立してスケール
+└── TBスキャン課金
 
-DISASTER RECOVERY:
-├── Snapshots stored in S3 (11 9's durability)
-├── Automated snapshots (retention 1-35 days)
-├── Manual snapshots (until deleted)
-└── Can copy to another region
+災害対策:
+├── スナップショットはS3保存（耐久性11ナイン）
+├── 自動スナップショット（保持1〜35日）
+├── 手動スナップショット（削除まで保持）
+└── 別リージョンコピー可能
 ```
 
 ### 3. AWS Glue
 ```
-COMPONENTS:
-├── Glue Crawler: Discovers schema
-├── Glue Catalog: Metadata repository
-├── Glue ETL: Transform data
-└── Glue Jobs: Scheduled or triggered
+構成要素:
+├── Glue Crawler: スキーマ検出
+├── Glue Catalog: メタデータ管理
+├── Glue ETL: 変換処理
+└── Glue Jobs: 定期/トリガー実行
 
-ETL PROCESS:
-1. Crawl source data → Populate catalog
-2. Define transformation (Python/Scala)
-3. Run job (transform data)
-4. Load to target (S3, Redshift, etc.)
+ETL手順:
+1. ソースをクロール → Catalog登録
+2. 変換ロジック定義（Python/Scala）
+3. ジョブ実行（変換）
+4. ターゲットへロード（S3/Redshift等）
 
-TRIGGERS:
-├── Scheduled (cron)
-├── On-demand
-└── Event-driven (JobRun completion)
+トリガー:
+├── スケジュール（cron）
+├── オンデマンド
+└── イベント駆動（JobRun完了など）
 
-FEATURES:
-├── Serverless (auto-scaling)
-├── Pay per second (job run time)
-├── Data Catalog (shared metadata)
-├── Supports Spark & Python
-└── BookmarkMemory (tracks processed data)
+機能:
+├── サーバーレス（自動スケール）
+├── 秒課金
+├── Data Catalog（共有メタデータ）
+├── Spark/Python対応
+└── Bookmark機能（処理済み追跡）
 ```
 
-### 4. Amazon EMR (Elastic MapReduce)
+### 4. Amazon EMR（Elastic MapReduce）
 ```
-WHAT: Managed Hadoop framework
+概要: マネージドHadoop基盤
 
-FRAMEWORKS SUPPORTED:
-├── Hadoop (MapReduce)
-├── Spark (in-memory)
-├── HBase (NoSQL)
-├── Presto (interactive queries)
-├── Flink (stream processing)
-├── Hive (SQL on Hadoop)
-└── 20+ more
+対応フレームワーク:
+├── Hadoop（MapReduce）
+├── Spark（インメモリ）
+├── HBase（NoSQL）
+├── Presto（対話型クエリ）
+├── Flink（ストリーム処理）
+├── Hive（Hadoop上SQL）
+└── 20種類以上
 
-CLUSTER TYPES:
-├── Transient (temporary, cost-effective)
-└── Long-running (persistent)
+クラスター種別:
+├── Transient（一時利用・低コスト）
+└── Long-running（恒常運用）
 
-NODE TYPES:
-├── Master Node (manage cluster)
-├── Core Nodes (run tasks, HDFS storage)
-└── Task Nodes (run tasks only, no storage)
+ノード種別:
+├── Master Node（管理）
+├── Core Nodes（実行＋HDFS保存）
+└── Task Nodes（実行のみ）
 
-STORAGE OPTIONS:
-├── HDFS (on cluster)
-├── EMRFS (S3 as HDFS)
-└── Local instance store
+ストレージ:
+├── HDFS（クラスタ内）
+├── EMRFS（S3をHDFS的に利用）
+└── インスタンスストア
 
-USE CASES:
-├── Big data processing
-├── Machine learning
-├── Log analysis
-└── ETL at scale
+用途:
+├── 大規模データ処理
+├── 機械学習
+├── ログ分析
+└── 大規模ETL
 ```
 
-## 💡 Common Exam Scenarios
+## 💡 よくある出題シナリオ
 
-### Scenario 1: Query S3 Logs with SQL
-**Q**: Analyze CloudTrail logs in S3 using SQL, no infrastructure
-**✅ ANSWER**: Amazon Athena
+### シナリオ1: S3ログをSQLで分析
+**Q**: S3のCloudTrailログを、インフラ構築なしでSQL分析したい
+**✅ 答え**: Amazon Athena
 
-### Scenario 2: Petabyte-Scale Analytics
-**Q**: Business intelligence on petabytes of structured data
-**✅ ANSWER**: Amazon Redshift (data warehouse)
+### シナリオ2: ペタバイト分析
+**Q**: 構造化データのペタバイト級BI
+**✅ 答え**: Amazon Redshift（DWH）
 
-### Scenario 3: Reduce Athena Costs
-**Q**: Athena queries costing too much
-**✅ ANSWER**: Convert to Parquet/ORC format, compress, partition data
+### シナリオ3: Athenaコスト削減
+**Q**: Athenaのクエリ費用が高い
+**✅ 答え**: Parquet/ORC化、圧縮、パーティション分割
 
-### Scenario 4: ETL Pipeline
-**Q**: Transform CSV data in S3, load to Redshift nightly
-**✅ ANSWER**: AWS Glue (serverless ETL with scheduler)
+### シナリオ4: ETLパイプライン
+**Q**: S3のCSVを毎晩変換してRedshiftへ
+**✅ 答え**: AWS Glue（スケジューラ付きサーバーレスETL）
 
-### Scenario 5: Real-Time Log Search
-**Q**: Search application logs in real-time, need full-text search
-**✅ ANSWER**: Amazon OpenSearch (formerly Elasticsearch)
+### シナリオ5: リアルタイムログ検索
+**Q**: 全文検索を伴うリアルタイムログ検索
+**✅ 答え**: Amazon OpenSearch（旧Elasticsearch）
 
-### Scenario 6: Interactive Dashboards
-**Q**: Create business dashboards from Athena/Redshift data
-**✅ ANSWER**: Amazon QuickSight
+### シナリオ6: 対話型ダッシュボード
+**Q**: Athena/RedshiftのデータをBI可視化したい
+**✅ 答え**: Amazon QuickSight
 
-### Scenario 7: Spark Processing
-**Q**: Run Apache Spark jobs on large datasets
-**✅ ANSWER**: Amazon EMR with Spark
+### シナリオ7: Spark処理
+**Q**: 大規模データにApache Sparkジョブを実行
+**✅ 答え**: Amazon EMR（Spark）
 
-### Scenario 8: Query Both S3 and Redshift
-**Q**: Need to join data in S3 with data in Redshift
-**✅ ANSWER**: Redshift Spectrum
+### シナリオ8: S3とRedshiftを横断クエリ
+**Q**: S3データとRedshiftデータを結合したい
+**✅ 答え**: Redshift Spectrum
 
-## 🎓 Speed Learning Tips
+## 🎓 速習ポイント
 
-### Athena Partitioning
+### Athena パーティション
 ```
-WITHOUT PARTITION:
+パーティションなし:
 s3://bucket/data/year2024month01day01.csv
 s3://bucket/data/year2024month01day02.csv
-└── Scans all files (expensive)
+└── 全ファイルをスキャン（高コスト）
 
-WITH PARTITION:
+パーティションあり:
 s3://bucket/data/year=2024/month=01/day=01/data.csv
 s3://bucket/data/year=2024/month=01/day=02/data.csv
-└── Query: WHERE year=2024 AND month=01
-└── Scans only relevant partition (cheap!)
+└── 例: WHERE year=2024 AND month=01
+└── 必要パーティションのみスキャン（低コスト）
 
-PARTITION PROJECTION:
-├── No need to run MSCK REPAIR
-├── Athena auto-discovers partitions
-└── Best for time-based partitions
+パーティションプロジェクション:
+├── MSCK REPAIR不要
+├── Athenaが自動認識
+└── 時系列データで有効
 ```
 
-### Redshift Best Practices
-✅ Use columnar storage (it's automatic)
-✅ Choose appropriate distribution key
-✅ Use sort keys for query performance
-✅ Enable compression (auto)
-✅ Use Redshift Spectrum for S3 data
-✅ Regular VACUUM and ANALYZE
-✅ Use Concurrency Scaling for bursts
-✅ Snapshot for backup/DR
+### Redshift ベストプラクティス
+✅ 列指向ストレージを活用（自動）
+✅ 適切なDistribution Keyを選ぶ
+✅ Sort Keyでクエリ最適化
+✅ 圧縮を有効化（自動）
+✅ S3データはRedshift Spectrumを使う
+✅ 定期的にVACUUM/ANALYZE
+✅ バースト時はConcurrency Scaling
+✅ バックアップ/DRはスナップショット
 
 ### Glue vs EMR vs Lambda
 ```
-USE GLUE WHEN:
-✅ Serverless ETL needed
-✅ Simple transformations
-✅ Metadata catalog
-✅ Python/Scala jobs
-✅ Don't want to manage infrastructure
+Glueを使うべきとき:
+✅ サーバーレスETLが必要
+✅ 比較的シンプルな変換
+✅ メタデータカタログが必要
+✅ Python/Scalaジョブ
+✅ インフラ運用を避けたい
 
-USE EMR WHEN:
-✅ Complex big data processing
-✅ Need specific Hadoop ecosystem tools
-✅ Custom configurations
-✅ Cost optimization (Spot instances)
-✅ Large-scale ML
+EMRを使うべきとき:
+✅ 複雑なビッグデータ処理
+✅ 特定Hadoopエコシステムが必要
+✅ カスタム設定が必要
+✅ Spotでコスト最適化したい
+✅ 大規模ML処理
 
-USE LAMBDA WHEN:
-✅ Simple transformations
-✅ < 15 minutes execution
-✅ Event-driven processing
-✅ Small data volumes
+Lambdaを使うべきとき:
+✅ 軽量な変換
+✅ 実行15分未満
+✅ イベント駆動処理
+✅ データ量が小さい
 ```
 
-## 📝 Rapid-Fire Facts
+## 📝 重要暗記ポイント
 
-### Athena Query Optimization
+### Athena クエリ最適化
 ```
-COSTS COMPARISON (1 TB data):
-├── CSV uncompressed: $5.00
-├── CSV compressed (GZIP): $1.25 (75% saving)
-├── Parquet uncompressed: $0.50 (90% saving)
-└── Parquet compressed: $0.15 (97% saving!)
+コスト比較（1TBデータ）:
+├── CSV 非圧縮: $5.00
+├── CSV 圧縮（GZIP）: $1.25（75%削減）
+├── Parquet 非圧縮: $0.50（90%削減）
+└── Parquet 圧縮: $0.15（97%削減）
 
-PERFORMANCE:
-├── Columnar (Parquet) = 10x faster
-├── Compression = Faster (less data read)
-└── Partitioning = Only scan needed data
+性能:
+├── 列指向（Parquet）= 約10倍高速
+├── 圧縮 = 読み取りデータ減で高速化
+└── パーティション = 必要データのみスキャン
 ```
 
-### Redshift Distribution Styles
-| Style | When to Use | Example |
-|-------|-------------|---------|
-| **EVEN** | No clear join patterns | Fact table (default) |
-| **KEY** | Frequently joined tables | Join on customer_id |
-| **ALL** | Small dimension tables | Broadcast to all nodes |
-| **AUTO** | Let Redshift decide | Most cases |
+### Redshift Distribution Style
+| Style | 使う場面 | 例 |
+|-------|----------|----|
+| **EVEN** | 明確な結合キーがない | ファクト表（既定） |
+| **KEY** | 結合が多い | customer_idで結合 |
+| **ALL** | 小さな次元表 | 全ノード複製 |
+| **AUTO** | Redshiftに任せる | 多くのケース |
 
-### QuickSight Quick Facts
+### QuickSight 要点
 ```
-WHAT: Business Intelligence (BI) service
-PRICING: Per user/session
-USERS: Standard ($9/user), Enterprise ($18/user)
+概要: BIサービス
+料金: ユーザー/セッション課金
+ユーザー: Standard($9), Enterprise($18)
 
-DATA SOURCES:
+データソース:
 ├── Athena, Redshift, RDS
 ├── S3
-├── SaaS (Salesforce, etc.)
-└── On-premises databases
+├── SaaS（Salesforce等）
+└── オンプレDB
 
-FEATURES:
-├── ML Insights (anomaly detection)
-├── Embedded analytics
-├── SPICE (in-memory, 10 GB free/user)
-├── Auto-refresh
-└── Mobile apps
+機能:
+├── ML Insights（異常検知）
+├── 埋め込み分析
+├── SPICE（インメモリ、ユーザーごと10GB無料）
+├── 自動更新
+└── モバイルアプリ
 
-SPICE (Super-fast, Parallel, In-memory Calculation Engine):
-└── Import data for faster queries
+SPICE:
+└── データ取り込みで高速クエリ
 ```
 
-### OpenSearch (Elasticsearch) Use Cases
+### OpenSearch（Elasticsearch）の用途
 ```
-PRIMARY USES:
-├── Log analytics (ELK stack)
-├── Full-text search
-├── Application monitoring
-├── Security analytics
-└── Clickstream analysis
+主用途:
+├── ログ分析（ELK）
+├── 全文検索
+├── アプリ監視
+├── セキュリティ分析
+└── クリックストリーム分析
 
-FEATURES:
-├── Multi-AZ deployment
-├── Automated snapshots to S3
-├── Encryption at rest & transit
-├── Fine-grained access control
-└── Integrated with Kibana
+機能:
+├── Multi-AZ
+├── S3への自動スナップショット
+├── 保存時/転送時暗号化
+├── きめ細かいアクセス制御
+└── Kibana連携
 
-NOT A REPLACEMENT FOR:
-❌ Relational database (use RDS)
-❌ Data warehouse (use Redshift)
+代替ではないもの:
+❌ リレーショナルDB（RDSを使う）
+❌ データウェアハウス（Redshiftを使う）
 ```
 
-## 🚀 5-Minute Master Review
+## 🚀 5分総復習
 
-### Analytics Decision Tree
+### 分析サービス意思決定ツリー
 ```
-1. What's your data source?
-   S3 → Athena (query in place)
-   Database → Redshift (warehouse)
-   
-2. What's your use case?
-   AD-HOC QUERIES → Athena
-   BI/REPORTING → Redshift + QuickSight
+1. データソースは？
+   S3 → Athena（その場でクエリ）
+   DB → Redshift（DWH）
+
+2. 用途は？
+   アドホッククエリ → Athena
+   BI/レポーティング → Redshift + QuickSight
    ETL → Glue
-   BIG DATA PROCESSING → EMR
-   SEARCH → OpenSearch
-   STREAMING → Kinesis Analytics
-   
-3. Need serverless?
+   ビッグデータ処理 → EMR
+   検索 → OpenSearch
+   ストリーミング分析 → Kinesis Analytics
+
+3. サーバーレスが必要？
    YES → Athena, Glue, QuickSight
-   NO → Redshift, EMR, OpenSearch
-   
-4. Data size?
-   < 1 TB → Athena
-   TB to PB → Redshift
-   PB+ → EMR or Redshift
+   NO  → Redshift, EMR, OpenSearch
+
+4. データ規模は？
+   <1TB → Athena
+   TB〜PB → Redshift
+   PB超 → EMR or Redshift
 ```
 
-### Common Analytics Patterns
+### よくある分析アーキテクチャ
 ```
-1. DATA LAKE PATTERN
-   S3 (data lake) → Glue (catalog) → Athena (query) → QuickSight (viz)
-   
-2. DATA WAREHOUSE PATTERN
-   Sources → Glue ETL → Redshift → QuickSight
-   
-3. LOG ANALYSIS PATTERN
+1. DATA LAKE
+   S3（レイク）→ Glue（カタログ）→ Athena（クエリ）→ QuickSight（可視化）
+
+2. DATA WAREHOUSE
+   各種ソース → Glue ETL → Redshift → QuickSight
+
+3. LOG ANALYSIS
    Logs → Kinesis Firehose → S3 → Athena → OpenSearch
-   
+
 4. BIG DATA PROCESSING
-   S3 → EMR (Spark) → Process → S3/Redshift
-   
-5. HYBRID QUERY PATTERN
-   Redshift + Redshift Spectrum → Query S3 & Redshift together
+   S3 → EMR（Spark）→ 処理 → S3/Redshift
+
+5. HYBRID QUERY
+   Redshift + Redshift Spectrum → S3とRedshiftを同時クエリ
 ```
 
-### Data Formats Comparison
-| Format | Type | Compression | Splittable | Athena Performance |
-|--------|------|-------------|------------|-------------------|
-| **CSV** | Row | Fair | Yes | Slow, expensive |
-| **JSON** | Row | Fair | Yes | Slow, expensive |
-| **Parquet** | Columnar | Excellent | Yes | ⭐ Best |
-| **ORC** | Columnar | Excellent | Yes | ⭐ Best |
-| **Avro** | Row | Good | Yes | Good |
+### データ形式比較
+| 形式 | 種別 | 圧縮効率 | 分割読込 | Athena性能 |
+|------|------|----------|----------|------------|
+| **CSV** | 行指向 | 普通 | 可 | 遅い・高コスト |
+| **JSON** | 行指向 | 普通 | 可 | 遅い・高コスト |
+| **Parquet** | 列指向 | 高い | 可 | ⭐ 最良 |
+| **ORC** | 列指向 | 高い | 可 | ⭐ 最良 |
+| **Avro** | 行指向 | 良い | 可 | 良い |
 
-### Common Mistakes to Avoid
-❌ Using Athena on uncompressed CSV (expensive!)
-❌ Not partitioning S3 data for Athena
-❌ Using Redshift for OLTP (use RDS)
-❌ SELECT * in Athena (scans all columns)
-❌ Not using Redshift Spectrum for S3 data
-❌ Running EMR long-term for simple ETL (use Glue)
-❌ Forgetting to terminate EMR clusters (cost!)
-❌ Not using SPICE in QuickSight (slow queries)
+### よくあるミス
+❌ 非圧縮CSVをAthenaでそのまま分析する（高コスト）
+❌ Athena用S3データをパーティション化しない
+❌ OLTP用途にRedshiftを使う（RDSを使う）
+❌ AthenaでSELECT *を多用する
+❌ S3データにSpectrumを使わない
+❌ 単純ETLに長期EMR運用をする（Glueを検討）
+❌ EMRクラスター停止忘れで課金増
+❌ QuickSightでSPICEを使わず低速化
 
-## 🎯 Exam Practice Speedrun
+## 🎯 試験直前スピードチェック
 
-**Quick Questions** (Answers at bottom)
+**クイック問題**（答えは末尾）
 
-1. Cheapest way to query S3 data? __
-2. Best format for Athena queries? __
-3. What type of database is Redshift? __
-4. Serverless ETL service? __
-5. What is Redshift Spectrum? __
-6. Can Athena query compressed data? __
-7. Service for Hadoop/Spark? __
-8. QuickSight in-memory engine name? __
+1. S3データを最安でクエリする方法は？ __
+2. Athenaに最適なデータ形式は？ __
+3. Redshiftはどの種類のDB？ __
+4. サーバーレスETLサービスは？ __
+5. Redshift Spectrumとは？ __
+6. Athenaは圧縮データをクエリ可能？ __
+7. Hadoop/Spark向けサービスは？ __
+8. QuickSightのインメモリエンジン名は？ __
 
 ---
 
 ### AWS Lake Formation
 ```
-WHAT: Build secure data lakes
-SIMPLIFIES:
-├── Data ingestion from multiple sources
-├── Data cataloging (uses Glue Catalog)
-├── Data transformation
-├── Fine-grained access control
-└── Security at scale
+概要: セキュアなデータレイク構築
+簡素化できること:
+├── 複数ソースからの取り込み
+├── データカタログ化（Glue Catalog利用）
+├── データ変換
+├── きめ細かいアクセス制御
+└── 大規模セキュリティ運用
 
-FEATURES:
-├── Blueprints for common sources
-├── Column/row-level security
-├── Centralized permissions
-├── Data deduplication
-└── Machine learning transforms
+機能:
+├── 代表的ソース向けBlueprint
+├── 列/行レベルセキュリティ
+├── 権限の一元管理
+├── データ重複排除
+└── ML変換
 
-INTEGRATES WITH:
+連携:
 ├── Athena, Redshift, EMR
 ├── QuickSight
 └── SageMaker
@@ -421,38 +421,37 @@ INTEGRATES WITH:
 
 ### Kinesis Data Analytics
 ```
-WHAT: Real-time analytics on streaming data
-INPUT: Kinesis Data Streams, Kinesis Firehose
-QUERY: SQL or Apache Flink
+概要: ストリーミングデータのリアルタイム分析
+入力: Kinesis Data Streams, Kinesis Firehose
+クエリ: SQL または Apache Flink
 
-USE CASES:
-├── Real-time dashboards
-├── Real-time metrics
-├── Anomaly detection
-└── Time-series analytics
+用途:
+├── リアルタイムダッシュボード
+├── リアルタイム指標
+├── 異常検知
+└── 時系列分析
 
-OUTPUTS:
+出力:
 ├── Kinesis Data Streams
 ├── Kinesis Data Firehose
 ├── Lambda
-└── S3 (via Firehose)
+└── S3（Firehose経由）
 ```
 
-## ⏱️ Next Steps
-- Time spent: ~45-60 min
-- Practice: Run Athena query, understand Redshift
-- Ready for: Analytics practice questions
-- Move to: Module 12 - Architecture Patterns
+## ⏱️ 次のアクション
+- 学習時間: 約45〜60分
+- 実践: Athenaを実際に実行、Redshiftの特性を確認
+- 次に解く: AnalyticsのPractice Questions
+- 次モジュール: Module 12 - Architecture Patterns
 
 ---
 
-**Quick Answers**: 
-1) Athena (pay per query, serverless)
-2) Parquet or ORC (columnar, compressed)
-3) OLAP / Data Warehouse (not OLTP)
+**クイック問題の解答**:
+1) Athena（クエリ従量・サーバーレス）
+2) Parquet または ORC（列指向・圧縮）
+3) OLAP / データウェアハウス（OLTPではない）
 4) AWS Glue
-5) Query S3 data from Redshift without loading
-6) Yes (saves costs!)
-7) Amazon EMR (Elastic MapReduce)
+5) Redshiftからロード不要でS3をクエリ
+6) はい（コスト削減に有効）
+7) Amazon EMR（Elastic MapReduce）
 8) SPICE
-
