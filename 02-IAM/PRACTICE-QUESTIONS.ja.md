@@ -1,67 +1,67 @@
-# IAM - Practice Questions
+# IAM - 練習問題
 
-> **⚠️ DISCLAIMER:** These are **original practice questions** created for educational purposes based on AWS documentation. They are **NOT actual exam questions** from the AWS certification exam.
+> **⚠️ 免責事項:** これらは AWS ドキュメントに基づき、教育目的で作成された**オリジナル練習問題**です。AWS 認定試験の**実際の試験問題ではありません**。
 
-## Exam-Standard Questions (SAA-C03)
+## 試験標準問題（SAA-C03）
 
 ---
 
-### Question 1
-An application running on Amazon EC2 instances needs to access objects in an Amazon S3 bucket. What is the MOST secure way to grant this access?
+### 問題 1
+Amazon EC2 インスタンス上で実行されるアプリケーションが、Amazon S3 バケット内のオブジェクトにアクセスする必要があります。このアクセスを付与する**最も安全な**方法はどれですか？
 
-A. Create an IAM user with programmatic access and store the access keys on the EC2 instance  
-B. Create an IAM role with S3 permissions and attach it to the EC2 instance  
-C. Make the S3 bucket public and allow anonymous access  
-D. Use the root account credentials on the EC2 instance  
+A. プログラムによるアクセスを持つ IAM ユーザーを作成し、アクセスキーを EC2 インスタンスに保存する  
+B. S3 権限を持つ IAM ロールを作成し、EC2 インスタンスにアタッチする  
+C. S3 バケットをパブリックにして匿名アクセスを許可する  
+D. EC2 インスタンスでルートアカウント認証情報を使用する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- IAM roles provide temporary security credentials that rotate automatically
-- No need to manage or embed long-term credentials
-- Most secure and AWS-recommended approach
-- Option A: Access keys are long-term credentials, security risk if exposed
-- Option C: Violates security best practices
-- Option D: Never use root credentials for applications
-- **Best Practice**: Always use IAM roles for EC2 instances
+**解説:**
+- IAM ロールは自動的にローテーションされる一時的なセキュリティ認証情報を提供する
+- 長期認証情報を管理したり埋め込んだりする必要がない
+- 最も安全で AWS 推奨のアプローチ
+- 選択肢 A: アクセスキーは長期認証情報であり、漏えい時にセキュリティリスクが高い
+- 選択肢 C: セキュリティのベストプラクティスに反する
+- 選択肢 D: アプリケーションでルート認証情報を使ってはいけない
+- **ベストプラクティス**: EC2 インスタンスでは常に IAM ロールを使用する
 
-**References:** IAM Roles, EC2 Instance Profiles, AWS Security Best Practices
+**参考:** IAM ロール、EC2 インスタンスプロファイル、AWS セキュリティのベストプラクティス
 </details>
 
 ---
 
-### Question 2
-A company needs to grant temporary access to external auditors to review CloudTrail logs in S3. The access should expire after 7 days. What is the BEST solution?
+### 問題 2
+企業が外部監査人に対して、S3 内の CloudTrail ログを確認するための一時的アクセスを付与する必要があります。アクセスは 7 日後に期限切れになる必要があります。**最適な**ソリューションはどれですか？
 
-A. Create IAM users for auditors and delete them after 7 days  
-B. Create IAM roles and provide auditors with temporary security credentials using AWS STS  
-C. Share the root account credentials for 7 days  
-D. Create an S3 pre-signed URL valid for 7 days  
+A. 監査人用に IAM ユーザーを作成し、7 日後に削除する  
+B. IAM ロールを作成し、AWS STS を使用して監査人に一時的なセキュリティ認証情報を提供する  
+C. ルートアカウント認証情報を 7 日間共有する  
+D. 7 日間有効な S3 の事前署名 URL を作成する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- AWS STS (Security Token Service) generates temporary credentials
-- IAM roles can be assumed by external users via federation
-- Credentials automatically expire based on session duration
-- Option A: Requires manual deletion, operational overhead
-- Option C: Never share root credentials
-- Option D: Pre-signed URLs work but IAM roles are more comprehensive
-- **Best for temporary access**: STS with IAM roles
+**解説:**
+- AWS STS（Security Token Service）は一時的な認証情報を生成する
+- IAM ロールはフェデレーションを通じて外部ユーザーが引き受け可能
+- セッション期間に基づいて認証情報は自動的に期限切れになる
+- 選択肢 A: 手動削除が必要で、運用負荷が発生する
+- 選択肢 C: ルート認証情報の共有は厳禁
+- 選択肢 D: 事前署名 URL も有効だが、IAM ロールの方が包括的
+- **一時アクセスに最適**: IAM ロールと STS
 
-**References:** AWS STS, Temporary Security Credentials, Cross-Account Access
+**参考:** AWS STS、一時的セキュリティ認証情報、クロスアカウントアクセス
 </details>
 
 ---
 
-### Question 3
-A solutions architect is writing an IAM policy to deny access to all S3 buckets except one specific bucket named "production-data". Which policy element should be used?
+### 問題 3
+ソリューションアーキテクトが、"production-data" という特定バケットを除くすべての S3 バケットへのアクセスを拒否する IAM ポリシーを作成しています。どのポリシー要素を使用すべきですか？
 
 ```json
 {
@@ -89,27 +89,27 @@ A solutions architect is writing an IAM policy to deny access to all S3 buckets 
 }
 ```
 
-What is the correct approach?
+正しいアプローチはどれですか？
 
-A. Use Allow effect for the specific bucket only  
-B. Use Deny effect for all buckets except the one  
-C. Use both Allow for specific bucket and implicit Deny for others  
-D. Use resource-based policy on S3 bucket  
+A. 特定バケットのみに Allow 効果を使用する  
+B. 1 つを除くすべてのバケットに Deny 効果を使用する  
+C. 特定バケットに Allow を設定し、それ以外は暗黙の Deny に任せる  
+D. S3 バケットにリソースベースポリシーを使用する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- IAM uses default Deny for all actions not explicitly allowed
-- Allow access to "production-data" bucket explicitly
-- All other buckets are implicitly denied
-- No need for explicit Deny statement for other buckets
-- **IAM Evaluation Logic**: Explicit Deny > Allow > Implicit Deny
-- Simpler policy: Just Allow the specific bucket
+**解説:**
+- IAM は明示的に許可されていない操作をデフォルトで Deny する
+- "production-data" バケットへのアクセスのみを明示的に Allow する
+- その他のバケットは暗黙的に拒否される
+- その他に対する明示的 Deny ステートメントは不要
+- **IAM 評価ロジック**: 明示的 Deny > Allow > 暗黙的 Deny
+- よりシンプルなポリシー: 特定バケットへの Allow のみ
 
-**Correct Policy**:
+**正しいポリシー**:
 ```json
 {
   "Version": "2012-10-17",
@@ -126,29 +126,29 @@ D. Use resource-based policy on S3 bucket
 }
 ```
 
-**References:** IAM Policy Evaluation Logic, S3 IAM Policies
+**参考:** IAM ポリシー評価ロジック、S3 IAM ポリシー
 </details>
 
 ---
 
-### Question 4
-A company has a requirement that all IAM users must use Multi-Factor Authentication (MFA) before they can delete any S3 objects. How can this be enforced?
+### 問題 4
+企業では、すべての IAM ユーザーが S3 オブジェクトを削除する前に Multi-Factor Authentication（MFA）を使用しなければならない要件があります。どのように強制できますか？
 
-A. Enable MFA Delete on the S3 bucket  
-B. Create an IAM policy with a condition requiring MFA  
-C. Use AWS Organizations Service Control Policies  
-D. Configure S3 bucket policy to require MFA  
+A. S3 バケットで MFA Delete を有効化する  
+B. MFA を要求する条件付き IAM ポリシーを作成する  
+C. AWS Organizations の Service Control Policies を使用する  
+D. MFA を要求する S3 バケットポリシーを設定する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- IAM policy condition `aws:MultiFactorAuthPresent` enforces MFA
-- Can be applied to specific actions like `s3:DeleteObject`
+**解説:**
+- IAM ポリシー条件 `aws:MultiFactorAuthPresent` で MFA を強制できる
+- `s3:DeleteObject` など特定アクションに適用可能
 
-**Example Policy**:
+**ポリシー例**:
 ```json
 {
   "Version": "2012-10-17",
@@ -167,33 +167,33 @@ D. Configure S3 bucket policy to require MFA
 }
 ```
 
-- Option A: MFA Delete protects versioning but requires bucket owner MFA
-- Option C: SCPs can enforce but IAM policy is more direct
-- Option D: Can work but IAM policy is standard approach
+- 選択肢 A: MFA Delete はバージョニング保護向けで、バケット所有者の MFA が必要
+- 選択肢 C: SCP でも強制可能だが、IAM ポリシーの方が直接的
+- 選択肢 D: 機能する場合はあるが、標準的なのは IAM ポリシー
 
-**References:** IAM Policy Conditions, MFA with IAM Policies
+**参考:** IAM ポリシー条件、IAM ポリシーでの MFA
 </details>
 
 ---
 
-### Question 5
-A development team needs read-only access to all EC2 instances, but write access should only be granted during business hours (9 AM - 5 PM). How can this be implemented?
+### 問題 5
+開発チームは、すべての EC2 インスタンスへの読み取り専用アクセスを必要としていますが、書き込みアクセスは営業時間（午前 9 時〜午後 5 時）のみ許可したいと考えています。どのように実装しますか？
 
-A. Use time-based IAM policy conditions  
-B. Manually attach/detach policies during business hours  
-C. Use AWS Lambda to modify IAM policies based on time  
-D. Create two separate IAM groups and move users between them  
+A. 時間ベースの IAM ポリシー条件を使用する  
+B. 営業時間中にポリシーを手動でアタッチ/デタッチする  
+C. AWS Lambda を使って時間に応じて IAM ポリシーを変更する  
+D. 2 つの IAM グループを作成し、ユーザーを移動させる  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
-- IAM supports time-based conditions using `aws:CurrentTime`
-- Can specify date/time ranges for policy evaluation
+**解説:**
+- IAM は `aws:CurrentTime` を用いた時間ベース条件をサポートしている
+- ポリシー評価に日時範囲を指定できる
 
-**Example Policy**:
+**ポリシー例**:
 ```json
 {
   "Version": "2012-10-17",
@@ -220,17 +220,17 @@ D. Create two separate IAM groups and move users between them
 }
 ```
 
-- Read-only access always allowed
-- Write access only during specified hours
-- Other options require manual intervention or complex automation
+- 読み取り専用アクセスは常時許可
+- 書き込みアクセスは指定時間のみ許可
+- 他の選択肢は手動対応や複雑な自動化が必要
 
-**References:** IAM Policy Conditions, Time-Based Access Control
+**参考:** IAM ポリシー条件、時間ベースアクセス制御
 </details>
 
 ---
 
-### Question 6
-A company wants to allow users to change their own passwords but nothing else. Which AWS managed policy should be attached?
+### 問題 6
+企業が、ユーザー自身のパスワード変更のみを許可し、それ以外は許可したくありません。どの AWS 管理ポリシーをアタッチすべきですか？
 
 A. IAMFullAccess  
 B. IAMUserChangePassword  
@@ -238,19 +238,19 @@ C. IAMReadOnlyAccess
 D. PowerUserAccess  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- `IAMUserChangePassword` is an AWS managed policy for self-service password changes
-- Follows principle of least privilege
-- Allows users to manage only their own passwords
-- Option A: Too permissive, full IAM access
-- Option C: Read-only, can't change passwords
-- Option D: Almost full access except IAM
+**解説:**
+- `IAMUserChangePassword` はセルフサービスのパスワード変更用 AWS 管理ポリシー
+- 最小権限の原則に従っている
+- ユーザー自身のパスワード管理のみを許可する
+- 選択肢 A: 権限が広すぎる（IAM フルアクセス）
+- 選択肢 C: 読み取り専用のためパスワード変更不可
+- 選択肢 D: IAM 以外ほぼフルアクセス
 
-**Alternative**: Create custom policy:
+**代替案**: カスタムポリシーを作成
 ```json
 {
   "Version": "2012-10-17",
@@ -267,34 +267,34 @@ D. PowerUserAccess
 }
 ```
 
-**References:** AWS Managed Policies, Self-Service Password Management
+**参考:** AWS 管理ポリシー、セルフサービスのパスワード管理
 </details>
 
 ---
 
-### Question 7
-An organization has multiple AWS accounts. They want to centrally manage permissions across all accounts. What is the BEST solution?
+### 問題 7
+組織は複数の AWS アカウントを保有しています。すべてのアカウントで権限を一元管理したい場合、**最適な**ソリューションはどれですか？
 
-A. Create identical IAM policies in each account  
-B. Use AWS Organizations with Service Control Policies (SCPs)  
-C. Use IAM roles in each account  
-D. Share IAM users across accounts  
+A. 各アカウントで同一の IAM ポリシーを作成する  
+B. Service Control Policies（SCP）を伴う AWS Organizations を使用する  
+C. 各アカウントで IAM ロールを使用する  
+D. アカウント間で IAM ユーザーを共有する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- Service Control Policies (SCPs) set permission boundaries for entire AWS accounts
-- Applied at organization, OU, or account level
-- Centrally managed from master/management account
-- Maximum permissions available, individual IAM policies still needed
-- Option A: Not centralized, difficult to maintain
-- Option C: Roles help with cross-account access but don't centrally manage permissions
-- Option D: IAM users cannot be shared across accounts
+**解説:**
+- Service Control Policies（SCP）は AWS アカウント全体の権限境界を設定する
+- 組織、OU、アカウントレベルで適用可能
+- マスター/管理アカウントから集中管理できる
+- 利用可能な最大権限を制御し、個別 IAM ポリシーは引き続き必要
+- 選択肢 A: 一元管理ではなく、保守が困難
+- 選択肢 C: ロールはクロスアカウントアクセスに有効だが、集中権限管理ではない
+- 選択肢 D: IAM ユーザーはアカウント間共有不可
 
-**SCP Example** (Deny all regions except us-east-1):
+**SCP 例**（us-east-1 以外の全リージョンを拒否）:
 ```json
 {
   "Version": "2012-10-17",
@@ -313,95 +313,95 @@ D. Share IAM users across accounts
 }
 ```
 
-**References:** AWS Organizations, Service Control Policies
+**参考:** AWS Organizations、Service Control Policies
 </details>
 
 ---
 
-### Question 8
-A company uses SAML 2.0 to allow employees to access AWS using their corporate Active Directory credentials. What type of access is this?
+### 問題 8
+企業は SAML 2.0 を使用して、社員が社内 Active Directory 認証情報で AWS にアクセスできるようにしています。これはどのアクセス種別ですか？
 
-A. IAM user access  
-B. Root account access  
-C. Federated access  
-D. Programmatic access  
+A. IAM ユーザーアクセス  
+B. ルートアカウントアクセス  
+C. フェデレーテッドアクセス  
+D. プログラムによるアクセス  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- Federation allows users to access AWS using existing corporate credentials
-- SAML 2.0 is a standard for identity federation
-- Users authenticate with corporate IdP (like Active Directory)
-- IdP provides temporary AWS credentials via IAM role assumption
-- No need to create IAM users for each employee
-- **Types of Federation**: SAML 2.0, OpenID Connect, Custom Identity Broker
+**解説:**
+- フェデレーションにより、既存の社内認証情報を使って AWS へアクセスできる
+- SAML 2.0 は ID フェデレーションの標準
+- ユーザーは社内 IdP（Active Directory など）で認証される
+- IdP は IAM ロール引き受けを通じて一時的 AWS 認証情報を提供する
+- 各社員向けに IAM ユーザーを作成する必要がない
+- **フェデレーションの種類**: SAML 2.0、OpenID Connect、カスタム Identity Broker
 
-**Federation Flow**:
-1. User authenticates with corporate IdP
-2. IdP generates SAML assertion
-3. User presents assertion to AWS STS
-4. STS returns temporary credentials
-5. User accesses AWS with temp credentials
+**フェデレーションのフロー**:
+1. ユーザーが社内 IdP で認証する
+2. IdP が SAML アサーションを生成する
+3. ユーザーがそのアサーションを AWS STS に提示する
+4. STS が一時認証情報を返す
+5. ユーザーが一時認証情報で AWS にアクセスする
 
-**References:** Identity Federation, SAML 2.0, AWS STS
+**参考:** ID フェデレーション、SAML 2.0、AWS STS
 </details>
 
 ---
 
-### Question 9
-Which statement about IAM policies is correct?
+### 問題 9
+IAM ポリシーに関する記述として正しいものはどれですか？
 
-A. Identity-based policies are attached to resources  
-B. Resource-based policies are attached to IAM identities  
-C. Identity-based policies define permissions for users, groups, and roles  
-D. Resource-based policies cannot specify principals from other accounts  
+A. ID ベースポリシーはリソースにアタッチされる  
+B. リソースベースポリシーは IAM ID にアタッチされる  
+C. ID ベースポリシーはユーザー、グループ、ロールの権限を定義する  
+D. リソースベースポリシーは他アカウントのプリンシパルを指定できない  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- **Identity-based policies**: Attached to users, groups, roles (who can do what)
-- **Resource-based policies**: Attached to resources like S3, SQS (who can access this resource)
-- Option A: Incorrect, identity-based policies attach to identities
-- Option B: Incorrect, resource-based policies attach to resources
-- Option D: Incorrect, resource-based policies CAN specify cross-account principals
+**解説:**
+- **ID ベースポリシー**: ユーザー、グループ、ロールにアタッチ（誰が何をできるか）
+- **リソースベースポリシー**: S3、SQS などのリソースにアタッチ（誰がこのリソースへアクセスできるか）
+- 選択肢 A: 誤り。ID ベースポリシーは ID にアタッチされる
+- 選択肢 B: 誤り。リソースベースポリシーはリソースにアタッチされる
+- 選択肢 D: 誤り。リソースベースポリシーはクロスアカウントのプリンシパルを指定可能
 
-**Examples**:
-- Identity-based: IAM user policy, role policy
-- Resource-based: S3 bucket policy, KMS key policy, Lambda function policy
+**例**:
+- ID ベース: IAM ユーザーポリシー、ロールポリシー
+- リソースベース: S3 バケットポリシー、KMS キーポリシー、Lambda 関数ポリシー
 
-**References:** IAM Policy Types, Identity vs Resource-based Policies
+**参考:** IAM ポリシーの種類、ID ベースとリソースベースポリシー
 </details>
 
 ---
 
-### Question 10
-A Lambda function needs to access DynamoDB tables. What is the correct way to grant permissions?
+### 問題 10
+Lambda 関数が DynamoDB テーブルにアクセスする必要があります。権限を付与する正しい方法はどれですか？
 
-A. Create an IAM user for the Lambda function  
-B. Create an IAM execution role for the Lambda function  
-C. Add permissions directly to the Lambda function  
-D. Use resource-based policy on DynamoDB  
+A. Lambda 関数用に IAM ユーザーを作成する  
+B. Lambda 関数用の IAM 実行ロールを作成する  
+C. Lambda 関数に直接権限を追加する  
+D. DynamoDB でリソースベースポリシーを使用する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- Lambda execution role defines what the function can access
-- Role is assumed by Lambda service when function executes
-- Attach policies to role (e.g., AmazonDynamoDBFullAccess or custom policy)
-- Option A: Lambda functions cannot use IAM users
-- Option C: No such mechanism, must use IAM roles
-- Option D: DynamoDB doesn't have resource-based policies like S3
+**解説:**
+- Lambda 実行ロールは関数がアクセスできる対象を定義する
+- 関数実行時に Lambda サービスがロールを引き受ける
+- ポリシーをロールにアタッチする（例: AmazonDynamoDBFullAccess またはカスタムポリシー）
+- 選択肢 A: Lambda 関数は IAM ユーザーを使用しない
+- 選択肢 C: そのような仕組みはなく、IAM ロールを使用する必要がある
+- 選択肢 D: DynamoDB は S3 のようなリソースベースポリシーを持たない
 
-**Lambda Execution Role Policy Example**:
+**Lambda 実行ロールのポリシー例**:
 ```json
 {
   "Version": "2012-10-17",
@@ -419,13 +419,13 @@ D. Use resource-based policy on DynamoDB
 }
 ```
 
-**References:** Lambda Execution Roles, Service Roles
+**参考:** Lambda 実行ロール、サービスロール
 </details>
 
 ---
 
-### Question 11
-What does the following IAM policy condition do?
+### 問題 11
+次の IAM ポリシー条件は何を行いますか？
 
 ```json
 "Condition": {
@@ -435,24 +435,24 @@ What does the following IAM policy condition do?
 }
 ```
 
-A. Allows access only from the specified IP range  
-B. Denies access from the specified IP range  
-C. Logs access from the specified IP range  
-D. Routes traffic through the specified IP range  
+A. 指定した IP 範囲からのアクセスのみを許可する  
+B. 指定した IP 範囲からのアクセスを拒否する  
+C. 指定した IP 範囲からのアクセスをログ記録する  
+D. 指定した IP 範囲を経由してトラフィックをルーティングする  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
-- Condition restricts policy effectiveness to requests from specified IP range
-- When used with "Effect": "Allow", grants access only from those IPs
-- When used with "Effect": "Deny", denies access from those IPs
-- Does not log or route traffic
-- **Use Case**: Restrict access to corporate network IPs
+**解説:**
+- この条件は、指定 IP 範囲からのリクエストにのみポリシー効果を適用する
+- "Effect": "Allow" と組み合わせると、その IP からのみアクセスを許可
+- "Effect": "Deny" と組み合わせると、その IP からのアクセスを拒否
+- ログ記録やルーティングは行わない
+- **ユースケース**: 企業ネットワーク IP へのアクセス制限
 
-**Complete Policy Example**:
+**完全なポリシー例**:
 ```json
 {
   "Version": "2012-10-17",
@@ -471,29 +471,29 @@ D. Routes traffic through the specified IP range
 }
 ```
 
-**References:** IAM Policy Conditions, IP-based Access Control
+**参考:** IAM ポリシー条件、IP ベースアクセス制御
 </details>
 
 ---
 
-### Question 12
-A company wants to ensure that IAM users cannot create EC2 instances larger than t3.medium. How can this be enforced?
+### 問題 12
+企業は IAM ユーザーが t3.medium より大きい EC2 インスタンスを作成できないようにしたいと考えています。どのように強制できますか？
 
-A. Use IAM policy with condition checking instance type  
-B. Use AWS Config rules  
-C. Use AWS Budgets  
-D. Use EC2 instance limits  
+A. インスタンスタイプを確認する条件付き IAM ポリシーを使用する  
+B. AWS Config ルールを使用する  
+C. AWS Budgets を使用する  
+D. EC2 インスタンス制限を使用する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
-- IAM policy conditions can restrict EC2 instance types
-- Condition key: `ec2:InstanceType`
+**解説:**
+- IAM ポリシー条件で EC2 インスタンスタイプを制限できる
+- 条件キー: `ec2:InstanceType`
 
-**Policy Example**:
+**ポリシー例**:
 ```json
 {
   "Version": "2012-10-17",
@@ -524,82 +524,82 @@ D. Use EC2 instance limits
 }
 ```
 
-- Option B: Config rules detect compliance, don't prevent actions
-- Option C: Budgets monitor costs, don't restrict actions
-- Option D: Service limits are for account-wide quotas, not policy-based restrictions
+- 選択肢 B: Config ルールは準拠状況を検出するが、操作を防止しない
+- 選択肢 C: Budgets はコスト監視であり、操作制限はしない
+- 選択肢 D: サービス制限はアカウント全体のクォータであり、ポリシー制限ではない
 
-**References:** IAM Policy Conditions, EC2 Instance Type Restrictions
+**参考:** IAM ポリシー条件、EC2 インスタンスタイプ制限
 </details>
 
 ---
 
-### Question 13
-What is the maximum number of IAM groups a user can belong to?
+### 問題 13
+1 人の IAM ユーザーが所属できる IAM グループの最大数はいくつですか？
 
 A. 5  
 B. 10  
 C. 20  
-D. Unlimited  
+D. 無制限  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- An IAM user can be a member of up to 10 groups
-- This is an AWS service limit/quota
-- Groups simplify permission management
-- If more complex permissions needed, use multiple policies or roles
+**解説:**
+- IAM ユーザーは最大 10 グループまで所属可能
+- これは AWS のサービス制限/クォータ
+- グループは権限管理を簡素化する
+- より複雑な権限が必要な場合は、複数ポリシーやロールを使用する
 
-**IAM Limits (Key ones for exam)**:
-- Users per account: 5,000 (default)
-- Groups per account: 300
-- Groups per user: 10
-- Managed policies per user/group/role: 10
-- Inline policy size: 2,048 characters for users, 10,240 for roles
+**IAM 制限（試験で重要なもの）**:
+- アカウントあたりユーザー数: 5,000（デフォルト）
+- アカウントあたりグループ数: 300
+- ユーザーあたりグループ数: 10
+- ユーザー/グループ/ロールあたり管理ポリシー数: 10
+- インラインポリシーサイズ: ユーザー 2,048 文字、ロール 10,240 文字
 
-**References:** IAM Quotas and Limits
+**参考:** IAM クォータと制限
 </details>
 
 ---
 
-### Question 14
-A developer accidentally committed AWS access keys to a public GitHub repository. What should be done IMMEDIATELY?
+### 問題 14
+開発者が誤って AWS アクセスキーを公開 GitHub リポジトリにコミットしてしまいました。**直ちに**実施すべきことは何ですか？
 
-A. Change the password of the IAM user  
-B. Delete the GitHub repository  
-C. Deactivate and delete the exposed access keys  
-D. Enable MFA on the account  
+A. IAM ユーザーのパスワードを変更する  
+B. GitHub リポジトリを削除する  
+C. 露出したアクセスキーを無効化して削除する  
+D. アカウントで MFA を有効化する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- Exposed credentials must be deactivated/deleted immediately
-- Prevents unauthorized access using compromised keys
-- Steps: Deactivate keys → Create new keys → Delete old keys → Review CloudTrail
-- Option A: Passwords are separate from access keys
-- Option B: Deleting repo doesn't help if already cloned/indexed
-- Option D: MFA doesn't protect already-exposed keys
+**解説:**
+- 露出した認証情報は直ちに無効化/削除する必要がある
+- 侵害されたキーによる不正アクセスを防止できる
+- 手順: キー無効化 → 新キー作成 → 旧キー削除 → CloudTrail 確認
+- 選択肢 A: パスワードはアクセスキーとは別物
+- 選択肢 B: リポジトリ削除は、すでにクローン/索引化されていれば効果が薄い
+- 選択肢 D: MFA はすでに露出したキーを保護できない
 
-**Incident Response Steps**:
-1. Deactivate compromised keys immediately
-2. Review CloudTrail for unauthorized activity
-3. Create new access keys
-4. Delete compromised keys
-5. Scan code repositories
-6. Implement secrets management (AWS Secrets Manager, Parameter Store)
+**インシデント対応手順**:
+1. 侵害されたキーを直ちに無効化
+2. CloudTrail で不正アクティビティを確認
+3. 新しいアクセスキーを作成
+4. 侵害されたキーを削除
+5. コードリポジトリをスキャン
+6. シークレット管理を導入（AWS Secrets Manager、Parameter Store）
 
-**References:** AWS Security Best Practices, Incident Response
+**参考:** AWS セキュリティのベストプラクティス、インシデント対応
 </details>
 
 ---
 
-### Question 15
-Which IAM entity can have both trust policy and permissions policy?
+### 問題 15
+信頼ポリシーとアクセス許可ポリシーの両方を持てる IAM エンティティはどれですか？
 
 A. IAM User  
 B. IAM Group  
@@ -607,18 +607,18 @@ C. IAM Role
 D. IAM Policy  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: C**
+**解答: C**
 
-**Explanation:**
-- **IAM Roles** have two types of policies:
-  - **Trust Policy**: Defines who can assume the role (principal)
-  - **Permissions Policy**: Defines what the role can do (actions)
-- Users and Groups don't have trust policies
-- Policies are documents, not entities with other policies
+**解説:**
+- **IAM ロール**には 2 種類のポリシーがある:
+  - **信頼ポリシー（Trust Policy）**: 誰がロールを引き受けられるか（principal）を定義
+  - **アクセス許可ポリシー（Permissions Policy）**: ロールが何をできるか（actions）を定義
+- ユーザーとグループには信頼ポリシーがない
+- ポリシーはドキュメントであり、他ポリシーを持つエンティティではない
 
-**Trust Policy Example**:
+**信頼ポリシー例**:
 ```json
 {
   "Version": "2012-10-17",
@@ -634,7 +634,7 @@ D. IAM Policy
 }
 ```
 
-**Permissions Policy Example**:
+**アクセス許可ポリシー例**:
 ```json
 {
   "Version": "2012-10-17",
@@ -648,37 +648,37 @@ D. IAM Policy
 }
 ```
 
-**References:** IAM Roles, Trust Policies, Role Assumption
+**参考:** IAM ロール、信頼ポリシー、ロール引き受け
 </details>
 
 ---
 
-### Question 16
-A company needs to provide third-party vendors access to specific S3 buckets without creating IAM users. What is the BEST approach?
+### 問題 16
+企業は、IAM ユーザーを作成せずにサードパーティベンダーへ特定の S3 バケットアクセスを提供する必要があります。**最適な**アプローチはどれですか？
 
-A. Share root account credentials  
-B. Create cross-account IAM roles with external ID  
-C. Make S3 buckets public  
-D. Use S3 pre-signed URLs  
+A. ルートアカウント認証情報を共有する  
+B. External ID 付きクロスアカウント IAM ロールを作成する  
+C. S3 バケットをパブリックにする  
+D. S3 事前署名 URL を使用する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- Cross-account roles allow external accounts to access resources
-- External ID adds security layer preventing confused deputy problem
-- Vendor assumes role from their AWS account
-- No need to manage IAM users
+**解説:**
+- クロスアカウントロールにより、外部アカウントがリソースへアクセスできる
+- External ID は Confused Deputy 問題を防ぐ追加のセキュリティ層
+- ベンダーは自社 AWS アカウントからロールを引き受ける
+- IAM ユーザーを管理する必要がない
 
-**Setup**:
-1. Create IAM role in your account
-2. Trust policy allows vendor's AWS account
-3. Include External ID for security
-4. Vendor assumes role using STS AssumeRole
+**設定手順**:
+1. 自アカウントに IAM ロールを作成
+2. 信頼ポリシーでベンダーの AWS アカウントを許可
+3. セキュリティのため External ID を含める
+4. ベンダーが STS AssumeRole でロールを引き受ける
 
-**Trust Policy with External ID**:
+**External ID を含む信頼ポリシー**:
 ```json
 {
   "Version": "2012-10-17",
@@ -699,110 +699,110 @@ D. Use S3 pre-signed URLs
 }
 ```
 
-**References:** Cross-Account Access, External ID, Confused Deputy Problem
+**参考:** クロスアカウントアクセス、External ID、Confused Deputy 問題
 </details>
 
 ---
 
-### Question 17
-What is the default effect when no IAM policy explicitly allows or denies an action?
+### 問題 17
+IAM ポリシーでアクションが明示的に許可も拒否もされていない場合のデフォルト効果は何ですか？
 
 A. Allow  
 B. Deny  
-C. Prompt for approval  
-D. Log the action  
+C. 承認を求める  
+D. アクションをログ記録する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- IAM uses **implicit deny** by default
-- All actions denied unless explicitly allowed
-- **Evaluation Logic**: Explicit Deny → Allow → Implicit Deny
-- Cannot override explicit Deny with Allow
-- Must have explicit Allow to perform action
+**解説:**
+- IAM はデフォルトで **暗黙的拒否（implicit deny）** を使用する
+- 明示的に許可されない限り、すべてのアクションは拒否される
+- **評価ロジック**: 明示的 Deny → Allow → 暗黙的 Deny
+- 明示的 Deny は Allow で上書きできない
+- アクション実行には明示的 Allow が必要
 
-**Policy Evaluation Flow**:
-1. Deny evaluation: If any policy has explicit Deny → DENY
-2. Organizations SCPs: Applied as permission boundary
-3. Resource-based policies: Evaluated
-4. Identity-based policies: If any has Allow → ALLOW
-5. IAM permissions boundaries: Applied as filter
-6. Session policies: Applied for assumed roles
-7. Default: DENY (if no explicit Allow)
+**ポリシー評価フロー**:
+1. Deny 評価: いずれかのポリシーに明示的 Deny があれば → DENY
+2. Organizations SCP: 権限境界として適用
+3. リソースベースポリシー: 評価
+4. ID ベースポリシー: いずれかに Allow があれば → ALLOW
+5. IAM permissions boundaries: フィルターとして適用
+6. セッションポリシー: 引き受けロールに適用
+7. デフォルト: DENY（明示的 Allow がない場合）
 
-**References:** IAM Policy Evaluation Logic
+**参考:** IAM ポリシー評価ロジック
 </details>
 
 ---
 
-### Question 18
-A company wants to grant temporary access to S3 objects for unauthenticated users for 1 hour. What should be used?
+### 問題 18
+企業が、未認証ユーザーに対して S3 オブジェクトへの 1 時間の一時アクセスを付与したいと考えています。何を使用すべきですか？
 
-A. IAM user credentials  
-B. S3 pre-signed URLs  
-C. S3 bucket policy  
-D. IAM role  
+A. IAM ユーザー認証情報  
+B. S3 事前署名 URL  
+C. S3 バケットポリシー  
+D. IAM ロール  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: B**
+**解答: B**
 
-**Explanation:**
-- Pre-signed URLs grant time-limited access to S3 objects
-- No AWS credentials needed by end user
-- URL contains authentication information
-- Expires after specified duration
+**解説:**
+- 事前署名 URL は S3 オブジェクトへの時間制限付きアクセスを提供する
+- エンドユーザーに AWS 認証情報は不要
+- URL に認証情報が含まれる
+- 指定した期間後に期限切れとなる
 
-**Generate Pre-signed URL (AWS CLI)**:
+**事前署名 URL の生成（AWS CLI）**:
 ```bash
 aws s3 presign s3://my-bucket/object.pdf --expires-in 3600
 ```
 
-**Use Cases**:
-- Temporary download links
-- Upload forms for unauthenticated users
-- Sharing private content without making public
-- Time-limited access to resources
+**ユースケース**:
+- 一時的なダウンロードリンク
+- 未認証ユーザー向けアップロードフォーム
+- パブリック化せずにプライベートコンテンツを共有
+- リソースへの時間制限付きアクセス
 
-- Option A: Requires creating users, not for temporary/anonymous
-- Option C: Bucket policies are not time-limited
-- Option D: Roles require authentication
+- 選択肢 A: ユーザー作成が必要で、一時/匿名用途に不向き
+- 選択肢 C: バケットポリシー自体は時間制限付きではない
+- 選択肢 D: ロールは認証を要する
 
-**References:** S3 Pre-signed URLs, Temporary Access
+**参考:** S3 事前署名 URL、一時アクセス
 </details>
 
 ---
 
-### Question 19
-What is the purpose of IAM permissions boundaries?
+### 問題 19
+IAM permissions boundaries の目的は何ですか？
 
-A. To set maximum permissions an IAM entity can have  
-B. To grant additional permissions beyond policies  
-C. To replace IAM policies  
-D. To encrypt IAM credentials  
+A. IAM エンティティが持てる最大権限を設定する  
+B. ポリシーを超える追加権限を付与する  
+C. IAM ポリシーを置き換える  
+D. IAM 認証情報を暗号化する  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A**
+**解答: A**
 
-**Explanation:**
-- Permissions boundaries set maximum permissions limit
-- Cannot grant more permissions than boundary allows
-- Even if identity policy allows, boundary can restrict
-- **Use Case**: Delegate permission management safely
+**解説:**
+- permissions boundaries は最大権限の上限を設定する
+- 境界で許可されない権限は付与できない
+- ID ポリシーで許可されても、境界で制限できる
+- **ユースケース**: 権限管理を安全に委任する
 
-**Example Scenario**:
-- Set permissions boundary on developers
-- Developers can create IAM roles for Lambda
-- But those roles cannot exceed boundary permissions
-- Prevents privilege escalation
+**例のシナリオ**:
+- 開発者に permissions boundary を設定
+- 開発者は Lambda 用 IAM ロールを作成可能
+- ただしロール権限は boundary を超えられない
+- 権限昇格を防止できる
 
-**Effective Permissions** = Identity Policy ∩ Permissions Boundary
+**有効権限** = Identity Policy ∩ Permissions Boundary
 
 ```json
 // Permissions Boundary
@@ -822,95 +822,94 @@ D. To encrypt IAM credentials
 }
 ```
 
-Even if identity policy allows IAM actions, boundary prevents it.
+ID ポリシーが IAM アクションを許可していても、boundary によって防止される。
 
-**References:** IAM Permissions Boundaries, Delegated Administration
+**参考:** IAM Permissions Boundaries、委任管理
 </details>
 
 ---
 
-### Question 20
-Which of the following actions require MFA for the root account according to AWS best practices? (Choose TWO)
+### 問題 20
+次のうち、AWS ベストプラクティスに従ってルートアカウントで MFA を要求すべき操作はどれですか？（2 つ選択）
 
-A. Logging into AWS Console  
-B. Changing account settings  
-C. Launching EC2 instances  
-D. Deleting S3 buckets  
-E. Viewing billing information  
+A. AWS コンソールへのログイン  
+B. アカウント設定の変更  
+C. EC2 インスタンスの起動  
+D. S3 バケットの削除  
+E. 請求情報の表示  
 
 <details>
-<summary>Show Answer</summary>
+<summary>解答を表示</summary>
 
-**Answer: A, B**
+**解答: A, B**
 
-**Explanation:**
-- AWS best practices: Enable MFA on root account immediately
-- Root account should be protected with MFA
-- MFA required for sensitive operations
-- Some actions like changing account settings require root + MFA
+**解説:**
+- AWS ベストプラクティス: ルートアカウントでは MFA を即時有効化
+- ルートアカウントは MFA で保護すべき
+- 機微な操作には MFA が必要
+- アカウント設定変更など一部操作は root + MFA が必要
 
-**Root Account Best Practices**:
-1. ✅ Enable MFA on root account
-2. ✅ Don't use root for everyday tasks
-3. ✅ Delete root access keys (use IAM users instead)
-4. ✅ Create IAM users for administrative tasks
-5. ✅ Use root only for tasks requiring root
-6. ✅ Secure root credentials (password manager)
+**ルートアカウントのベストプラクティス**:
+1. ✅ ルートアカウントで MFA を有効化
+2. ✅ 日常業務でルートを使わない
+3. ✅ ルートアクセスキーを削除（代わりに IAM ユーザーを使用）
+4. ✅ 管理作業用の IAM ユーザーを作成
+5. ✅ ルート必須の作業にのみルートを使用
+6. ✅ ルート認証情報を安全に保管（パスワードマネージャー）
 
-**Tasks Requiring Root Account**:
-- Change account settings
-- Close AWS account
-- Change AWS Support plan
-- Restore IAM user permissions
-- Register as seller in Reserved Instance Marketplace
-- Configure S3 bucket for MFA Delete
-- Sign up for GovCloud
+**ルートアカウントが必要なタスク**:
+- アカウント設定の変更
+- AWS アカウントの解約
+- AWS Support プランの変更
+- IAM ユーザー権限の復旧
+- Reserved Instance Marketplace で販売者登録
+- MFA Delete 向け S3 バケット設定
+- GovCloud へのサインアップ
 
-**References:** Root Account Best Practices, MFA, AWS Account Security
+**参考:** ルートアカウントのベストプラクティス、MFA、AWS アカウントセキュリティ
 </details>
 
 ---
 
-## Summary
+## まとめ
 
-**Total Questions**: 20  
-**Topics Covered**:
-- IAM Roles and Temporary Credentials (STS)
-- IAM Policies (Identity-based, Resource-based, Conditions)
-- Multi-Factor Authentication (MFA)
-- Cross-Account Access and External ID
-- Identity Federation (SAML 2.0)
-- Service Control Policies (SCPs)
-- IAM Best Practices
+**問題数合計**: 20  
+**対象トピック**:
+- IAM ロールと一時認証情報（STS）
+- IAM ポリシー（ID ベース、リソースベース、条件）
+- Multi-Factor Authentication（MFA）
+- クロスアカウントアクセスと External ID
+- ID フェデレーション（SAML 2.0）
+- Service Control Policies（SCP）
+- IAM ベストプラクティス
 - Permissions Boundaries
-- Pre-signed URLs
-- Root Account Security
+- 事前署名 URL
+- ルートアカウントセキュリティ
 
-**Exam Tips**:
-1. **Always prefer IAM roles over access keys** for AWS services
-2. **Use STS** for temporary credentials
-3. **Policy Evaluation**: Explicit Deny > Allow > Implicit Deny
-4. **Root account**: Enable MFA, don't use for daily tasks
-5. **Federation**: Use existing corporate credentials
-6. **Cross-account**: Use roles with external ID for third parties
-7. **Permissions boundaries**: Set maximum permissions cap
-8. **Groups limit**: User can belong to max 10 groups
-9. **Pre-signed URLs**: Temporary access for unauthenticated users
-10. **Principle of least privilege**: Grant minimum permissions needed
+**試験対策のポイント**:
+1. AWS サービスには**アクセスキーより IAM ロールを優先**
+2. 一時認証情報には**STS を使用**
+3. **ポリシー評価**: 明示的 Deny > Allow > 暗黙的 Deny
+4. **ルートアカウント**: MFA を有効化し、日常利用しない
+5. **フェデレーション**: 既存の社内認証情報を利用
+6. **クロスアカウント**: サードパーティには External ID 付きロール
+7. **Permissions boundaries**: 最大権限の上限を設定
+8. **グループ上限**: ユーザーは最大 10 グループ
+9. **事前署名 URL**: 未認証ユーザーへの一時アクセス
+10. **最小権限の原則**: 必要最小限の権限のみ付与
 
-**Common Exam Scenarios**:
-- EC2 accessing S3 → Use IAM role
-- Temporary external access → STS with IAM role
-- Corporate SSO → SAML 2.0 federation
-- Third-party vendor → Cross-account role with External ID
-- Time-limited anonymous access → Pre-signed URLs
-- Restrict actions → IAM policy conditions
-- Multi-account governance → AWS Organizations with SCPs
+**試験でよくあるシナリオ**:
+- EC2 から S3 アクセス → IAM ロールを使用
+- 一時的な外部アクセス → IAM ロール + STS
+- 社内 SSO → SAML 2.0 フェデレーション
+- サードパーティベンダー → External ID 付きクロスアカウントロール
+- 時間制限付き匿名アクセス → 事前署名 URL
+- アクション制限 → IAM ポリシー条件
+- マルチアカウントガバナンス → SCP 付き AWS Organizations
 
-**Next Steps**:
-- Review IAM policy evaluation logic
-- Practice writing IAM policies with conditions
-- Understand difference between identity-based and resource-based policies
-- Study cross-account access patterns
-- Review AWS security best practices
-
+**次のステップ**:
+- IAM ポリシー評価ロジックを復習する
+- 条件付き IAM ポリシー作成を練習する
+- ID ベースとリソースベースポリシーの違いを理解する
+- クロスアカウントアクセスパターンを学習する
+- AWS セキュリティのベストプラクティスを復習する
